@@ -1,0 +1,153 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Interactiva: Números Complejos</title>
+    
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                macros: {
+                    R: "\\mathbb{R}",
+                    C: "\\mathbb{C}"
+                }
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <style>
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 { text-align: center; color: #8e44ad; border-bottom: 2px solid #9b59b6; padding-bottom: 15px;}
+        .tarjeta-container {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-left: 5px solid #9b59b6;
+        }
+        .tarjeta-titulo {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        .enunciado-caja {
+            background-color: #f8f9fa;
+            border: 1px solid #a4b0be;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-left: 4px solid #34495e;
+            font-size: 0.95em;
+        }
+        .paso {
+            display: none; 
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: #f9fbfd;
+            border-radius: 5px;
+            border-left: 3px solid #8e44ad;
+            animation: fadeIn 0.4s ease-in-out;
+            overflow-x: auto;
+        }
+        .btn-siguiente {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: background 0.3s;
+        }
+        .btn-siguiente:hover { background-color: #219653; }
+        .btn-completado {
+            background-color: #95a5a6;
+            cursor: default;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<script src="https://cdn.jsdelivr.net/npm/scorm-api-wrapper@1.0.0/dist/scorm-api-wrapper.min.js"></script>
+
+    <h1>✨ Demostraciones y Axiomas: Números Complejos</h1>
+    <div id="contenedor-tarjetas"></div>
+
+    <script>
+        const conceptos = [{"titulo": "Definici\u00f3n de N\u00famero Complejo", "enunciado": "Un <b>n\u00famero complejo</b> $z$ es una expresi\u00f3n de la forma: \\[ z = a + bi \\] donde $a$ y $b$ son <b>n\u00fameros reales</b>, e $i$ es la <b>unidad imaginaria</b>, definida como $i^2 = -1$ o $i = \\sqrt{-1}$.", "pasos": ["<b>Partes del n\u00famero complejo:</b><br><ul><li>$a$ se llama <b>parte real</b> de $z$, y se denota $\\operatorname{Re}(z) = a$.</li><li>$b$ se llama <b>parte imaginaria</b> de $z$, y se denota $\\operatorname{Im}(z) = b$.</li></ul>", "<b>Casos particulares:</b><br><ul><li>Si $b = 0$, entonces el n\u00famero complejo es un n\u00famero real.</li><li>Si $a = 0$ y $b \\neq 0$, se le llama <b>n\u00famero imaginario puro</b>.</li></ul>", "El conjunto de todos los n\u00fameros complejos se denota por $\\mathbb{C}$: \\[ \\mathbb{C} = \\{ a + bi \\mid a, b \\in \\mathbb{R} \\} \\]"]}, {"titulo": "Operaciones: Suma y Multiplicaci\u00f3n", "enunciado": "Operaciones b\u00e1sicas dadas dos variables $z_1 = a + bi$ y $z_2 = c + di$.", "pasos": ["<b>Suma:</b> Se suman parte real con parte real y parte imaginaria con parte imaginaria. \\[ \\boxed{z_1 + z_2 = (a + c) + (b + d)i} \\]<br><i>Ejemplo:</i> $(3 + 2i) + (-1 + 5i) = (3 - 1) + (2 + 5)i = 2 + 7i$", "<b>Multiplicaci\u00f3n:</b> \\[ \\boxed{z_1 \\cdot z_2 = (ac - bd) + (ad + bc)i} \\]", "<i>Ejemplo paso a paso:</i><br> $(2 + 3i)(1 - 4i) = (2 \\cdot 1 - 3 \\cdot (-4)) + (2 \\cdot (-4) + 3 \\cdot 1)i$", "$= (2 + 12) + (-8 + 3)i$", "$= 14 - 5i$"]}, {"titulo": "Axioma 1: Asociatividad de la suma", "enunciado": "Los n\u00fameros complejos forman un campo. Sean $z_1 = a+bi$, $z_2 = c+di$, $z_3 = e+fi$.<br><br><b>Asociatividad de la suma:</b> \\[ (z_1 + z_2) + z_3 = z_1 + (z_2 + z_3) \\]", "pasos": ["Desarrollamos el lado izquierdo:<br> \\[ ((a+bi)+(c+di))+(e+fi) = ((a+c)+(b+d)i)+(e+fi) \\]", "\\[ = ((a+c)+e) + ((b+d)+f)i \\]", "Agrupamos usando propiedades de $\\mathbb{R}$:<br> \\[ = (a+(c+e)) + (b+(d+f))i \\]", "Reconstruimos hacia el lado derecho:<br> \\[ = (a+bi)+((c+di)+(e+fi)) \\]<br><i>Se cumple por la asociatividad de la suma en $\\mathbb{R}$.</i>"]}, {"titulo": "Axioma 2: Conmutatividad de la suma", "enunciado": "<b>Conmutatividad de la suma:</b> \\[ z_1 + z_2 = z_2 + z_1 \\]", "pasos": ["Comenzamos con la suma directa:<br> \\[ (a+bi)+(c+di) = (a+c)+(b+d)i \\]", "Conmutamos las partes reales e imaginarias:<br> \\[ = (c+a)+(d+b)i \\]", "Separamos en complejos:<br> \\[ = (c+di)+(a+bi) \\]<br><i>Se cumple por la conmutatividad de la suma en $\\mathbb{R}$.</i>"]}, {"titulo": "Axioma 3: Elemento neutro aditivo", "enunciado": "<b>Elemento neutro aditivo (cero):</b> Existe $0_{\\mathbb{C}} = 0+0i$ tal que: \\[ z + 0_{\\mathbb{C}} = z, \\quad \\forall z \\in \\mathbb{C} \\]", "pasos": ["Sumamos el cero complejo:<br> \\[ (a+bi)+(0+0i) = (a+0)+(b+0)i \\]", "Resolviendo:<br> \\[ = a+bi = z \\]"]}, {"titulo": "Axioma 4: Inverso aditivo", "enunciado": "<b>Inverso aditivo:</b> Para cada $z=a+bi$, existe $-z = (-a)+(-b)i$ tal que: \\[ z + (-z) = 0_{\\mathbb{C}} \\]", "pasos": ["Sumamos $z$ y su propuesto inverso:<br> \\[ (a+bi)+((-a)+(-b)i) = (a+(-a)) + (b+(-b))i \\]", "Simplificamos:<br> \\[ = 0+0i = 0_{\\mathbb{C}} \\]"]}, {"titulo": "Axioma 5: Asociatividad del producto", "enunciado": "<b>Asociatividad del producto:</b> \\[ (z_1 \\cdot z_2) \\cdot z_3 = z_1 \\cdot (z_2 \\cdot z_3) \\]", "pasos": ["Primero agrupamos a la izquierda:<br> \\[ z_1 \\cdot z_2 = (ac-bd) + (ad+bc)i \\]", "Multiplicamos por el tercer t\u00e9rmino:<br> \\[ (z_1 \\cdot z_2) \\cdot z_3 = ((ac-bd)e - (ad+bc)f) + ((ac-bd)f + (ad+bc)e)i \\]", "Expandimos todo:<br> \\[ = (ace - bde - adf - bcf) + (acf - bdf + ade + bce)i \\]", "Ahora analizamos agrupando a la derecha:<br> \\[ z_2 \\cdot z_3 = (ce-df) + (cf+de)i \\]", "Multiplicamos desde la izquierda por $z_1$:<br> \\[ z_1 \\cdot (z_2 \\cdot z_3) = (a(ce-df)-b(cf+de)) + (a(cf+de)+b(ce-df))i \\]", "Expandimos:<br> \\[ = (ace-adf-bcf-bde) + (acf+ade+bce-bdf)i \\]<br><i>\u00a1Ambos resultados coinciden!</i>"]}, {"titulo": "Axioma 6: Conmutatividad del producto", "enunciado": "<b>Conmutatividad del producto:</b> \\[ z_1 \\cdot z_2 = z_2 \\cdot z_1 \\]", "pasos": ["Producto est\u00e1ndar:<br> \\[ z_1 \\cdot z_2 = (ac-bd) + (ad+bc)i \\]", "Producto invertido:<br> \\[ z_2 \\cdot z_1 = (ca-db) + (cb+da)i \\]", "Reordenando t\u00e9rminos por reglas en $\\mathbb{R}$:<br> \\[ = (ac-bd) + (ad+bc)i \\]"]}, {"titulo": "Axioma 7: Elemento neutro multiplicativo", "enunciado": "<b>Elemento neutro multiplicativo (uno):</b> Existe $1_{\\mathbb{C}} = 1+0i$ tal que: \\[ z \\cdot 1_{\\mathbb{C}} = z, \\quad \\forall z \\in \\mathbb{C} \\]", "pasos": ["Planteamos la multiplicaci\u00f3n:<br> \\[ (a+bi)(1+0i) = (a \\cdot 1 - b \\cdot 0) + (a \\cdot 0 + b \\cdot 1)i \\]", "Simplificamos:<br> \\[ = a+bi = z \\]"]}, {"titulo": "Axioma 8: Inverso multiplicativo", "enunciado": "<b>Inverso multiplicativo:</b> Para $z \\neq 0_{\\mathbb{C}}$ (es decir, $a$ y $b$ no ambos cero), existe $z^{-1}$ dado por: \\[ \\boxed{z^{-1} = \\frac{a}{a^2+b^2} - \\frac{b}{a^2+b^2}i} \\] tal que $z \\cdot z^{-1} = 1_{\\mathbb{C}}$.", "pasos": ["<b>Verificaci\u00f3n:</b> Planteamos el producto.<br> \\[ z \\cdot z^{-1} = (a+bi)\\left(\\frac{a}{a^2+b^2} - \\frac{b}{a^2+b^2}i\\right) \\]", "Hacemos la distribuci\u00f3n t\u00e9rmino a t\u00e9rmino:<br> \\[ = \\left(a \\cdot \\frac{a}{a^2+b^2} - b \\cdot \\left(-\\frac{b}{a^2+b^2}\\right)\\right) + \\left(a \\cdot \\left(-\\frac{b}{a^2+b^2}\\right) + b \\cdot \\frac{a}{a^2+b^2}\\right)i \\]", "Agrupamos numeradores sobre el denominador com\u00fan:<br> \\[ = \\frac{a^2+b^2}{a^2+b^2} + \\frac{-ab+ba}{a^2+b^2}i \\]", "Reducimos la expresi\u00f3n:<br> \\[ = 1 + 0i = 1_{\\mathbb{C}} \\]<br><i>El inverso existe siempre que $a^2+b^2 \\neq 0$, es decir, $z \\neq 0_{\\mathbb{C}}$.</i>"]}, {"titulo": "Axioma 9: Distributividad", "enunciado": "<b>Distributividad:</b> \\[ z_1 \\cdot (z_2 + z_3) = z_1 \\cdot z_2 + z_1 \\cdot z_3 \\]", "pasos": ["Desarrollamos el lado izquierdo agrupando primero la suma:<br> \\[ z_1 \\cdot (z_2+z_3) = (a+bi)((c+e)+(d+f)i) \\]", "Aplicamos la f\u00f3rmula de multiplicaci\u00f3n:<br> \\[ = (a(c+e)-b(d+f)) + (a(d+f)+b(c+e))i \\]", "Expandimos:<br> \\[ = (ac+ae-bd-bf) + (ad+af+bc+be)i \\]", "Ahora desarrollamos el lado derecho (distribuci\u00f3n directa):<br> \\[ z_1 \\cdot z_2 + z_1 \\cdot z_3 = ((ac-bd)+(ad+bc)i) + ((ae-bf)+(af+be)i) \\]", "Agrupamos y comparamos:<br> \\[ = (ac-bd+ae-bf) + (ad+bc+af+be)i \\]<br><i>Ambos resultados son id\u00e9nticos.</i>"]}];
+        const contenedorTarjetas = document.getElementById('contenedor-tarjetas');
+        
+        let progreso = {};
+
+        conceptos.forEach((concepto, i) => {
+            progreso[i] = 0; 
+            
+            let htmlPasos = '';
+            concepto.pasos.forEach((paso, j) => {
+                htmlPasos += `<div class="paso" id="card-${i}-paso-${j}">${paso}</div>`;
+            });
+
+            const cardDiv = document.createElement('div');
+            cardDiv.className = 'tarjeta-container';
+            cardDiv.innerHTML = `
+                <div class="tarjeta-titulo">${concepto.titulo}</div>
+                <div class="enunciado-caja">${concepto.enunciado}</div>
+                <div id="pasos-container-${i}">
+                    ${htmlPasos}
+                </div>
+                <button id="btn-${i}" class="btn-siguiente" onclick="revelarSiguientePaso(${i})">
+                    Revelar siguiente paso 👁️
+                </button>
+            `;
+            contenedorTarjetas.appendChild(cardDiv);
+        });
+
+        function revelarSiguientePaso(indexCard) {
+            const pasoActual = progreso[indexCard];
+            const maxPasos = conceptos[indexCard].pasos.length;
+
+            if (pasoActual < maxPasos) {
+                const elementoPaso = document.getElementById(`card-${indexCard}-paso-${pasoActual}`);
+                elementoPaso.style.display = 'block';
+                
+                if (window.MathJax) {
+                    MathJax.typesetPromise([elementoPaso]);
+                }
+
+                progreso[indexCard]++;
+
+                if (progreso[indexCard] === maxPasos) {
+                    const btn = document.getElementById(`btn-${indexCard}`);
+                    btn.className = 'btn-siguiente btn-completado';
+                    btn.innerHTML = 'Demostración Completada ✅';
+                    btn.onclick = null; 
+                }
+            }
+        }
+    </script>
+</body>
+</html>

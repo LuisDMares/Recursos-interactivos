@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen Visual: Normalización</title>
+    <script>
+      MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] } };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    
+    <style>
+        :root {
+            --bg-color: #e2e8f0;
+            --card-bg: #ffffff;
+            --primary: #c2410c; /* Naranja oscuro, contraste académico */
+            --secondary: #ea580c;
+            --text-dark: #1e293b;
+            --table-border: #cbd5e1;
+            --table-header: #fed7aa;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+        .subtitle {
+            color: #475569;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        .controls {
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1rem;
+        }
+        button {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            background-color: var(--primary);
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: var(--secondary);
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2.5rem;
+            width: 100%;
+            max-width: 1400px;
+        }
+        .card-container {
+            perspective: 1500px;
+            min-height: 400px; 
+            display: flex;
+        }
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transition: transform 0.7s cubic-bezier(0.4, 0.2, 0.2, 1);
+            transform-style: preserve-3d;
+            cursor: pointer;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+        }
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            padding: 2rem;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .card-front {
+            background-color: var(--card-bg);
+            border: 2px solid var(--table-border);
+            border-top: 6px solid var(--primary);
+        }
+        .card-front p {
+            margin-top: 0;
+            font-size: 1.1rem;
+            line-height: 1.4;
+        }
+        .card-back {
+            transform: rotateY(180deg);
+            background-color: #fff7ed;
+            overflow-y: auto;
+            justify-content: flex-start;
+            border: 2px solid var(--primary);
+        }
+        .card-back p {
+            font-size: 1.05rem;
+            line-height: 1.6;
+        }
+        
+        /* Estilos para las tablas dentro de las tarjetas */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .data-table th, .data-table td {
+            border: 1px solid var(--table-border);
+            padding: 6px 8px;
+            text-align: left;
+        }
+        .data-table th {
+            background-color: var(--table-header);
+            color: #9a3412;
+            font-weight: bold;
+        }
+        .data-table tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+        .data-table tr:hover {
+            background-color: #f1f5f9;
+        }
+        
+        .hint {
+            display: block;
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            color: var(--primary);
+            text-align: center;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+    </style>
+</head>
+<body>
+
+    <h1>Evaluación Visual de Normalización</h1>
+    <div class="subtitle">Encuentra los datos repetidos en las tablas para deducir las dependencias.</div>
+    
+    <div class="controls">
+        <button onclick="shuffleCards()">Aleatorio</button>
+        <button onclick="resetOrder()">Orden Progresivo</button>
+    </div>
+
+    <div class="grid" id="flashcard-grid">
+
+        <div class="card-container" style="order: 0;" data-original-order="0" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <p>
+            Identifica el problema y normaliza a <b>1NF</b>:
+            <table class="data-table">
+                <tr><th>ID_Med</th><th>Nombre</th><th>Especialidades</th></tr>
+                <tr><td>M01</td><td>Dra. López</td><td>Cardiología, Pediatría</td></tr>
+                <tr><td>M02</td><td>Dr. Smith</td><td>Neurología</td></tr>
+            </table>
+        </p>
+                    <span class="hint">Click para ver la solución</span>
+                </div>
+                <div class="card-face card-back">
+                    <h3 style="color: #c2410c; margin-top:0; border-bottom: 1px solid #fdba74; padding-bottom: 5px;">Resolución</h3>
+                    <p>
+            <b>Problema:</b> El atributo <code>Especialidades</code> no es atómico (multivaluado).<br><br>
+            <b>Solución (1NF):</b> Separar en dos tablas para atomicidad.<br><br>
+            <b>MEDICO</b>(<b>ID_Med</b>, Nombre)<br>
+            <b>MEDICO_ESP</b>(<b>ID_Med</b>, <b>Especialidad</b>)
+        </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 1;" data-original-order="1" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <p>
+            La Llave Primaria es (NumCta, ClaveMat). Lleva a <b>2NF</b>:
+            <table class="data-table">
+                <tr><th>NumCta</th><th>ClaveMat</th><th>Calificacion</th><th>NombreAlumno</th></tr>
+                <tr><td>314</td><td>M101</td><td>9</td><td>Luis Rojas</td></tr>
+                <tr><td>314</td><td>F200</td><td>10</td><td>Luis Rojas</td></tr>
+                <tr><td>415</td><td>M101</td><td>8</td><td>Ana Gómez</td></tr>
+            </table>
+        </p>
+                    <span class="hint">Click para ver la solución</span>
+                </div>
+                <div class="card-face card-back">
+                    <h3 style="color: #c2410c; margin-top:0; border-bottom: 1px solid #fdba74; padding-bottom: 5px;">Resolución</h3>
+                    <p>
+            <b>Problema (Dependencia Parcial):</b> <code>NombreAlumno</code> se repite para cada materia inscrita porque depende únicamente de <code>NumCta</code>, no de toda la llave compuesta.<br><br>
+            <b>Solución (2NF):</b><br>
+            <b>ALUMNO</b>(<b>NumCta</b>, NombreAlumno)<br>
+            <b>INSCRIPCION</b>(<b>NumCta</b>, <b>ClaveMat</b>, Calificacion)
+        </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 2;" data-original-order="2" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <p>
+            La Llave Primaria es (ID_Emp). Lleva a <b>3NF</b>:
+            <table class="data-table">
+                <tr><th>ID_Emp</th><th>Nombre</th><th>CodDepto</th><th>NombreDepto</th></tr>
+                <tr><td>E10</td><td>Carlos</td><td>D1</td><td>Ventas</td></tr>
+                <tr><td>E11</td><td>María</td><td>D1</td><td>Ventas</td></tr>
+                <tr><td>E12</td><td>José</td><td>D2</td><td>Sistemas</td></tr>
+            </table>
+        </p>
+                    <span class="hint">Click para ver la solución</span>
+                </div>
+                <div class="card-face card-back">
+                    <h3 style="color: #c2410c; margin-top:0; border-bottom: 1px solid #fdba74; padding-bottom: 5px;">Resolución</h3>
+                    <p>
+            <b>Problema (Dependencia Transitiva):</b> <code>NombreDepto</code> depende de <code>CodDepto</code>, el cual no es la Llave Primaria de la tabla. Observa cómo "Ventas" se repite innecesariamente.<br><br>
+            <b>Solución (3NF):</b><br>
+            <b>DEPARTAMENTO</b>(<b>CodDepto</b>, NombreDepto)<br>
+            <b>EMPLEADO</b>(<b>ID_Emp</b>, Nombre, <i>CodDepto</i>)
+        </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 3;" data-original-order="3" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <p>
+            <b>Reto Integrador (Paso 1):</b> Identifica las anomalías de la siguiente orden de compra (Llave sugerida: NoOrden, CodArticulo):
+            <table class="data-table">
+                <tr><th>NoOrden</th><th>Fecha</th><th>CodProv</th><th>NomProv</th><th>CodArt</th><th>DescArt</th><th>Cant</th><th>Precio</th></tr>
+                <tr><td>O-100</td><td>26/Abr</td><td>P1</td><td>Acme</td><td>A1</td><td>Tuerca</td><td>50</td><td>$2</td></tr>
+                <tr><td>O-100</td><td>26/Abr</td><td>P1</td><td>Acme</td><td>A2</td><td>Clavo</td><td>100</td><td>$1</td></tr>
+                <tr><td>O-101</td><td>27/Abr</td><td>P1</td><td>Acme</td><td>A1</td><td>Tuerca</td><td>20</td><td>$2</td></tr>
+            </table>
+        </p>
+                    <span class="hint">Click para ver la solución</span>
+                </div>
+                <div class="card-face card-back">
+                    <h3 style="color: #c2410c; margin-top:0; border-bottom: 1px solid #fdba74; padding-bottom: 5px;">Resolución</h3>
+                    <p>
+            <b>Anomalías visuales:</b><br>
+            - <i>Inserción:</i> No puedes registrar a un proveedor (Acme) o un artículo (Tuerca) sin generar una orden de compra.<br>
+            - <i>Actualización:</i> Si el "NomProv" Acme cambia de nombre, debes actualizar dos órdenes distintas (3 filas).<br>
+            - <i>Dependencias parciales:</i> Fecha, CodProv y NomProv solo dependen de NoOrden. DescArt y Precio solo dependen de CodArt.<br>
+            - <i>Dependencia transitiva:</i> NomProv depende de CodProv.
+        </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 4;" data-original-order="4" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <p>
+            <b>Reto Integrador (Paso 2):</b> Toma la tabla anterior y defínela completamente en <b>3NF</b>.
+        </p>
+                    <span class="hint">Click para ver la solución</span>
+                </div>
+                <div class="card-face card-back">
+                    <h3 style="color: #c2410c; margin-top:0; border-bottom: 1px solid #fdba74; padding-bottom: 5px;">Resolución</h3>
+                    <p>
+            <b>Proceso de separación:</b><br>
+            1. <b>PROVEEDOR</b>(<b>CodProv</b>, NomProv) -> <i>Elimina transitividad</i>.<br>
+            2. <b>ARTICULO</b>(<b>CodArt</b>, DescArt, Precio) -> <i>Elimina dependencia parcial de la orden</i>.<br>
+            3. <b>ORDEN</b>(<b>NoOrden</b>, Fecha, <i>CodProv</i>) -> <i>Cabecera de la orden</i>.<br>
+            4. <b>DETALLE_ORDEN</b>(<b>NoOrden</b>, <b>CodArt</b>, Cant) -> <i>Cuerpo de la orden, depende de la llave compuesta completa</i>.
+        </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const grid = document.getElementById('flashcard-grid');
+        const cards = Array.from(grid.children);
+
+        function shuffleCards() {
+            cards.forEach(card => {
+                card.style.order = Math.floor(Math.random() * 10000);
+                const innerCard = card.querySelector('.card');
+                if(innerCard.classList.contains('flipped')) {
+                    innerCard.classList.remove('flipped');
+                }
+            });
+        }
+
+        function resetOrder() {
+            cards.forEach(card => {
+                card.style.order = card.getAttribute('data-original-order');
+                const innerCard = card.querySelector('.card');
+                if(innerCard.classList.contains('flipped')) {
+                    innerCard.classList.remove('flipped');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

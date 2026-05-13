@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estudio Interactivo: Tarea 1 Inferencia</title>
+    
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                macros: {
+                    R: "\\mathbb{R}",
+                    N: "\\mathbb{N}",
+                    E: "\\mathbb{E}",
+                    Var: "\\text{Var}",
+                    Cov: "\\text{Cov}",
+                    Pbb: "\\mathbb{P}",
+                    ind: "\\mathbb{I}",
+                    bar: ["\\overline{#1}", 1],
+                    hat: ["\\widehat{#1}", 1]
+                }
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <style>
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 { text-align: center; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 15px;}
+        .problema-container {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-left: 5px solid #2980b9;
+        }
+        .problema-titulo {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        .enunciado-caja {
+            background-color: #f8f9fa;
+            border: 1px solid #a4b0be;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-left: 4px solid #34495e;
+            font-size: 0.95em;
+        }
+        .paso {
+            display: none; 
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: #f9fbfd;
+            border-radius: 5px;
+            border-left: 3px solid #3498db;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+        .btn-siguiente {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: background 0.3s;
+        }
+        .btn-siguiente:hover { background-color: #219653; }
+        .btn-completado {
+            background-color: #95a5a6;
+            cursor: default;
+        }
+        .anexo-container {
+            background: #ecf0f1;
+            padding: 25px;
+            border-radius: 8px;
+            margin-top: 40px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .ref-link {
+            color: #e67e22;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .ref-link:hover { text-decoration: underline; }
+        .anexo-item {
+            padding: 10px;
+            border-bottom: 1px solid #bdc3c7;
+        }
+        .anexo-item:target {
+            background-color: #f1c40f33; /* Destaca la referencia al llegar ahí */
+            transition: background-color 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🧠 Demostraciones Paso a Paso: Tarea 1</h1>
+    <div id="contenedor-tareas"></div>
+
+    <div class="anexo-container" id="anexo">
+        <h2 style="color: #2c3e50; border-bottom: 2px solid #bdc3c7; padding-bottom: 10px;">📚 Anexo: Resultados Teóricos</h2>
+        <div id="contenedor-anexo"></div>
+    </div>
+
+    <script>
+        const problemas = [{"titulo": "Problema 1: Independencia entre la Media y la Diferencia", "enunciado": "Supongan un escenario donde la variable de respuesta $Y_i \\sim N(\\beta, \\sigma^2)$ para $i = 1, 2$. Queremos analizar la independencia entre el promedio de las respuestas y su diferencia.<br><br><ol type='a'><li><b>(Teor\u00eda):</b> Defina $\\bar{Y} = \\frac{Y_1 + Y_2}{2}$ y $D = Y_1 - Y_2$. Demuestren que $\\Cov(\\bar{Y}, D) = 0$ y justifiquen por qu\u00e9 implica independencia.</li><li><b>(C\u00e1lculo/Aplicaci\u00f3n):</b> Varianza te\u00f3rica $\\sigma^2 = 25$. \u00bfCu\u00e1l es la probabilidad de que $\\bar{Y}$ exceda el valor nominal $\\beta$ por m\u00e1s de 5 ml, y al mismo tiempo, $D$ sea menor a 2 ml?</li></ol>", "pasos": ["<b>a) Teor\u00eda: Demostraci\u00f3n de independencia</b><br><b>Datos:</b> $Y_1, Y_2 \\sim N(\\beta, \\sigma^2)$ independientes.<br>Definimos: \\[ \\bar{Y} = \\frac{Y_1 + Y_2}{2}, \\qquad D = Y_1 - Y_2 \\]", "Calculamos la covarianza: \\[ \\Cov(\\bar{Y}, D) = \\Cov\\left(\\frac{Y_1 + Y_2}{2}, Y_1 - Y_2\\right) = \\frac{1}{2}\\Cov(Y_1 + Y_2, Y_1 - Y_2) \\]", "Desarrollando: \\[ \\Cov(Y_1 + Y_2, Y_1 - Y_2) = \\Cov(Y_1, Y_1) - \\Cov(Y_1, Y_2) + \\Cov(Y_2, Y_1) - \\Cov(Y_2, Y_2) \\]", "Como $\\Cov(Y_1, Y_1) = \\Var(Y_1) = \\sigma^2$, $\\Cov(Y_2, Y_2) = \\sigma^2$, y por independencia $\\Cov(Y_1, Y_2) = \\Cov(Y_2, Y_1) = 0$, obtenemos: \\[ \\Cov(Y_1 + Y_2, Y_1 - Y_2) = \\sigma^2 - 0 + 0 - \\sigma^2 = 0 \\] \\[ \\boxed{\\Cov(\\bar{Y}, D) = 0} \\]", "<b>Justificaci\u00f3n de independencia:</b> Por <a href='#R-1'><b>[R-1]</b></a>, cualquier combinaci\u00f3n lineal de Normales independientes sigue una distribuci\u00f3n Normal Multivariada. Por <a href='#R-2'><b>[R-2]</b></a>, covarianza cero en Normal Multivariada implica independencia estoc\u00e1stica. Concluimos que $\\bar{Y}$ y $D$ son independientes.", "<b>b) C\u00e1lculo/Aplicaci\u00f3n</b><br><b>Datos:</b> $\\sigma^2 = 25 \\implies \\sigma = 5$. Queremos: \\[ \\Pbb(\\bar{Y} > \\beta + 5 \\ \\cap \\ D < 2) \\] Por independencia demostrada en (a): \\[ \\Pbb(\\bar{Y} > \\beta + 5) \\cdot \\Pbb(D < 2) \\]", "<b>Distribuciones:</b> \\[ \\bar{Y} \\sim N\\left(\\beta, \\frac{25}{2}\\right), \\quad D \\sim N(0, 50) \\]", "<b>Estandarizaci\u00f3n:</b><br> $Z_1 = \\frac{\\bar{Y} - \\beta}{\\sqrt{12.5}} \\implies Z_1 > 1.4142 \\implies \\Pbb = 0.0787$<br>$Z_2 = \\frac{D}{\\sqrt{50}} \\implies Z_2 < 0.2828 \\implies \\Pbb = 0.6114$", "Multiplicando: \\[ \\Pbb(\\bar{Y} > \\beta + 5 \\ \\cap \\ D < 2) = 0.0787 \\times 0.6114 \\approx 0.0481 \\] \\[ \\boxed{\\Pbb(\\bar{Y} > \\beta + 5 \\text{ y } D < 2) \\approx 0.0481} \\]"]}, {"titulo": "Problema 2: Distribuci\u00f3n Conjunta del M\u00ednimo y M\u00e1ximo", "enunciado": "En clase derivamos las distribuciones marginales del m\u00ednimo ($U = X_{(1)}$) y del m\u00e1ximo ($V = X_{(n)}$). Para estudiar la amplitud necesitamos su comportamiento simult\u00e1neo.<br><br><ol type='a'><li><b>(Teor\u00eda):</b> El evento $\\{U > u \\text{ y } V \\leq v\\}$ significa que todos los datos cayeron en $(u, v]$. Deduzcan $\\Pbb(U > u, V \\leq v)$. Luego, demuestren que $F_{U,V}(u,v) = [F(v)]^n - [F(v) - F(u)]^n$ y obtengan la densidad conjunta $f_{U,V}(u,v)$.</li><li><b>(C\u00e1lculo/Aplicaci\u00f3n):</b> L\u00e1minas var\u00edan seg\u00fan $\\text{Unif}(0, 10)$ mm. Muestra $n = 4$. Calcule la probabilidad exacta de que el m\u00ednimo mida $\\leq 2$ mm y el m\u00e1ximo mida $\\leq 8$ mm.</li></ol>", "pasos": ["<b>a) Teor\u00eda: Deducci\u00f3n de la CDF y PDF conjunta</b><br>Sean $X_1, \\dots, X_n$ i.i.d. con CDF $F(x)$ y PDF $f(x)$. Definimos $U = X_{(1)}$ y $V = X_{(n)}$.", "El evento $\\{U > u, V \\leq v\\}$ significa que todos los datos est\u00e1n en $(u, v]$. Por independencia: \\[ \\Pbb(U > u, V \\leq v) = \\prod_{i=1}^n \\Pbb(u < X_i \\leq v) = [F(v) - F(u)]^n \\]", "La CDF conjunta es: \\[ F_{U,V}(u,v) = \\Pbb(V \\leq v) - \\Pbb(U > u, V \\leq v) \\] Por <a href='#R-3'><b>[R-3]</b></a>, $\\Pbb(V \\leq v) = [F(v)]^n$. Por lo tanto: \\[ \\boxed{F_{U,V}(u,v) = [F(v)]^n - [F(v) - F(u)]^n, \\quad u \\leq v} \\]", "Derivando para obtener la densidad conjunta: \\[ f_{U,V}(u,v) = \\frac{\\partial^2}{\\partial u \\partial v} F_{U,V}(u,v) = n(n-1)[F(v) - F(u)]^{n-2} f(u) f(v) \\]", "<b>b) C\u00e1lculo/Aplicaci\u00f3n</b><br><b>Datos:</b> $X_i \\sim \\text{Unif}(0,10)$, $n=4 \\implies F(x) = \\frac{x}{10}$. Queremos $\\Pbb(U \\leq 2, V \\leq 8)$.", "Aplicamos la CDF conjunta: \\[ \\Pbb(U \\leq 2, V \\leq 8) = [F(8)]^4 - [F(8) - F(2)]^4 \\]", "Calculamos: \\[ F(8) = 0.8, \\quad F(2) = 0.2 \\] \\[ (0.8)^4 - (0.6)^4 = 0.4096 - 0.1296 = 0.28 \\] \\[ \\boxed{\\Pbb(U \\leq 2 \\ \\text{y} \\ V \\leq 8) = 0.28} \\]"]}, {"titulo": "Problema 3: Varianza de la ECDF", "enunciado": "La Funci\u00f3n de Distribuci\u00f3n Emp\u00edrica $\\hat{F}_n(x)$ es nuestra mejor herramienta para estimar $F(x)$.<br><br><ol type='a'><li><b>(Teor\u00eda):</b> Demuestren matem\u00e1ticamente que la varianza del estimador $\\hat{F}_n(x)$ est\u00e1 dada por $\\frac{F(x)[1-F(x)]}{n}$.</li><li><b>(C\u00e1lculo/Aplicaci\u00f3n):</b> Para $n = 100$, encuentre qu\u00e9 valor de probabilidad te\u00f3rica $F(x)$ maximiza la varianza del estimador. (Expliquen qu\u00e9 significa esto intuitivamente).</li></ol>", "pasos": ["<b>a) Teor\u00eda: Demostraci\u00f3n de $\\Var(\\hat{F}_n(x))$</b><br>La ECDF es: \\[ \\hat{F}_n(x) = \\frac{1}{n} \\sum_{i=1}^n \\ind(X_i \\leq x) \\]", "Cada $I_i = \\ind(X_i \\leq x)$ es Bernoulli con par\u00e1metro $p = F(x)$ seg\u00fan <a href='#R-4'><b>[R-4]</b></a>. Por tanto: \\[ \\E[I_i] = F(x), \\quad \\Var(I_i) = F(x)[1-F(x)] \\]", "Por independencia de las $I_i$: \\[ \\Var(\\hat{F}_n(x)) = \\frac{1}{n^2} \\sum_{i=1}^n \\Var(I_i) = \\frac{1}{n^2} \\cdot n \\cdot F(x)[1-F(x)] \\] \\[ \\boxed{\\Var(\\hat{F}_n(x)) = \\frac{F(x)[1-F(x)]}{n}} \\]", "<b>b) Maximizaci\u00f3n de la varianza</b><br>Para maximizar $g(p) = p(1-p)$ con $p = F(x) \\in [0,1]$:<br> $g'(p) = 1 - 2p = 0 \\implies p = 1/2$.", "Como $g''(p) = -2 < 0$, $p = 1/2$ es m\u00e1ximo. \\[ \\boxed{F(x) = 1/2 \\text{ maximiza la varianza}} \\]<br><b>Interpretaci\u00f3n:</b> La m\u00e1xima incertidumbre ocurre en la mediana de la distribuci\u00f3n."]}, {"titulo": "Problema 4: Intervalo de Confianza con Varianza Desconocida", "enunciado": "Ensayo cl\u00ednico con muestra $n = 4$ y datos $N(\\mu, \\sigma^2)$. El m\u00e9dico desea construir un intervalo sim\u00e9trico.<br><br><ol type='a'><li><b>(Teor\u00eda):</b> Utilizando el Teorema de Fisher, demuestren c\u00f3mo estandarizar $\\bar{X}$ usando el estimador $S$ para construir el pivote $T \\sim t_{(n-1)}$.</li><li><b>(C\u00e1lculo/Aplicaci\u00f3n):</b> Calculen $k$ tal que la probabilidad de que $\\mu$ se encuentre en $\\left[ \\bar{X} - k \\frac{S}{\\sqrt{n}}, \\bar{X} + k \\frac{S}{\\sqrt{n}} \\right]$ sea exactamente $95\\%$. Comparen $k$ con la Normal Est\u00e1ndar.</li></ol>", "pasos": ["<b>a) Teor\u00eda: Construcci\u00f3n del pivote $T$</b><br>Sea $X_1, \\dots, X_n \\sim N(\\mu, \\sigma^2)$. Por <a href='#R-5'><b>[R-5]</b></a>: $\\bar{X} \\sim N(\\mu, \\sigma^2/n)$, $\\frac{(n-1)S^2}{\\sigma^2} \\sim \\chi^2_{(n-1)}$, independientes.", "Construimos el estad\u00edstico: \\[ T = \\frac{\\bar{X} - \\mu}{S/\\sqrt{n}} = \\frac{(\\bar{X} - \\mu)/(\\sigma/\\sqrt{n})}{\\sqrt{(n-1)S^2/\\sigma^2} / \\sqrt{n-1}} = \\frac{Z}{\\sqrt{V/(n-1)}} \\]", "Por definici\u00f3n <a href='#R-6'><b>[R-6]</b></a>, el cociente es una t de Student: \\[ \\boxed{T \\sim t_{(n-1)}} \\]", "<b>b) C\u00e1lculo del Intervalo para $n=4$</b><br>Grados de libertad $\\nu = 3$. Queremos $k$ tal que $\\Pbb(-k \\leq T \\leq k) = 0.95$.", "Por simetr\u00eda: $\\Pbb(T \\leq k) = 0.975 \\implies k = t_{0.975, 3} \\approx 3.182$.", "Comparando con la Normal ($z = 1.96$): $3.182 / 1.96 \\approx 1.62$.<br><b>Interpretaci\u00f3n:</b> Estimar $\\sigma$ en muestras peque\u00f1as hace el intervalo un 62% m\u00e1s ancho."]}, {"titulo": "Problema 5: Estimaci\u00f3n de una Probabilidad en Poisson", "enunciado": "Monitoreo asumiendo un modelo $X \\sim \\text{Poisson}(\\lambda)$. Funcional $\\theta = \\Pbb(X = 0)$.<br><br><ol type='a'><li><b>(Teor\u00eda):</b> Proponga el estimador $\\hat{\\theta}_{\\text{emp}}$ usando el Plug-in No Param\u00e9trico. Luego proponga $\\hat{\\theta}_{\\text{param}}$ usando el Plug-in Param\u00e9trico sabiendo que $\\hat{\\lambda} = \\bar{X}$.</li><li><b>(C\u00e1lculo/Aplicaci\u00f3n):</b> Con la muestra $x = \\{0,1,0,2,0,1,1,0,3,2\\}$ calcule num\u00e9ricamente ambos. Explique por qu\u00e9 el param\u00e9trico suele ser m\u00e1s eficiente.</li></ol>", "pasos": ["<b>a) Teor\u00eda: Estimador no param\u00e9trico (Plug-in con ECDF):</b><br>Por <a href='#R-7'><b>[R-7]</b></a>, el estimador Plug-in sustituye $F$ por $\\hat{F}_n$: \\[ \\hat{\\theta}_{\\text{emp}} = \\hat{F}_n(0) = \\frac{1}{n} \\sum_{i=1}^n \\ind(X_i = 0) = \\frac{\\text{n\u00famero de ceros}}{n} \\]", "<b>Estimador param\u00e9trico (Plug-in con Poisson):</b><br>Si $X \\sim \\text{Poisson}(\\lambda)$, entonces $\\theta = e^{-\\lambda}$. Sustituyendo $\\hat{\\lambda} = \\bar{X}$: \\[ \\hat{\\theta}_{\\text{param}} = e^{-\\bar{X}} \\]", "<b>b) C\u00e1lculo/Aplicaci\u00f3n:</b> Datos: $n=10$, $x = \\{0,1,0,2,0,1,1,0,3,2\\}$.", "<b>Emp\u00edrico:</b> N\u00famero de ceros = 4. \\[ \\hat{\\theta}_{\\text{emp}} = 4/10 = 0.4 \\]", "<b>Param\u00e9trico:</b> $\\bar{x} = 10/10 = 1$. \\[ \\hat{\\theta}_{\\text{param}} = e^{-1} \\approx 0.3679 \\]", "<b>\u00bfPor qu\u00e9 es m\u00e1s eficiente?</b> $\\hat{\\theta}_{\\text{param}}$ usa toda la muestra ($\\bar{X}$), mientras $\\hat{\\theta}_{\\text{emp}}$ solo usa ceros/no-ceros desperdiciando informaci\u00f3n."]}, {"titulo": "Problema 6: Colapso del Bootstrap para el M\u00e1ximo", "enunciado": "Muestra original $x = \\{10, 20, 30\\}$. M\u00e1ximo observado $x_{(3)} = 30$.<br><br><ol type='a'><li><b>(Teor\u00eda):</b> Al extraer muestras Bootstrap $n = 3$, determine cu\u00e1ntos universos existen y en cu\u00e1ntos el m\u00e1ximo virtual $X_{(3)}^* < 30$.</li><li><b>(C\u00e1lculo/Aplicaci\u00f3n):</b> Calcule la probabilidad exacta $\\Pbb(X_{(3)}^* = 30)$. Compare con la asint\u00f3tica $1 - e^{-1} \\approx 0.632$.</li></ol>", "pasos": ["<b>a) Teor\u00eda: Conteo de universos Bootstrap</b><br>Total de muestras posibles = $3^3 = 27$.", "Para que $X_{(3)}^* < 30$, elegimos solo de $\\{10, 20\\}$. Total = $2^3 = 8$ muestras.", "Muestras atascadas en $X_{(3)}^* = 30$: $27 - 8 = 19$.", "<b>b) C\u00e1lculo exacto y asint\u00f3tico</b><br>Probabilidad exacta: $\\Pbb(X_{(3)}^* = 30) = 19/27 \\approx 0.7037$.", "Aproximaci\u00f3n asint\u00f3tica seg\u00fan <a href='#R-8'><b>[R-8]</b></a>: $\\lim_{n \\to \\infty} 1 - (1 - 1/n)^n = 1 - e^{-1} \\approx 0.6321$.<br><b>Conclusi\u00f3n:</b> M\u00e1s del 70% de las muestras tienen el m\u00e1ximo atascado. El Bootstrap subestima fuertemente a los extremos."]}, {"titulo": "Problema 7: Propiedad de Falta de Memoria", "enunciado": "Propiedad de falta de memoria en la Exponencial.<br><br><ol type='a'><li><b>(Teor\u00eda):</b> Demuestre formalmente $\\Pbb(X > s + t \\mid X > s) = \\Pbb(X > t)$ para todo $s, t > 0$.</li><li><b>(C\u00e1lculo/Aplicaci\u00f3n):</b> Servidor con $n=50$ procesadores. Cae si falla el primero. Sabiendo que $X_{(1)} \\sim \\text{Exp}(n\\lambda)$ con $\\lambda=0.02$, si ya oper\u00f3 $s=2$ a\u00f1os, calcule la probabilidad de sobrevivir al menos $t=1$ a\u00f1o m\u00e1s.</li></ol>", "pasos": ["<b>a) Teor\u00eda: Demostraci\u00f3n formal</b><br>Sea $X \\sim \\text{Exp}(\\lambda)$. Para $s,t > 0$: \\[ \\Pbb(X > s + t \\mid X > s) = \\frac{\\Pbb(X > s + t \\ \\cap \\ X > s)}{\\Pbb(X > s)} = \\frac{\\Pbb(X > s + t)}{\\Pbb(X > s)} \\]", "Usando la supervivencia $\\Pbb(X > x) = e^{-\\lambda x}$: \\[ \\Pbb(X > s + t \\mid X > s) = \\frac{e^{-\\lambda(s+t)}}{e^{-\\lambda s}} = e^{-\\lambda t} = \\Pbb(X > t) \\]", "<b>b) C\u00e1lculo/Aplicaci\u00f3n</b><br>Por <a href='#R-9'><b>[R-9]</b></a>, $X_{(1)} \\sim \\text{Exp}(50 \\times 0.02) = \\text{Exp}(1)$.", "Por falta de memoria demostrada: \\[ \\Pbb(X_{(1)} > 2 + 1 \\mid X_{(1)} > 2) = \\Pbb(X_{(1)} > 1) = e^{-1} \\] \\[ \\boxed{\\text{Probabilidad de sobrevivir 1 a\u00f1o extra} = e^{-1} \\approx 0.3679} \\]"]}, {"titulo": "Problema 8: Distribuci\u00f3n de Pareto y su M\u00e1ximo", "enunciado": "Multas siguen distribuci\u00f3n de Pareto $F(x) = 1 - (x_m/x)^\\alpha$.<br><br><ol type='a'><li><b>(Teor\u00eda):</b> Si $\\alpha=1, x_m=1$, demuestren que $\\E[X] = \\infty$.</li><li><b>(C\u00e1lculo/Aplicaci\u00f3n):</b> Para $n = 10$ multas, calcule la probabilidad de que el m\u00e1ximo $X_{(10)} > 5$.</li></ol>", "pasos": ["<b>a) Teor\u00eda: Esperanza infinita para $\\alpha = 1$</b><br>Densidad es $f(x) = x^{-2}$ para $x \\geq 1$.", "Calculando la esperanza: \\[ \\E[X] = \\int_1^\\infty x \\cdot x^{-2} \\, dx = \\int_1^\\infty \\frac{1}{x} \\, dx = \\lim_{b \\to \\infty} [\\ln x]_1^b = \\lim_{b \\to \\infty} \\ln b = \\infty \\]", "<b>b) C\u00e1lculo del M\u00e1ximo</b><br>La CDF del m\u00e1ximo por <a href='#R-3'><b>[R-3]</b></a> es: \\[ F_{X_{(10)}}(x) = [F(x)]^{10} = (1 - x^{-1})^{10} \\]", "Queremos $\\Pbb(X_{(10)} > 5) = 1 - F_{X_{(10)}}(5)$:<br> \\[ F_{X_{(10)}}(5) = (1 - 0.2)^{10} = (0.8)^{10} \\approx 0.10737 \\]", "\\[ \\Pbb(X_{(10)} > 5) = 1 - 0.10737 = 0.89263 \\]<br><b>Interpretaci\u00f3n:</b> La probabilidad de rebasar 5 millones es alt\u00edsima (89%) dada la cola pesada."]}, {"titulo": "Problema 9: Bootstrap para la Mediana", "enunciado": "An\u00e1lisis de mediana emp\u00edrica en log\u00edstica.<br><br><ol type='a'><li><b>(Teor\u00eda):</b> Expliquen por qu\u00e9 el Bootstrap sortea el obst\u00e1culo de no conocer la densidad $f(m)$ en el centro.</li><li><b>(C\u00e1lculo/Aplicaci\u00f3n):</b> Con $B = 1000$ r\u00e9plicas Bootstrap $\\hat{\\theta}^{*b}$ ordenadas de menor a mayor, indiquen qu\u00e9 \u00edndices corresponden a los l\u00edmites de un intervalo emp\u00edrico del $90\\%$.</li></ol>", "pasos": ["<b>a) Teor\u00eda: L\u00f3gica del Bootstrap</b><br>La varianza asint\u00f3tica requiere $f(m)$. El algoritmo <a href='#R-10'><b>[R-10]</b></a> lo sortea porque:", "Aproxima la poblaci\u00f3n con la ECDF $\\hat{F}_n$ (que converge por <a href='#R-11'><b>[R-11]</b></a>). Genera $B$ muestras virtuales, calcula sus medianas, y simula directamente la variabilidad emp\u00edrica sin necesidad de conocer la ecuaci\u00f3n te\u00f3rica de la densidad.", "<b>b) \u00cdndices para $B=1000$</b><br>Para un intervalo del $90\\%$ ($\\alpha = 0.10$):", "\u00cdndice inferior: $\\lceil 0.05 \\times 1000 \\rceil = 50$<br>\u00cdndice superior: $\\lceil 0.95 \\times 1000 \\rceil = 950$<br>\\[ \\boxed{\\text{Intervalo} = [\\hat{\\theta}_{(50)}^*, \\ \\hat{\\theta}_{(950)}^*]} \\]"]}, {"titulo": "Problema 10: Estimaci\u00f3n de una Proporci\u00f3n mediante Plug-in", "enunciado": "Estimar proporci\u00f3n de tiburones $< 3$ metros. Funcional $\\theta = F(3)$.<br><br><ol type='a'><li><b>(Teor\u00eda):</b> Demuestren que el estimador es $\\hat{p}$ y usen el TCL para derivar su distribuci\u00f3n normal asint\u00f3tica.</li><li><b>(C\u00e1lculo/Aplicaci\u00f3n):</b> $n=100$, 36 tiburones $< 3$m. Calcule la probabilidad de que $\\hat{\\theta}$ no diste m\u00e1s de $0.05$ del par\u00e1metro $\\theta$.</li></ol>", "pasos": ["<b>a) Teor\u00eda: Estimador Plug-in</b><br>Por <a href='#R-7'><b>[R-7]</b></a>: \\[ \\hat{\\theta} = \\hat{F}_n(3) = \\frac{1}{n} \\sum_{i=1}^n \\ind(X_i < 3) = \\hat{p} \\]", "Cada $Y_i = \\ind(X_i < 3)$ es Bernoulli($\\theta$) seg\u00fan <a href='#R-4'><b>[R-4]</b></a>, con $\\E[Y_i]=\\theta$ y $\\Var(Y_i)=\\theta(1-\\theta)$.", "Por el Teorema del L\u00edmite Central <a href='#R-12'><b>[R-12]</b></a>: \\[ \\frac{\\hat{p} - \\theta}{\\sqrt{\\theta(1-\\theta)/n}} \\xrightarrow{d} N(0,1) \\implies \\hat{p} \\approx N\\left(\\theta, \\frac{\\theta(1-\\theta)}{n}\\right) \\]", "<b>b) C\u00e1lculo/Aplicaci\u00f3n</b><br>$n = 100, \\hat{p} = 0.36$. Aproximamos la varianza: $\\hat{\\sigma}^2 = \\frac{0.36 \\times 0.64}{100} = 0.002304 \\implies \\hat{\\sigma} = 0.048$.", "Estandarizamos $\\Pbb(|\\hat{p} - \\theta| \\leq 0.05)$: \\[ \\frac{|\\hat{p} - \\theta|}{\\hat{\\sigma}} \\leq \\frac{0.05}{0.048} \\approx 1.0417 \\]", "\\[ \\Pbb(|Z| \\leq 1.0417) = 2\\Phi(1.0417) - 1 \\approx 2(0.8512) - 1 = 0.7024 \\] \\[ \\boxed{\\text{Probabilidad } \\approx 0.7024} \\]"]}];
+        const anexo = [{"id": "R-1", "texto": "<b>[R-1] Combinaciones lineales de Normales</b> (M\u00f3dulo 1, semana 4): Si $X_i \\sim N(\\mu_i, \\sigma_i^2)$ independientes, entonces cualquier combinaci\u00f3n lineal $\\sum a_i X_i$ sigue una distribuci\u00f3n Normal."}, {"id": "R-2", "texto": "<b>[R-2] Independencia en la Normal Multivariada</b> (M\u00f3dulo 1, semana 4): En un vector Normal Multivariado, covarianza cero implica independencia estoc\u00e1stica."}, {"id": "R-3", "texto": "<b>[R-3] Distribuci\u00f3n del M\u00e1ximo</b> (M\u00f3dulo 1, semana 5): Para una muestra i.i.d., $F_{X_{(n)}}(x) = [F(x)]^n$."}, {"id": "R-4", "texto": "<b>[R-4] ECDF y conexi\u00f3n Bernoulli</b> (M\u00f3dulo 1, semana 3): $\\ind(X_i \\leq x) \\sim \\text{Bernoulli}(F(x))$."}, {"id": "R-5", "texto": "<b>[R-5] Teorema de Fisher</b> (M\u00f3dulo 1, semana 4): Para una muestra Normal: $\\bar{X} \\sim N(\\mu, \\sigma^2/n)$, $\\frac{(n-1)S^2}{\\sigma^2} \\sim \\chi^2_{(n-1)}$, y $\\bar{X}$ y $S^2$ son independientes."}, {"id": "R-6", "texto": "<b>[R-6] Distribuci\u00f3n t de Student</b> (M\u00f3dulo 1, semana 4): $T = \\frac{Z}{\\sqrt{V/\\nu}} \\sim t_{(\\nu)}$ con $Z \\sim N(0,1)$ y $V \\sim \\chi^2_{(\\nu)}$ independientes."}, {"id": "R-7", "texto": "<b>[R-7] Principio Plug-in</b> (M\u00f3dulo 1, semana 5): Cualquier par\u00e1metro $\\theta = T(F)$ se estima por $\\hat{\\theta} = T(\\hat{F}_n)$."}, {"id": "R-8", "texto": "<b>[R-8] Fracaso del Bootstrap para extremos</b> (M\u00f3dulo 1, semana 5): $\\Pbb(X_{(n)}^* = x_{(n)}) = 1 - (1 - 1/n)^n \\to 1 - e^{-1}$."}, {"id": "R-9", "texto": "<b>[R-9] Distribuci\u00f3n del m\u00ednimo exponencial</b> (M\u00f3dulo 1, semana 5): Si $X_i \\sim \\text{Exp}(\\lambda)$, entonces $X_{(1)} \\sim \\text{Exp}(n\\lambda)$."}, {"id": "R-10", "texto": "<b>[R-10] Algoritmo Bootstrap</b> (M\u00f3dulo 1, semana 5): Remuestreo con reemplazo desde la ECDF para estimar la incertidumbre de un estimador."}, {"id": "R-11", "texto": "<b>[R-11] Teorema de Glivenko-Cantelli</b> (M\u00f3dulo 1, semana 3): $\\sup_x |\\hat{F}_n(x) - F(x)| \\xrightarrow{a.s.} 0$."}, {"id": "R-12", "texto": "<b>[R-12] Teorema del L\u00edmite Central</b> (M\u00f3dulo 0, semana 1-2): $\\frac{\\bar{X}_n - \\mu}{\\sigma/\\sqrt{n}} \\xrightarrow{d} N(0,1)$."}];
+        
+        const contenedorTareas = document.getElementById('contenedor-tareas');
+        const contenedorAnexo = document.getElementById('contenedor-anexo');
+        
+        // Estado para rastrear el paso
+        let progreso = {};
+
+        // Renderizar los Problemas
+        problemas.forEach((prob, i) => {
+            progreso[i] = 0; 
+            
+            let htmlPasos = '';
+            prob.pasos.forEach((paso, j) => {
+                htmlPasos += `<div class="paso" id="prob-${i}-paso-${j}">${paso}</div>`;
+            });
+
+            const probDiv = document.createElement('div');
+            probDiv.className = 'problema-container';
+            probDiv.innerHTML = `
+                <div class="problema-titulo">${prob.titulo}</div>
+                <div class="enunciado-caja">${prob.enunciado}</div>
+                <div id="pasos-container-${i}">
+                    ${htmlPasos}
+                </div>
+                <button id="btn-${i}" class="btn-siguiente" onclick="revelarSiguientePaso(${i})">
+                    Revelar siguiente paso 👁️
+                </button>
+            `;
+            contenedorTareas.appendChild(probDiv);
+        });
+
+        // Renderizar el Anexo
+        anexo.forEach(item => {
+            const divAnexo = document.createElement('div');
+            divAnexo.className = 'anexo-item';
+            divAnexo.id = item.id;
+            divAnexo.innerHTML = item.texto;
+            contenedorAnexo.appendChild(divAnexo);
+        });
+
+        // Función para mostrar los pasos uno por uno
+        function revelarSiguientePaso(indexProb) {
+            const pasoActual = progreso[indexProb];
+            const maxPasos = problemas[indexProb].pasos.length;
+
+            if (pasoActual < maxPasos) {
+                const elementoPaso = document.getElementById(`prob-${indexProb}-paso-${pasoActual}`);
+                elementoPaso.style.display = 'block';
+                
+                if (window.MathJax) {
+                    MathJax.typesetPromise([elementoPaso]);
+                }
+
+                progreso[indexProb]++;
+
+                if (progreso[indexProb] === maxPasos) {
+                    const btn = document.getElementById(`btn-${indexProb}`);
+                    btn.className = 'btn-siguiente btn-completado';
+                    btn.innerHTML = 'Demostración Completada ✅';
+                    btn.onclick = null; 
+                }
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Interactiva de Álgebra Lineal</title>
+    
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']],
+                macros: {
+                    R: "\\mathbb{R}",
+                    C: "\\mathbb{C}",
+                    Q: "\\mathbb{Q}",
+                    Z: "\\mathbb{Z}",
+                    F: "\\mathbb{F}",
+                    M: "\\mathbf{M}",
+                    P: "\\mathbb{P}",
+                    0: "\\mathbf{0}",
+                    span: "\\operatorname{span}",
+                    tr: "\\operatorname{tr}",
+                    N: "\\mathbb{N}",
+                    calF: "\\mathcal{F}"
+                }
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; line-height: 1.6; max-width: 800px; margin: auto; padding: 20px; color: #2c3e50; background-color: #fcfcfc;}
+        h1, h2 { color: #2980b9; border-bottom: 2px solid #ecf0f1; padding-bottom: 5px; }
+        h3 { color: #34495e; margin-top: 25px; font-size: 1.2em; }
+        
+        /* Cajas para Ejercicios, Lemas y Teoremas */
+        .ejercicio { background: #ffffff; padding: 20px; border-left: 5px solid #2980b9; margin-top: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .lema, .teorema { background: #fffcf5; padding: 20px; border-left: 5px solid #f39c12; margin-top: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        
+        .solucion { margin-top: 20px; padding-left: 10px; font-size: 0.95em; }
+        .solucion-title { font-weight: bold; color: #27ae60; margin-bottom: 10px; display: inline-block; }
+        details { background: #f8f9fa; border: 1px solid #e9ecef; padding: 12px; margin-top: 15px; border-radius: 6px; }
+        summary { font-weight: bold; color: #e67e22; cursor: pointer; outline: none; padding: 5px; user-select: none; }
+        summary:hover { color: #d35400; }
+        ol, ul { margin-top: 10px; margin-bottom: 10px; }
+        li { margin-bottom: 8px; }
+    </style>
+</head>
+<body>
+    <h1>Guía Teórica de Álgebra Lineal</h1>
+<div class="ejercicio">
+<strong>Ejercicio <strong>1.4.11</strong></strong><br>
+Demuestra que \(\span(\{x\}) = \{ax : a \in F\}\) para cualquier vector \(x\) en un espacio vectorial. Interpreta este resultado geométricamente en \(\R^3\).
+</div>
+<div class="solucion">
+<span class="solucion-title">Demostración paso a paso:</span><br>
+Demostraremos la doble inclusión.
+
+
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+\((\subseteq)\): Sea \(v \in \span(\{x\})\). Por definición de span, existen vectores \(u_1, \ldots, u_k \in \{x\}\) y escalares \(a_1, \ldots, a_k \in F\) tales que \(v = a_1u_1 + \cdots + a_ku_k\).
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+Como cada \(u_i\) debe ser \(x\) (el único elemento del conjunto), tenemos \(v = a_1x + \cdots + a_kx = (a_1 + \cdots + a_k)x\). Por lo tanto, \(v = ax\) con \(a = \sum_{i=1}^k a_i \in F\).
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+\((\supseteq)\): Sea \(ax\) con \(a \in F\). Entonces \(ax\) es una combinación lineal del vector \(x\) con coeficiente \(a\), por lo tanto \(ax \in \span(\{x\})\).
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+<strong>Interpretación geométrica en \(\R^3\):</strong> En \(\R^3\), el conjunto \(\{ax : a \in \R\}\) representa todos los múltiplos escalares del vector \(x\). Esto es exactamente la recta que pasa por el origen en la dirección del vector \(x\).
+<br>
+</details>
+</details>
+</details>
+</details>
+</div>
+<div class="ejercicio">
+<strong>Ejercicio <strong>1.4.13</strong></strong><br>
+Demuestra que si \(S_1 \subseteq S_2\) son subconjuntos de un espacio vectorial \(V\), entonces \(\span(S_1) \subseteq \span(S_2)\). En particular, si \(S_1 \subseteq S_2\) y \(\span(S_1) = V\), deduce que \(\span(S_2) = V\).
+</div>
+<div class="solucion">
+<span class="solucion-title">Demostración paso a paso:</span><br>
+Sea \(v \in \span(S_1)\). Entonces existen vectores \(u_1, \ldots, u_k \in S_1\) y escalares \(a_1, \ldots, a_k \in F\) tales que:
+\[
+v = a_1u_1 + \cdots + a_ku_k
+\]
+
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+Como \(S_1 \subseteq S_2\), cada \(u_i\) también pertenece a \(S_2\). Por lo tanto, \(v\) es una combinación lineal de vectores de \(S_2\), lo que significa que \(v \in \span(S_2)\). Hemos probado \(\span(S_1) \subseteq \span(S_2)\).
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+Para la segunda parte, si \(\span(S_1) = V\) y \(S_1 \subseteq S_2\), entonces:
+\[
+V = \span(S_1) \subseteq \span(S_2) \subseteq V
+\]
+Por lo tanto, \(\span(S_2) = V\).
+<br>
+</details>
+</details>
+</div>
+<div class="ejercicio">
+<strong>Ejercicio <strong>1.4.14</strong></strong><br>
+Demuestra que si \(S_1\) y \(S_2\) son subconjuntos arbitrarios de un espacio vectorial \(V\), entonces \(\span(S_1 \cup S_2) = \span(S_1) + \span(S_2)\), donde la suma de dos subconjuntos se define como \(\{x + y : x \in \span(S_1), y \in \span(S_2)\}\).
+</div>
+<div class="solucion">
+<span class="solucion-title">Demostración paso a paso:</span><br>
+Demostraremos la doble inclusión.
+
+
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+\((\subseteq)\): Sea \(v \in \span(S_1 \cup S_2)\). Entonces existen vectores \(u_1, \ldots, u_k \in S_1 \cup S_2\) y escalares \(a_1, \ldots, a_k \in F\) tales que \(v = \sum_{i=1}^k a_i u_i\).
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+Podemos separar esta suma en dos partes: los vectores que provienen de \(S_1\) y los que provienen de \(S_2\). Sea \(I = \{i : u_i \in S_1\}\) y \(J = \{i : u_i \in S_2\}\). Entonces:
+\[
+v = \sum_{i \in I} a_i u_i + \sum_{j \in J} a_j u_j
+\]
+La primera suma está en \(\span(S_1)\) y la segunda en \(\span(S_2)\). Por lo tanto, \(v \in \span(S_1) + \span(S_2)\).
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+\((\supseteq)\): Sea \(v \in \span(S_1) + \span(S_2)\). Entonces \(v = x + y\) con \(x \in \span(S_1)\) e \(y \in \span(S_2)\).
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+Por definición, \(x = \sum_{i=1}^p a_i u_i\) con \(u_i \in S_1\), e \(y = \sum_{j=1}^q b_j w_j\) con \(w_j \in S_2\). Entonces:
+\[
+v = \sum_{i=1}^p a_i u_i + \sum_{j=1}^q b_j w_j
+\]
+es una combinación lineal de vectores en \(S_1 \cup S_2\). Por lo tanto, \(v \in \span(S_1 \cup S_2)\).
+<br>
+</details>
+</details>
+</details>
+</details>
+</div>
+<div class="ejercicio">
+<strong>Ejercicio <strong>1.4.16</strong></strong><br>
+Sea \(V\) un espacio vectorial y \(S\) un subconjunto de \(V\) con la propiedad de que siempre que \(v_1, v_2, \ldots, v_n \in S\) y \(a_1v_1 + a_2v_2 + \cdots + a_nv_n = 0\), entonces \(a_1 = a_2 = \cdots = a_n = 0\). Demuestra que todo vector en el span de \(S\) se puede escribir de forma única como combinación lineal de vectores de \(S\).
+</div>
+<div class="solucion">
+<span class="solucion-title">Demostración paso a paso:</span><br>
+Sea \(v \in \span(S)\). Por definición, existen vectores \(u_1, \ldots, u_n \in S\) y escalares \(a_1, \ldots, a_n \in F\) tales que:
+\[
+v = a_1u_1 + \cdots + a_nu_n
+\]
+
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+Supongamos que también tenemos otra representación:
+\[
+v = b_1u_1 + \cdots + b_nu_n
+\]
+(donde podemos suponer que usamos los mismos vectores \(u_i\) añadiendo coeficientes cero si es necesario).
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+Restando ambas expresiones obtenemos:
+\[
+0 = (a_1 - b_1)u_1 + \cdots + (a_n - b_n)u_n
+\]
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+Por la propiedad del enunciado (que es precisamente la definición de independencia lineal), todos los coeficientes deben ser cero. Por lo tanto, \(a_i - b_i = 0\) para todo \(i\), es decir, \(a_i = b_i\). Esto demuestra la unicidad.
+<br>
+</details>
+</details>
+</details>
+</div>
+<div class="ejercicio">
+<strong>Ejercicio <strong>1.5.9</strong></strong><br>
+Sean \(u\) y \(v\) vectores distintos en un espacio vectorial \(V\). Demuestra que \(\{u, v\}\) es linealmente dependiente si y solo si \(u\) es un múltiplo de \(v\) o \(v\) es un múltiplo de \(u\).
+</div>
+<div class="solucion">
+<span class="solucion-title">Demostración paso a paso:</span><br>
+
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+\((\Rightarrow)\): Supongamos que \(\{u, v\}\) es linealmente dependiente. Entonces existen escalares \(a, b \in F\), no ambos cero, tales que \(au + bv = 0\).
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+Si \(a \neq 0\), entonces \(u = -\frac{b}{a}v\), por lo que \(u\) es múltiplo de \(v\). Si \(a = 0\), entonces necesariamente \(b \neq 0\) (pues no ambos son cero), y tenemos \(bv = 0 \Rightarrow v = 0\). En este caso, \(v = 0 \cdot u\), por lo que \(v\) es múltiplo de \(u\) (el vector cero es múltiplo de cualquier vector). Análogamente, si \(b \neq 0\) obtenemos que \(v\) es múltiplo de \(u\).
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+\((\Leftarrow)\): Si \(u\) es múltiplo de \(v\), entonces existe \(c \in F\) tal que \(u = cv\).
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+Entonces \(1\cdot u + (-c)\cdot v = 0\), que es una combinación lineal no trivial (el coeficiente de \(u\) es 1). Por lo tanto, \(\{u, v\}\) es linealmente dependiente. El caso en que \(v\) es múltiplo de \(u\) es análogo.
+<br>
+</details>
+</details>
+</details>
+</details>
+</div>
+<div class="ejercicio">
+<strong>Ejercicio <strong>1.5.12</strong></strong><br>
+Demuestra el Teorema 1.6 y su corolario. (Teorema 1.6: Si \(S_1 \subseteq S_2 \subseteq V\) y \(S_1\) es linealmente dependiente, entonces \(S_2\) es linealmente dependiente. Corolario: Si \(S_2\) es linealmente independiente, entonces \(S_1\) es linealmente independiente.)
+</div>
+<div class="solucion">
+<span class="solucion-title">Demostración paso a paso:</span><br>
+<strong>Demostración del Teorema 1.6:</strong>
+Supongamos que \(S_1 \subseteq S_2\) y que \(S_1\) es linealmente dependiente. 
+
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+Por definición, existen vectores distintos \(u_1, \ldots, u_k \in S_1\) y escalares \(a_1, \ldots, a_k \in F\), no todos cero, tales que:
+\[
+a_1u_1 + \cdots + a_ku_k = 0
+\]
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+Como \(S_1 \subseteq S_2\), cada \(u_i\) también pertenece a \(S_2\). Por lo tanto, tenemos una combinación lineal no trivial de vectores de \(S_2\) que da el vector cero. Esto significa que \(S_2\) es linealmente dependiente.
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+<strong>Demostración del Corolario:</strong>
+Supongamos que \(S_2\) es linealmente independiente y que \(S_1 \subseteq S_2\). Queremos probar que \(S_1\) es linealmente independiente.
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+Procedemos por contradicción: si \(S_1\) fuera linealmente dependiente, entonces por el Teorema 1.6, \(S_2\) también sería linealmente dependiente, lo que contradice la hipótesis. Por lo tanto, \(S_1\) debe ser linealmente independiente.
+<br>
+</details>
+</details>
+</details>
+</details>
+</div>
+<div class="ejercicio">
+<strong>Ejercicio <strong>1.5.13</strong></strong><br>
+Sea \(V\) un espacio vectorial sobre un campo de característica distinta de dos.
+<ol type="a">
+<li> Sean \(u\) y \(v\) vectores distintos en \(V\). Demuestra que \(\{u,v\}\) es linealmente independiente si y solo si \(\{u+v, u-v\}\) es linealmente independiente.
+<li> Sean \(u\), \(v\) y \(w\) vectores distintos en \(V\). Demuestra que \(\{u,v,w\}\) es linealmente independiente si y solo si \(\{u+v, u+w, v+w\}\) es linealmente independiente.
+</ol>
+</div>
+<div class="solucion">
+<span class="solucion-title">Demostración paso a paso:</span><br>
+<strong>(a)</strong> Demostraremos la doble implicación.
+
+<h3>(\(\Rightarrow\)) Supongamos que \(\{u,v\</h3>\) es linealmente independiente.}
+Queremos probar que \(\{u+v, u-v\}\) es linealmente independiente. Consideremos una combinación lineal igualada al vector cero:
+\[
+\alpha(u+v) + \beta(u-v) = 0
+\]
+
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+Desarrollando:
+\[
+\alpha u + \alpha v + \beta u - \beta v = (\alpha + \beta)u + (\alpha - \beta)v = 0
+\]
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+Como \(\{u,v\}\) es linealmente independiente, la única solución es que los coeficientes sean cero:
+\[
+\alpha + \beta = 0 \quad \text{y} \quad \alpha - \beta = 0
+\]
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+Resolviendo este sistema: sumando ambas ecuaciones obtenemos \(2\alpha = 0\), y restando obtenemos \(2\beta = 0\). Como el campo no tiene característica 2, podemos multiplicar por el inverso de 2 para obtener \(\alpha = 0\) y \(\beta = 0\).
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+<h3>(\(\Leftarrow\)) Supongamos que \(\{u+v, u-v\</h3>\) es linealmente independiente.}
+Queremos probar que \(\{u,v\}\) es linealmente independiente. Consideremos una combinación lineal:
+\[
+\alpha u + \beta v = 0
+\]
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+Necesitamos expresar \(u\) y \(v\) en términos de \(u+v\) y \(u-v\). Observemos que:
+\[
+u = \frac{1}{2}(u+v) + \frac{1}{2}(u-v) \quad \text{y} \quad v = \frac{1}{2}(u+v) - \frac{1}{2}(u-v)
+\]
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+Sustituyendo estas expresiones en \(\alpha u + \beta v = 0\) y agrupando:
+\[
+\left(\frac{\alpha}{2} + \frac{\beta}{2}\right)(u+v) + \left(\frac{\alpha}{2} - \frac{\beta}{2}\right)(u-v) = 0
+\]
+Multiplicamos por 2 para simplificar:
+\[
+(\alpha + \beta)(u+v) + (\alpha - \beta)(u-v) = 0
+\]
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+Como \(\{u+v, u-v\}\) es linealmente independiente, los coeficientes deben ser cero:
+\[
+\alpha + \beta = 0 \quad \text{y} \quad \alpha - \beta = 0
+\]
+Resolviendo: \(\alpha = \beta = 0\).
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+<h3>(b) Demostración para tres vectores</h3>
+
+<h3>(\(\Rightarrow\)) Supongamos que \(\{u,v,w\</h3>\) es linealmente independiente.}
+Consideremos:
+\[
+\alpha(u+v) + \beta(u+w) + \gamma(v+w) = 0
+\]
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+Desarrollando:
+\[
+(\alpha + \beta)u + (\alpha + \gamma)v + (\beta + \gamma)w = 0
+\]
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+Como \(\{u,v,w\}\) es linealmente independiente, obtenemos el sistema:
+\[
+\begin{cases}
+\alpha + \beta = 0 \\
+\alpha + \gamma = 0 \\
+\beta + \gamma = 0
+\end{cases}
+\]
+Resolviendo llegamos a \(\alpha = \beta = \gamma = 0\) (usando que la característica no es 2).
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+<h3>(\(\Leftarrow\)) Supongamos que \(\{u+v, u+w, v+w\</h3>\) es linealmente independiente.}
+Podemos expresar \(u\), \(v\) y \(w\) en términos de los vectores dados:
+\[
+u = \frac{1}{2}(u+v) + \frac{1}{2}(u+w) - \frac{1}{2}(v+w)
+\]
+(y análogamente para \(v\) y \(w\)).
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+Sustituyendo esto en \(\alpha u + \beta v + \gamma w = 0\) y agrupando, llegaremos nuevamente a que los coeficientes deben ser cero por la independencia lineal de las sumas, demostrando que \(\alpha = \beta = \gamma = 0\).
+<br>
+</details>
+</details>
+</details>
+</details>
+</details>
+</details>
+</details>
+</details>
+</details>
+</details>
+</details>
+</details>
+</div>
+<div class="ejercicio">
+<strong>Ejercicio <strong>1.5.16</strong></strong><br>
+Demuestra que un conjunto \(S\) de vectores es linealmente independiente si y solo si cada subconjunto finito de \(S\) es linealmente independiente.
+</div>
+<div class="solucion">
+<span class="solucion-title">Demostración paso a paso:</span><br>
+
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+\((\Rightarrow)\): Supongamos que \(S\) es linealmente independiente. Sea \(T \subseteq S\) un subconjunto finito cualquiera. Si \(T\) fuera linealmente dependiente, entonces existirían vectores \(v_1, \ldots, v_k \in T\) y escalares no todos cero tales que \(\sum a_i v_i = 0\).
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+Pero estos vectores también están en \(S\), lo que contradiría que \(S\) es linealmente independiente. Por lo tanto, todo subconjunto finito de \(S\) debe ser linealmente independiente.
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+\((\Leftarrow)\): Supongamos que todo subconjunto finito de \(S\) es linealmente independiente. Queremos probar que \(S\) es linealmente independiente.
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+Si \(S\) fuera linealmente dependiente, existirían vectores \(v_1, \ldots, v_k \in S\) (distintos) y escalares no todos cero tales que \(\sum a_i v_i = 0\). Pero entonces el conjunto finito \(\{v_1, \ldots, v_k\} \subseteq S\) sería linealmente dependiente, contradiciendo la hipótesis. Por lo tanto, \(S\) debe ser linealmente independiente.
+<br>
+</details>
+</details>
+</details>
+</details>
+</div>
+<div class="ejercicio">
+<strong>Ejercicio <strong>1.5.18</strong></strong><br>
+Sea \(S\) un conjunto de polinomios no nulos en \(\P(F)\) tal que no hay dos con el mismo grado. Demuestra que \(S\) es linealmente independiente.
+</div>
+<div class="solucion">
+<span class="solucion-title">Demostración paso a paso:</span><br>
+Consideremos cualquier subconjunto finito \(\{p_1, \ldots, p_k\} \subseteq S\). Ordenamos los polinomios por grado creciente: \(\deg(p_1) < \deg(p_2) < \cdots < \deg(p_k)\). 
+
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+Supongamos que:
+\[
+a_1p_1 + a_2p_2 + \cdots + a_kp_k = 0
+\]
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+Observemos que el término de mayor grado en esta suma proviene de \(p_k\), ya que los demás tienen grado menor. Por lo tanto, el coeficiente de \(x^{\deg(p_k)}\) en la suma es \(a_k\) multiplicado por el coeficiente principal de \(p_k\).
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+Para que la suma sea el polinomio cero, este coeficiente debe ser cero, lo que implica \(a_k = 0\). Repitiendo el argumento con \(p_{k-1}\), obtenemos \(a_{k-1} = 0\), y así sucesivamente. Todos los coeficientes son cero.
+<br>
+</details>
+</details>
+</details>
+</div>
+<div class="ejercicio">
+<strong>Ejercicio <strong>1.5.20</strong></strong><br>
+Sean \(f, g \in \mathcal{F}(\R,\R)\) las funciones definidas por \(f(t) = e^{rt}\) y \(g(t) = e^{st}\) con \(r \neq s\). Demuestra que \(f\) y \(g\) son linealmente independientes en \(\mathcal{F}(\R,\R)\).
+</div>
+<div class="solucion">
+<span class="solucion-title">Demostración paso a paso:</span><br>
+Supongamos que existen escalares \(a, b \in \R\) tales que:
+\[
+a e^{rt} + b e^{st} = 0 \quad \text{para todo } t \in \R
+\]
+Queremos demostrar que \(a = b = 0\).
+
+
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+<strong>Caso 1:</strong> Si \(a = 0\), entonces la ecuación se reduce a \(b e^{st} = 0\) para todo \(t\). Como \(e^{st} > 0\) para todo \(t\), obtenemos \(b = 0\).
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+<strong>Caso 2:</strong> Si \(a \neq 0\), entonces podemos escribir:
+\[
+e^{rt} = -\frac{b}{a} e^{st} \quad \Rightarrow \quad e^{(r-s)t} = -\frac{b}{a} \quad \text{para todo } t
+\]
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+El lado izquierdo depende de \(t\) (pues \(r-s \neq 0\)), mientras que el lado derecho es constante. Esto es imposible.
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+Una alternativa más elegante: derivamos la ecuación original:
+\[
+a r e^{rt} + b s e^{st} = 0 \quad \text{para todo } t
+\]
+En \(t = 0\), tenemos \(a + b = 0\). Evaluando la derivada en \(t = 0\): \(a r + b s = 0\). Resolviendo el sistema obtenemos \(a = b = 0\).
+<br>
+</details>
+</details>
+</details>
+</details>
+</div>
+<div class="ejercicio">
+<strong>Ejercicio <strong>1.6.12</strong></strong><br>
+Sean \(u, v, w\) vectores distintos en un espacio vectorial \(V\). Demuestra que si \(\{u, v, w\}\) es una base para \(V\), entonces \(\{u+v+w, v+w, w\}\) también es una base para \(V\).
+</div>
+<div class="solucion">
+<span class="solucion-title">Demostración paso a paso:</span><br>
+Sea \(\beta = \{u, v, w\}\) una base de \(V\) y sea \(\gamma = \{u+v+w, v+w, w\}\). Como \(\dim(V) = 3\), para demostrar que \(\gamma\) es una base basta demostrar que es linealmente independiente.
+
+
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+<strong>Independencia lineal:</strong> Supongamos que existen escalares \(a, b, c \in F\) tales que:
+\[
+a(u+v+w) + b(v+w) + c w = 0
+\]
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+Desarrollando:
+\[
+a u + (a+b)v + (a+b+c)w = 0
+\]
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+Como \(\{u, v, w\}\) es linealmente independiente, todos los coeficientes deben ser cero:
+\[
+\begin{cases}
+a = 0 \\
+a + b = 0 \\
+a + b + c = 0
+\end{cases}
+\]
+Resolviendo: \(a = 0\), \(b = 0\), \(c = 0\). Por lo tanto, \(\gamma\) es linealmente independiente y forma una base.
+<br>
+</details>
+</details>
+</details>
+</div>
+<div class="ejercicio">
+<strong>Ejercicio <strong>1.6.19</strong></strong><br>
+Completa la demostración del Teorema 1.8. (Si cada vector se expresa de forma única, entonces \(\beta\) es una base.)
+</div>
+<div class="solucion">
+<span class="solucion-title">Demostración paso a paso:</span><br>
+Supongamos que cada vector \(v \in V\) se puede expresar de forma única como combinación lineal de los vectores de \(\beta = \{u_1, \ldots, u_n\}\). 
+
+
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+<strong>Generación:</strong> Por hipótesis, todo \(v \in V\) es combinación lineal de los vectores de \(\beta\). Por lo tanto, \(\span(\beta) = V\).
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+<strong>Independencia lineal:</strong> Consideremos el vector cero. Por hipótesis, el cero se puede expresar de forma única. Una forma de expresar el cero es:
+\[
+0 = 0u_1 + 0u_2 + \cdots + 0u_n
+\]
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+Por la unicidad, esta debe ser la única representación. Por lo tanto, si \(a_1u_1 + \cdots + a_nu_n = 0\), entonces necesariamente \(a_1 = \cdots = a_n = 0\). Esto demuestra que \(\beta\) es linealmente independiente y, en consecuencia, una base.
+<br>
+</details>
+</details>
+</details>
+</div>
+<div class="ejercicio">
+<strong>Ejercicio <strong>1.6.21</strong></strong><br>
+Demuestra que un espacio vectorial es de dimensión infinita si y solo si contiene un subconjunto infinito linealmente independiente.
+</div>
+<div class="solucion">
+<span class="solucion-title">Demostración paso a paso:</span><br>
+
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+\((\Rightarrow)\): Supongamos que \(V\) es de dimensión infinita. Construimos un subconjunto infinito linealmente independiente por inducción:
+Elegimos \(v_1 \neq 0\). Supongamos que hemos construido \(\{v_1, \ldots, v_k\}\) linealmente independiente.
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+Como \(V\) tiene dimensión infinita, \(\span(\{v_1, \ldots, v_k\}) \neq V\). Por lo tanto, existe \(v_{k+1} \in V\) que no está en este span. Por el Teorema 1.7, \(\{v_1, \ldots, v_k, v_{k+1}\}\) es linealmente independiente.
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+\((\Leftarrow)\): Supongamos que \(V\) contiene un subconjunto infinito linealmente independiente.
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+Si \(V\) tuviera dimensión finita \(n\), entonces cualquier subconjunto linealmente independiente tendría a lo sumo \(n\) vectores (por el Teorema de Reemplazo). Esto es una contradicción.
+<br>
+</details>
+</details>
+</details>
+</details>
+</div>
+<div class="ejercicio">
+<strong>Ejercicio <strong>1.6.22</strong></strong><br>
+Sean \(W_1\) y \(W_2\) subespacios de un espacio vectorial de dimensión finita \(V\). Determina condiciones necesarias y suficientes sobre \(W_1\) y \(W_2\) para que \(\dim(W_1 \cap W_2) = \dim(W_1)\).
+</div>
+<div class="solucion">
+<span class="solucion-title">Demostración paso a paso:</span><br>
+La condición \(\dim(W_1 \cap W_2) = \dim(W_1)\) significa que la dimensión de la intersección es igual a la dimensión de \(W_1\). 
+
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+Como \(W_1 \cap W_2 \subseteq W_1\), tenemos siempre \(\dim(W_1 \cap W_2) \leq \dim(W_1)\).
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+La igualdad ocurre si y solo si \(W_1 \cap W_2 = W_1\) (si un subespacio tiene la misma dimensión que el espacio que lo contiene, entonces son iguales).
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+Por lo tanto, \(\dim(W_1 \cap W_2) = \dim(W_1)\) si y solo si \(W_1 \subseteq W_2\).
+<br>
+</details>
+</details>
+</details>
+</div>
+<div class="ejercicio">
+<strong>Ejercicio <strong>1.6.24</strong></strong><br>
+Sea \(f(x)\) un polinomio de grado \(n\) en \(\P_n(\R)\). Demuestra que para cualquier \(g(x) \in \P_n(\R)\) existen escalares \(c_0, c_1, \ldots, c_n\) tales que:
+\[
+g(x) = c_0 f(x) + c_1 f'(x) + c_2 f''(x) + \cdots + c_n f^{(n)}(x)
+\]
+</div>
+<div class="solucion">
+<span class="solucion-title">Demostración paso a paso:</span><br>
+Consideremos el conjunto \(\{f, f', f'', \ldots, f^{(n)}\}\). Demostraremos que este conjunto es linealmente independiente en \(\P_n(\R)\). 
+
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+Supongamos que:
+\[
+c_0 f + c_1 f' + \cdots + c_n f^{(n)} = 0
+\]
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+Observemos que \(\deg(f) = n\), \(\deg(f') = n-1\), \(\ldots\), \(\deg(f^{(n)}) = 0\) (constante). Por lo tanto, estos polinomios tienen grados distintos. Por el Ejercicio 1.5.18, son linealmente independientes.
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+Como \(\P_n(\R)\) tiene dimensión \(n+1\) y tenemos \(n+1\) vectores linealmente independientes, forman una base de \(\P_n(\R)\), demostrando así la existencia de los escalares \(c_i\) para cualquier \(g(x)\).
+<br>
+</details>
+</details>
+</details>
+</div>
+<div class="ejercicio">
+<strong>Ejercicio <strong>1.6.26</strong></strong><br>
+Para un \(a \in \R\) fijo, determina la dimensión del subespacio de \(\P_n(\R)\) definido por \(\{f \in \P_n(\R) : f(a) = 0\}\).
+</div>
+<div class="solucion">
+<span class="solucion-title">Demostración paso a paso:</span><br>
+Sea \(W = \{f \in \P_n(\R) : f(a) = 0\}\). Vamos a encontrar una base explícita de \(W\).
+
+
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+<h3>Paso 1: Observación inicial</h3>
+El polinomio más simple que se anula en \(a\) es \((x - a)\). A partir de él, podemos construir otros multiplicando por cualquier otro polinomio. Consideramos la base propuesta:
+\[
+B = \{x - a,\; (x - a)^2,\; (x - a)^3,\; \ldots,\; (x - a)^n\}
+\]
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+<h3>Paso 2: Demostración de que \(B\) es linealmente independiente</h3>
+Supongamos que:
+\[
+c_1(x - a) + c_2(x - a)^2 + \cdots + c_n(x - a)^n = 0
+\]
+Si hacemos el cambio de variable \(t = x - a\), la expresión se convierte en:
+\[
+c_1 t + c_2 t^2 + \cdots + c_n t^n = 0
+\]
+Para que sea el polinomio cero, todos sus coeficientes deben ser cero (\(c_i = 0\)).
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+<h3>Paso 3: Demostración de que \(B\) genera a \(W\)</h3>
+Utilizamos el Teorema de Taylor centrado en \(x = a\):
+\[
+f(x) = f(a) + f'(a)(x - a) + \frac{f''(a)}{2!}(x - a)^2 + \cdots + \frac{f^{(n)}(a)}{n!}(x - a)^n
+\]
+Como \(f \in W\), tenemos \(f(a) = 0\). La expresión restante es una combinación lineal de los elementos de \(B\).
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+<h3>Paso 4: Conclusión</h3>
+Como \(B\) es linealmente independiente y genera a \(W\), es una base. Como contiene \(n\) elementos, \(\dim(W) = n\).
+<br>
+</details>
+</details>
+</details>
+</details>
+</div>
+<div class="ejercicio">
+<strong>Ejercicio <strong>1.6.28</strong></strong><br>
+Sea \(V\) un espacio vectorial de dimensión finita sobre \(\C\) con dimensión \(n\). Demuestra que si \(V\) se considera ahora como un espacio vectorial sobre \(\R\), entonces \(\dim_{\R}(V) = 2n\).
+</div>
+<div class="solucion">
+<span class="solucion-title">Demostración paso a paso:</span><br>
+Sea \(\{v_1, \ldots, v_n\}\) una base de \(V\) sobre \(\C\). Afirmamos que \(\{v_1, iv_1, v_2, iv_2, \ldots, v_n, iv_n\}\) es una base de \(V\) sobre \(\R\).
+
+
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+<strong>Generación sobre \(\R\):</strong> Sea \(v \in V\). Existen escalares \(a_j + ib_j \in \C\) tales que:
+\[
+v = \sum_{j=1}^n (a_j + ib_j)v_j = \sum_{j=1}^n a_j v_j + \sum_{j=1}^n b_j (iv_j)
+\]
+Esto expresa \(v\) como combinación lineal real de los vectores \(v_j\) e \(iv_j\).
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+<strong>Independencia lineal sobre \(\R\):</strong> Supongamos que:
+\[
+\sum_{j=1}^n a_j v_j + \sum_{j=1}^n b_j (iv_j) = 0
+\]
+con \(a_j, b_j \in \R\). Esto se puede reescribir como \(\sum_{j=1}^n (a_j + i b_j) v_j = 0\).
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+Como \(\{v_j\}\) es linealmente independiente sobre \(\C\), tenemos \(a_j + i b_j = 0\) para todo \(j\). Esto implica \(a_j = 0\) y \(b_j = 0\). La base real tiene \(2n\) elementos.
+<br>
+</details>
+</details>
+</details>
+</div>
+<div class="ejercicio">
+<strong>Ejercicio <strong>1.6.29</strong></strong><br>
+<ol type="a">
+<li> Demuestra que si \(W_1\) y \(W_2\) son subespacios de dimensión finita de \(V\), entonces \(\dim(W_1 + W_2) = \dim(W_1) + \dim(W_2) - \dim(W_1 \cap W_2)\).
+<li> Si \(V = W_1 + W_2\), deduce que \(V = W_1 \oplus W_2\) si y solo si \(\dim(V) = \dim(W_1) + \dim(W_2)\).
+</ol>
+</div>
+<div class="solucion">
+<span class="solucion-title">Demostración paso a paso:</span><br>
+<strong>(a)</strong> Sea \(k = \dim(W_1 \cap W_2)\). Tomamos una base \(\{u_1, \ldots, u_k\}\) de \(W_1 \cap W_2\). 
+
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+Extendemos esta base a una base de \(W_1\): \(\{u_1, \ldots, u_k, v_1, \ldots, v_m\}\) y a una base de \(W_2\): \(\{u_1, \ldots, u_k, w_1, \ldots, w_p\}\).
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+Afirmamos que \(B = \{u_1, \ldots, u_k, v_1, \ldots, v_m, w_1, \ldots, w_p\}\) es base de \(W_1 + W_2\).
+Cualquier vector \(x \in W_1 + W_2\) se escribe como \(x = x_1 + x_2\), que trivialmente es combinación de \(B\).
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+Para la independencia: \(\sum \alpha_i u_i + \sum \beta_j v_j + \sum \gamma_l w_l = 0\). Entonces \(\sum \gamma_l w_l\) está en \(W_1\) y también en \(W_2\), por lo que está en la intersección y puede escribirse como \(\sum \delta_i u_i\).
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+Como la base de \(W_2\) es linealmente independiente, los \(\gamma_l\) deben ser cero, lo que colapsa la ecuación original a los elementos de \(W_1\), forzando a que todos sean cero.
+Contando elementos obtenemos la fórmula requerida.
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+<strong>(b)</strong> Si \(V = W_1 + W_2\), la fórmula nos dice que \(\dim(V) = \dim(W_1) + \dim(W_2)\) si y solo si \(\dim(W_1 \cap W_2) = 0\), lo cual equivale a que \(W_1 \cap W_2 = \{0\}\), definición de suma directa.
+<br>
+</details>
+</details>
+</details>
+</details>
+</details>
+</div>
+<div class="ejercicio">
+<strong>Ejercicio <strong>1.6.33</strong></strong><br>
+Bases de sumas directas disjuntas. (Demostración omitida para brevedad en pasos).
+</div>
+<div class="solucion">
+<span class="solucion-title">Demostración paso a paso:</span><br>
+<strong>(a)</strong> Como \(V = W_1 \oplus W_2\), tenemos \(W_1 \cap W_2 = \{0\}\). 
+
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+Si existiera \(v \in \beta_1 \cap \beta_2\), entonces \(v\) sería no nulo y estaría en la intersección. Contradicción. Por lo tanto, \(\beta_1 \cap \beta_2 = \emptyset\).
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+Para ver que \(\beta_1 \cup \beta_2\) es base: cualquier \(v \in V\) es \(w_1 + w_2\), y cada uno es generado por su base. Si la combinación total da cero, la parte de \(W_1\) debe igualar a la parte negada de \(W_2\), forzando ambas a estar en la intersección (que es \(0\)), por lo que todos los coeficientes son cero.
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+<strong>(b)</strong> Para el recíproco, si la unión es base, genera a \(V\) (así que \(V = W_1 + W_2\)). Si \(v\) está en la intersección, puede escribirse con \(\beta_1\) y con \(\beta_2\). Restando ambas representaciones obtenemos cero. Por la independencia lineal de la base completa, todos los coeficientes son cero y \(v = 0\).
+<br>
+</details>
+</details>
+</details>
+</div>
+<div class="ejercicio">
+<strong>Ejercicio <strong>Propiedad de la dimensión</strong></strong><br>
+Demuestra que si \(V\) es un espacio vectorial de dimensión finita y \(W\) es un subespacio de \(V\) con \(\dim(W) = \dim(V)\), entonces \(W = V\).
+</div>
+<div class="solucion">
+<span class="solucion-title">Demostración paso a paso:</span><br>
+Sea \(n = \dim(V)\). Como \(W \subseteq V\) y ambos tienen la misma dimensión finita, cualquier base de \(W\) tiene \(n\) vectores linealmente independientes en \(V\). 
+
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+Por el Corolario 2 del Teorema de Reemplazo (Teorema 1.10), un conjunto linealmente independiente con \(n\) vectores en un espacio de dimensión \(n\) es una base de \(V\).
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+Por lo tanto, una base de \(W\) también es base de \(V\), lo que implica que todo vector de \(V\) es combinación lineal de vectores de \(W\). Como \(W \subseteq V\) por hipótesis, tenemos \(W = V\).
+<br>
+</details>
+</details>
+</div>
+<div class="ejercicio">
+<strong>Ejercicio <strong>Teorema de la base incompleta</strong></strong><br>
+Enuncia y demuestra el Teorema de la base incompleta: Todo conjunto linealmente independiente en un espacio vectorial de dimensión finita puede extenderse a una base.
+</div>
+<div class="solucion">
+<span class="solucion-title">Demostración paso a paso:</span><br>
+<strong>Enunciado:</strong> Sea \(V\) de dimensión finita \(n\) y \(S = \{v_1, \ldots, v_k\}\) linealmente independiente. Existen vectores para extenderlo a base de \(V\).
+
+
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+<strong>Demostración:</strong> Sea \(\beta = \{u_1, \ldots, u_n\}\) una base de \(V\). Aplicamos el Teorema de Reemplazo (Teorema 1.10) con \(L = S\) y \(G = \beta\).
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+El teorema nos dice que existe un subconjunto \(H \subseteq \beta\) con \(n - k\) vectores tales que \(S \cup H\) genera \(V\).
+<br>
+<details>
+<summary>Desplegar siguiente deducción ▾</summary>
+Como \(S \cup H\) tiene exactamente \(n\) vectores y genera \(V\), por el Corolario 2 del Teorema de Reemplazo, es una base de \(V\).
+<br>
+</details>
+</details>
+</details>
+</div>
+
+</body>
+</html>

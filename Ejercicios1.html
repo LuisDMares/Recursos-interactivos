@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estudio Interactivo - Álgebra Lineal</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 900px; margin: 0 auto; padding: 20px; line-height: 1.6; background-color: #f4f7f6; color: #2c3e50; }
+        .ejercicio { background: #fff; border-radius: 8px; padding: 30px; margin-bottom: 40px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .titulo { color: #1abc9c; border-bottom: 2px solid #1abc9c; padding-bottom: 10px; margin-top: 0; }
+        .enunciado { font-weight: 500; font-size: 1.1em; margin-bottom: 20px; background-color: #fafafa; padding: 15px; border-radius: 5px; border-left: 4px solid #bdc3c7; }
+        .subseccion { color: #2980b9; margin-top: 20px; border-bottom: 1px solid #ecf0f1; padding-bottom: 5px; }
+        .paso { margin-top: 20px; padding: 15px 20px; background-color: #f9fbff; border-left: 4px solid #3498db; border-radius: 4px; }
+        .lista-latex { padding-left: 20px; margin-top: 10px; }
+        .lista-latex li { margin-bottom: 8px; }
+        .btn-revelar { background-color: #3498db; color: white; border: none; padding: 12px 24px; font-size: 1em; font-weight: bold; cursor: pointer; border-radius: 5px; margin-top: 20px; transition: all 0.3s ease; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .btn-revelar:hover { background-color: #2980b9; transform: translateY(-1px); }
+        .completado { background-color: #27ae60; cursor: default; }
+        .completado:hover { background-color: #27ae60; transform: none; }
+    </style>
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                packages: {'[+]': ['ams', 'newcommand']}
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        function revelarPaso(btn) {
+            const contenedor = btn.parentElement;
+            // Buscamos los pasos que tienen display: none
+            const pasos = contenedor.querySelectorAll('.paso');
+            
+            for (let i = 0; i < pasos.length; i++) {
+                if (pasos[i].style.display === 'none') {
+                    pasos[i].style.display = 'block';
+                    MathJax.typesetPromise([pasos[i]]); // Renderizar matemáticas
+                    
+                    // Si acabamos de mostrar el último paso
+                    if (i === pasos.length - 1) {
+                        btn.textContent = "¡Ejercicio completado!";
+                        btn.classList.add("completado");
+                        btn.onclick = null;
+                    }
+                    break; // Salir del bucle tras revelar solo uno
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1 style="text-align: center; color: #2c3e50;">Resolución Paso a Paso</h1>
+
+    <div class="ejercicio">
+        <h2 class="titulo">Ejercicio 2</h2>
+        <div class="enunciado">$T: \mathbb{R}^3 \to \mathbb{R}^2$ definida por $T(a_1, a_2, a_3) = (a_1 - a_2, 2a_3)$.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">Linealidad</h3>
+Sean $x = (a_1, a_2, a_3)$ y $y = (b_1, b_2, b_3)$ en $\mathbb{R}^3$, y $c \in \mathbb{R}$.
+\begin{align*}
+T(cx + y) &= T(ca_1 + b_1, ca_2 + b_2, ca_3 + b_3) \\
+&= \big((ca_1 + b_1) - (ca_2 + b_2), \; 2(ca_3 + b_3)\big) \\
+&= (ca_1 - ca_2 + b_1 - b_2, \; 2ca_3 + 2b_3) \\
+&= c(a_1 - a_2, 2a_3) + (b_1 - b_2, 2b_3) \\
+&= cT(x) + T(y).
+\end{align*}
+Por lo tanto, $T$ es lineal.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">Espacio Nulo $N(T)$</h3>
+\begin{align*}
+N(T) &= \{(a_1, a_2, a_3) \in \mathbb{R}^3 : T(a_1, a_2, a_3) = (0,0)\} \\
+a_1 - a_2 &= 0 \implies a_1 = a_2 \\
+2a_3 &= 0 \implies a_3 = 0.
+\end{align*}
+Los vectores son de la forma $(a_1, a_1, 0) = a_1(1, 1, 0)$.\\
+Base de $N(T)$: $\beta_N = \{(1, 1, 0)\}$. \\
+Nulidad: $\operatorname{nullity}(T) = 1$.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">Rango $R(T)$</h3>
+Usando la base canónica $\{e_1, e_2, e_3\}$ de $\mathbb{R}^3$:
+\begin{align*}
+T(1, 0, 0) &= (1, 0) \\
+T(0, 1, 0) &= (-1, 0) \\
+T(0, 0, 1) &= (0, 2).
+\end{align*}
+$R(T) = \operatorname{span}\{(1,0), (-1,0), (0,2)\} = \operatorname{span}\{(1,0), (0,2)\}$.\\
+Base de $R(T)$: $\beta_R = \{(1,0), (0,2)\}$ (o $\{(1,0), (0,1)\}$). \\
+Rango: $\operatorname{rank}(T) = 2$.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">Teorema de la Dimensión</h3>
+$\operatorname{nullity}(T) + \operatorname{rank}(T) = 1 + 2 = 3 = \dim(\mathbb{R}^3)$. Se cumple.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">Inyectividad y Sobreyectividad</h3>
+<ul class="lista-latex">
+<li>Inyectiva: No, porque $N(T) \neq \{0\}$ (nulidad $= 1$).
+<li>Sobreyectiva: Sí, porque $\operatorname{rank}(T) = 2 = \dim(\mathbb{R}^2)$.
+</ul></div>
+        <button class="btn-revelar" onclick="revelarPaso(this)">Mostrar siguiente paso</button>
+    </div>
+
+    <div class="ejercicio">
+        <h2 class="titulo">Ejercicio 6</h2>
+        <div class="enunciado">$T: M_{n \times n}(F) \to F$ definida por $T(A) = \operatorname{tr}(A) = \sum_{i=1}^n A_{ii}$.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">Linealidad</h3>
+Sean $A, B \in M_{n \times n}(F)$ y $c \in F$.
+\begin{align*}
+\operatorname{tr}(A + B) &= \sum_{i=1}^n (A + B)_{ii} = \sum_{i=1}^n (A_{ii} + B_{ii}) = \sum_{i=1}^n A_{ii} + \sum_{i=1}^n B_{ii} = \operatorname{tr}(A) + \operatorname{tr}(B). \\
+\operatorname{tr}(cA) &= \sum_{i=1}^n (cA)_{ii} = \sum_{i=1}^n c A_{ii} = c \sum_{i=1}^n A_{ii} = c \operatorname{tr}(A).
+\end{align*}
+Por lo tanto, $T$ es lineal.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">Espacio Nulo $N(T)$</h3>
+$N(T) = \{A \in M_{n \times n}(F) : \operatorname{tr}(A) = 0\}$.\\
+Una base está formada por:
+<ul class="lista-latex">
+<li>$E_{ij}$ para $i \neq j$ (matrices con 1 en $(i,j)$ y 0 en el resto): $n^2 - n$ matrices.
+<li>$E_{kk} - E_{nn}$ para $k = 1, \dots, n-1$ (matrices con 1 en $(k,k)$, $-1$ en $(n,n)$): $n-1$ matrices.
+</ul>
+Total de vectores en la base: $(n^2 - n) + (n - 1) = n^2 - 1$. \\
+Nulidad: $\operatorname{nullity}(T) = n^2 - 1$.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">Rango $R(T)$</h3>
+Para la base estándar $\{E_{ij}\}$:
+<ul class="lista-latex">
+<li>Si $i \neq j$, $T(E_{ij}) = 0$.
+<li>Si $i = j$, $T(E_{ii}) = 1$.
+</ul>
+$R(T) = \operatorname{span}\{1\}$. Base: $\{1\}$. \\
+Rango: $\operatorname{rank}(T) = 1$.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">Teorema de la Dimensión</h3>
+$\operatorname{nullity}(T) + \operatorname{rank}(T) = (n^2 - 1) + 1 = n^2 = \dim(M_{n \times n}(F))$. Se cumple.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">Inyectividad y Sobreyectividad</h3>
+<ul class="lista-latex">
+<li>Inyectiva: Para $n \ge 2$, no ($N(T) \neq \{0\}$). Para $n = 1$, sí.
+<li>Sobreyectiva: Sí, porque $\operatorname{rank}(T) = 1 = \dim(F)$.
+</ul></div>
+        <button class="btn-revelar" onclick="revelarPaso(this)">Mostrar siguiente paso</button>
+    </div>
+
+    <div class="ejercicio">
+        <h2 class="titulo">Ejercicio 7</h2>
+        <div class="enunciado">Demostrar las propiedades 1, 2, 3 y 4 de la página 65.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">Propiedad 1: $T(0) = 0$</h3>
+$T(0) = T(0 \cdot x) = 0 \cdot T(x) = 0$.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">Propiedad 2: $T$ es lineal $\iff T(cx + y) = cT(x) + T(y)$</h3>
+<ul class="lista-latex">
+<li><strong>$\Rightarrow$</strong> Si $T$ es lineal, $T(cx + y) = T(cx) + T(y) = cT(x) + T(y)$.
+<li><strong>$\Leftarrow$</strong> Si se cumple la condición:
+  <ul class="lista-latex">
+  <li>Con $c = 1$: $T(x + y) = T(x) + T(y)$.
+  <li>Con $y = 0$: $T(cx) = cT(x) + T(0)$. Como $T(0) = 0$ (se prueba con $c=0, x=0, y=0$), $T(cx) = cT(x)$.
+  </ul>
+</ul></div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">Propiedad 3: $T(x - y) = T(x) - T(y)$</h3>
+$T(x - y) = T(x + (-y)) = T(x) + T((-1)y) = T(x) + (-1)T(y) = T(x) - T(y)$.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">Propiedad 4: $T\left(\sum_{i=1</h3>^n a_i x_i\right) = \sum_{i=1}^n a_i T(x_i)$}
+<ul class="lista-latex">
+<li><strong>$\Leftarrow$</strong> Con $n=2$, $a_1 = c, a_2 = 1, x_1 = x, x_2 = y$: $T(cx + y) = cT(x) + T(y)$, luego $T$ es lineal por Propiedad 2.
+<li><strong>$\Rightarrow$</strong> Por inducción sobre $n$:
+  <ul class="lista-latex">
+  <li>$n=1$: $T(a_1 x_1) = a_1 T(x_1)$ por linealidad.
+  <li>Hipótesis: válido para $n-1$.
+  <li>Paso $n$:
+    \begin{align*}
+    T\left(\sum_{i=1}^n a_i x_i\right) &= T\left(\sum_{i=1}^{n-1} a_i x_i + a_n x_n\right) \\
+    &= T\left(\sum_{i=1}^{n-1} a_i x_i\right) + T(a_n x_n) \\
+    &= \sum_{i=1}^{n-1} a_i T(x_i) + a_n T(x_n) = \sum_{i=1}^n a_i T(x_i).
+    \end{align*}
+  </ul>
+</ul></div>
+        <button class="btn-revelar" onclick="revelarPaso(this)">Mostrar siguiente paso</button>
+    </div>
+
+    <div class="ejercicio">
+        <h2 class="titulo">Ejercicio 8</h2>
+        <div class="enunciado">Demostrar que las transformaciones de los Ejemplos 2 y 3 son lineales.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">Ejemplo 2: Rotación $T_\theta(a_1, a_2) = (a_1 \cos\theta - a_2 \sin\theta, a_1 \sin\theta + a_2 \cos\theta)$</h3>
+Sean $x = (a_1, a_2)$, $y = (b_1, b_2)$ y $c \in \mathbb{R}$.
+\begin{align*}
+T_\theta(cx + y) &= T_\theta(ca_1 + b_1, ca_2 + b_2) \\
+&= \big((ca_1 + b_1)\cos\theta - (ca_2 + b_2)\sin\theta, (ca_1 + b_1)\sin\theta + (ca_2 + b_2)\cos\theta\big) \\
+&= \big(ca_1\cos\theta + b_1\cos\theta - ca_2\sin\theta - b_2\sin\theta, ca_1\sin\theta + b_1\sin\theta + ca_2\cos\theta + b_2\cos\theta\big) \\
+&= c(a_1\cos\theta - a_2\sin\theta, a_1\sin\theta + a_2\cos\theta) + (b_1\cos\theta - b_2\sin\theta, b_1\sin\theta + b_2\cos\theta) \\
+&= cT_\theta(x) + T_\theta(y).
+\end{align*}
+Por lo tanto, $T_\theta$ es lineal.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">Ejemplo 3: Reflexión $T(a_1, a_2) = (a_1, -a_2)$</h3>
+Sean $x = (a_1, a_2)$, $y = (b_1, b_2)$ y $c \in \mathbb{R}$.
+\begin{align*}
+T(cx + y) &= T(ca_1 + b_1, ca_2 + b_2) \\
+&= (ca_1 + b_1, -(ca_2 + b_2)) \\
+&= (ca_1 + b_1, -ca_2 - b_2) \\
+&= c(a_1, -a_2) + (b_1, -b_2) \\
+&= cT(x) + T(y).
+\end{align*}
+Por lo tanto, $T$ es lineal.</div>
+        <button class="btn-revelar" onclick="revelarPaso(this)">Mostrar siguiente paso</button>
+    </div>
+
+    <div class="ejercicio">
+        <h2 class="titulo">Ejercicio 9</h2>
+        <div class="enunciado">$T: \mathbb{R}^2 \to \mathbb{R}^2$ es una función. Explicar por qué $T$ no es lineal en cada caso.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">(a) $T(a_1, a_2) = (1, a_2)$</h3>
+Evaluamos en el vector cero:
+$$T(0,0) = (1, 0) \neq (0,0).$$
+Por la Propiedad 1 de las transformaciones lineales ($T(0) = 0$), esta función no puede ser lineal.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">(b) $T(a_1, a_2) = (a_1, a_1^2)$</h3>
+Tomamos $x = (1,0)$ y $c = 2$:
+$$T(x) = T(1,0) = (1, 1).$$
+$$T(2x) = T(2,0) = (2, 4).$$
+$$2T(x) = 2(1,1) = (2,2).$$
+Como $T(2x) \neq 2T(x)$, se viola la propiedad de homogeneidad ($T(cx) = cT(x)$). No es lineal.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">(c) $T(a_1, a_2) = (\sin a_1, 0)$</h3>
+Tomamos $x = (\pi/2, 0)$ e $y = (\pi/2, 0)$:
+$$T(x) = (\sin(\pi/2), 0) = (1,0).$$
+$$T(y) = (1,0).$$
+$$T(x+y) = T(\pi, 0) = (\sin \pi, 0) = (0,0).$$
+$$T(x) + T(y) = (1,0) + (1,0) = (2,0).$$
+Como $T(x+y) \neq T(x) + T(y)$, se viola la propiedad aditiva. No es lineal.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">(d) $T(a_1, a_2) = (|a_1|, a_2)$</h3>
+Tomamos $x = (1,0)$ y $c = -1$:
+$$T(x) = (|1|, 0) = (1,0).$$
+$$T(cx) = T(-1,0) = (|-1|, 0) = (1,0).$$
+$$cT(x) = -1(1,0) = (-1,0).$$
+Como $T(cx) \neq cT(x)$, se viola la propiedad de homogeneidad. No es lineal.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">(e) $T(a_1, a_2) = (a_1 + 1, a_2)$</h3>
+Evaluamos en el vector cero:
+$$T(0,0) = (0 + 1, 0) = (1,0) \neq (0,0).$$
+Por la Propiedad 1 ($T(0) = 0$), esta función no puede ser lineal.</div>
+        <button class="btn-revelar" onclick="revelarPaso(this)">Mostrar siguiente paso</button>
+    </div>
+
+    <div class="ejercicio">
+        <h2 class="titulo">Ejercicio 10</h2>
+        <div class="enunciado">Supongamos que $T: \mathbb{R}^2 \to \mathbb{R}^2$ es lineal, $T(1,0) = (1,4)$ y $T(1,1) = (2,5)$. ¿Cuánto es $T(2,3)$? ¿Es $T$ inyectiva?</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">Calcular $T(2,3)$</h3>
+Expresamos $(2,3)$ como combinación lineal de $(1,0)$ y $(1,1)$:
+\[
+(2,3) = \alpha(1,0) + \beta(1,1).
+\]
+Esto da el sistema:
+\[
+\begin{cases}
+\alpha + \beta = 2 \\
+\beta = 3
+\end{cases}
+\implies \beta = 3, \quad \alpha = -1.
+\]
+Verificación: $-1(1,0) + 3(1,1) = (-1,0) + (3,3) = (2,3)$.<br><br>Por la linealidad de $T$ (Propiedad 4, página 65):
+\begin{align*}
+T(2,3) &= T\big(-1(1,0) + 3(1,1)\big) \\
+&= -1 \cdot T(1,0) + 3 \cdot T(1,1) \\
+&= -1(1,4) + 3(2,5) \\
+&= (-1,-4) + (6,15) = (5,11).
+\end{align*}
+Por lo tanto, $T(2,3) = (5,11)$.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">¿Es $T$ inyectiva?</h3>
+Por el Teorema 2.4 (página 71), $T$ es inyectiva si y solo si $N(T) = \{0\}$. 
+Como $\dim(\mathbb{R}^2) = 2$, el Teorema 2.5 implica que $T$ es inyectiva si y solo si $\operatorname{rank}(T) = 2$.<br><br>Para hallar el rango, usamos el Teorema 2.2: $R(T)$ es generado por $T(1,0)$ y $T(1,1)$ (ya que $\{(1,0), (1,1)\}$ es una base de $\mathbb{R}^2$).
+Verifiquemos si $\{T(1,0), T(1,1)\} = \{(1,4), (2,5)\}$ es linealmente independiente usando la definición (Definición 4.3 del Capítulo 1):
+\[
+c_1(1,4) + c_2(2,5) = (0,0).
+\]
+Esto produce el sistema:
+\[
+\begin{cases}
+c_1 + 2c_2 = 0 \\
+4c_1 + 5c_2 = 0
+\end{cases}
+\]
+De la primera ecuación, $c_1 = -2c_2$. Sustituyendo en la segunda:
+$4(-2c_2) + 5c_2 = -3c_2 = 0 \implies c_2 = 0$, y por tanto $c_1 = 0$.
+Como la única solución es la trivial, el conjunto es linealmente independiente.<br><br>Dado que son dos vectores linealmente independientes en un espacio de dimensión 2, forman una base de $\mathbb{R}^2$. Así, $R(T) = \mathbb{R}^2$ y $\operatorname{rank}(T) = 2$.<br><br>Por el Teorema 2.5, $T$ es inyectiva (y también sobreyectiva).</div>
+        <button class="btn-revelar" onclick="revelarPaso(this)">Mostrar siguiente paso</button>
+    </div>
+
+    <div class="ejercicio">
+        <h2 class="titulo">Ejercicio 11</h2>
+        <div class="enunciado">Demostrar que existe una transformación lineal $T: \mathbb{R}^2 \to \mathbb{R}^3$ tal que $T(1,1) = (1,0,2)$ y $T(2,3) = (1,-1,4)$. ¿Cuánto es $T(8,11)$?</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">Existencia de la transformación lineal</h3>
+Por el Teorema 2.6 (página 72), existe una única transformación lineal si especificamos sus valores en una base del dominio. Verifiquemos que $\beta = \{(1,1), (2,3)\}$ es una base de $\mathbb{R}^2$.<br><br>Probemos independencia lineal (Definición 4.3 del Capítulo 1):
+\[
+c_1(1,1) + c_2(2,3) = (0,0).
+\]
+Esto produce el sistema:
+\[
+\begin{cases}
+c_1 + 2c_2 = 0 \\
+c_1 + 3c_2 = 0
+\end{cases}
+\]
+Restando la primera de la segunda: $(c_1 + 3c_2) - (c_1 + 2c_2) = 0 \implies c_2 = 0$. Luego $c_1 = 0$.
+Como la única solución es la trivial, los vectores son linealmente independientes. Dado que $\dim(\mathbb{R}^2) = 2$, $\beta$ es una base de $\mathbb{R}^2$.<br><br>Por el Teorema 2.6, existe una única transformación lineal $T: \mathbb{R}^2 \to \mathbb{R}^3$ con las imágenes dadas.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">Calcular $T(8,11)$</h3>
+Expresamos $(8,11)$ como combinación lineal de la base $\beta$:
+\[
+(8,11) = \alpha(1,1) + \beta(2,3).
+\]
+Esto da el sistema:
+\[
+\begin{cases}
+\alpha + 2\beta = 8 \\
+\alpha + 3\beta = 11
+\end{cases}
+\]
+Restando la primera de la segunda: $\beta = 3$. Sustituyendo: $\alpha + 2(3) = 8 \implies \alpha = 2$.<br><br>Verificación: $2(1,1) + 3(2,3) = (2,2) + (6,9) = (8,11)$.<br><br>Por la linealidad de $T$ (Propiedad 4, página 65):
+\begin{align*}
+T(8,11) &= T\big(2(1,1) + 3(2,3)\big) \\
+&= 2 \cdot T(1,1) + 3 \cdot T(2,3) \\
+&= 2(1,0,2) + 3(1,-1,4) \\
+&= (2,0,4) + (3,-3,12) \\
+&= (5, -3, 16).
+\end{align*}
+Por lo tanto, $T(8,11) = (5, -3, 16)$.</div>
+        <button class="btn-revelar" onclick="revelarPaso(this)">Mostrar siguiente paso</button>
+    </div>
+
+    <div class="ejercicio">
+        <h2 class="titulo">Ejercicio 12</h2>
+        <div class="enunciado">¿Existe una transformación lineal $T: \mathbb{R}^3 \to \mathbb{R}^2$ tal que $T(1,0,3) = (1,1)$ y $T(-2,0,-6) = (2,1)$?</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">Solución</h3>
+Observamos que los vectores del dominio son linealmente dependientes, ya que uno es múltiplo escalar del otro:
+\[
+(-2,0,-6) = -2(1,0,3).
+\]
+Si $T$ es lineal, debe preservar esta relación (por la propiedad de homogeneidad, Definición 2.1, página 65). Es decir:
+\[
+T(-2,0,-6) = T\big(-2(1,0,3)\big) = -2 \cdot T(1,0,3).
+\]
+Sustituyendo los valores dados:
+\[
+T(-2,0,-6) = -2(1,1) = (-2,-2).
+\]
+Pero el enunciado afirma que $T(-2,0,-6) = (2,1)$. Dado que $(-2,-2) \neq (2,1)$, las condiciones son inconsistentes con la linealidad.<br><br>Alternativamente, por el Teorema 2.6, para que exista una transformación lineal, la relación de dependencia lineal en el dominio debe preservarse en las imágenes. La combinación lineal:
+\[
+(-2,0,-6) + 2(1,0,3) = (0,0,0)
+\]
+debería implicar:
+\[
+T(-2,0,-6) + 2T(1,0,3) = T(0,0,0) = (0,0).
+\]
+Verificamos: $(2,1) + 2(1,1) = (4,3) \neq (0,0)$. La relación no se preserva.<br><br>Por lo tanto, <strong>no existe</strong> una transformación lineal que satisfaga las condiciones dadas.</div>
+        <button class="btn-revelar" onclick="revelarPaso(this)">Mostrar siguiente paso</button>
+    </div>
+
+    <div class="ejercicio">
+        <h2 class="titulo">Ejercicio 13</h2>
+        <div class="enunciado">Sean $V$ y $W$ espacios vectoriales, $T: V \to W$ lineal, y sea $\{w_1, w_2, \dots, w_k\}$ un subconjunto linealmente independiente de $R(T)$. Demostrar que si $S = \{v_1, v_2, \dots, v_k\}$ se elige de modo que $T(v_i) = w_i$ para $i = 1, 2, \dots, k$, entonces $S$ es linealmente independiente.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">Demostración</h3>
+Supongamos que tenemos una combinación lineal de los vectores de $S$ igual al vector cero en $V$:
+\[
+\sum_{i=1}^k c_i v_i = 0_V, \quad c_i \in F.
+\]
+Aplicamos la transformación lineal $T$ a ambos lados. Por la linealidad de $T$ (Propiedad 4, página 65):
+\[
+T\left(\sum_{i=1}^k c_i v_i\right) = T(0_V) \implies \sum_{i=1}^k c_i T(v_i) = 0_W,
+\]
+donde hemos usado que $T(0_V) = 0_W$ (Propiedad 1, página 65).<br><br>Por construcción, $T(v_i) = w_i$ para cada $i = 1, \dots, k$. Sustituyendo:
+\[
+\sum_{i=1}^k c_i w_i = 0_W.
+\]
+Dado que el conjunto $\{w_1, w_2, \dots, w_k\}$ es linealmente independiente por hipótesis, la única combinación lineal que produce el vector cero es la trivial. Por lo tanto:
+\[
+c_1 = c_2 = \dots = c_k = 0.
+\]
+Como la única solución a $\sum_{i=1}^k c_i v_i = 0_V$ es la trivial, concluimos que $S = \{v_1, v_2, \dots, v_k\}$ es linealmente independiente. \hfill $\square$</div>
+        <button class="btn-revelar" onclick="revelarPaso(this)">Mostrar siguiente paso</button>
+    </div>
+
+    <div class="ejercicio">
+        <h2 class="titulo">Ejercicio 14</h2>
+        <div class="enunciado">Sean $V$ y $W$ espacios vectoriales y $T: V \to W$ lineal.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">(a) $T$ es inyectiva $\iff$ $T$ envía subconjuntos L.I. de $V$ a subconjuntos L.I. de $W$</h3><br><br><strong>($\Rightarrow$)</strong> Supongamos que $T$ es inyectiva. Por el Teorema 2.4, $N(T) = \{0\}$. Sea $S = \{v_1, \dots, v_k\} \subseteq V$ linealmente independiente. Consideremos una combinación lineal:
+\[
+\sum_{i=1}^k c_i T(v_i) = 0_W.
+\]
+Por linealidad, $T\left(\sum_{i=1}^k c_i v_i\right) = 0_W$, luego $\sum_{i=1}^k c_i v_i \in N(T) = \{0_V\}$. Así, $\sum_{i=1}^k c_i v_i = 0_V$. Como $S$ es L.I., $c_i = 0$ para todo $i$. Por lo tanto, $T(S)$ es L.I.</div>
+        <div class="paso" style="display: none;"><strong>($\Leftarrow$)</strong> Supongamos que $T$ envía conjuntos L.I. a conjuntos L.I. Sea $v \in N(T)$ con $v \neq 0_V$. Entonces $\{v\}$ es L.I. (un vector no nulo), pero $T(\{v\}) = \{0_W\}$ es L.D. (contradicción). Luego $N(T) = \{0_V\}$ y $T$ es inyectiva.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">(b) Si $T$ es inyectiva, $S$ es L.I. $\iff$ $T(S)$ es L.I.</h3><br><br><strong>($\Rightarrow$)</strong> Inmediato de la parte (a).<br><br><strong>($\Leftarrow$)</strong> Supongamos que $T(S)$ es L.I. Sea $\sum_{i=1}^k c_i v_i = 0_V$ con $v_i \in S$. Aplicando $T$: $\sum_{i=1}^k c_i T(v_i) = 0_W$. Como $T(S)$ es L.I., $c_i = 0$ para todo $i$. Luego $S$ es L.I.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">(c) Si $\beta$ es base de $V$ y $T$ es biyectiva, $T(\beta)$ es base de $W$</h3><br><br>Sea $\beta = \{v_1, \dots, v_n\}$ base de $V$, y $T$ inyectiva y sobreyectiva.<br><br><strong>Independencia lineal:</strong> $\beta$ es L.I., y por (a), como $T$ es inyectiva, $T(\beta)$ es L.I.<br><br><strong>Generación:</strong> Por el Teorema 2.2, $R(T) = \operatorname{span}(T(\beta))$. Como $T$ es sobreyectiva, $R(T) = W$. Luego $\operatorname{span}(T(\beta)) = W$.<br><br>Por lo tanto, $T(\beta)$ es una base de $W$.</div>
+        <button class="btn-revelar" onclick="revelarPaso(this)">Mostrar siguiente paso</button>
+    </div>
+
+    <div class="ejercicio">
+        <h2 class="titulo">Ejercicio 15</h2>
+        <div class="enunciado">Recordemos la definición de $P(R)$ de la página 10. Definimos
+\[
+T: P(R) \to P(R) \quad \text{por} \quad T(f(x)) = \int_0^x f(t) \, dt.
+\]
+Demostrar que $T$ es lineal e inyectiva, pero no sobreyectiva.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">Linealidad</h3>
+Sean $f, g \in P(R)$ y $c \in \mathbb{R}$. Usando las propiedades de la integral:
+\begin{align*}
+T(cf + g)(x) &= \int_0^x (cf(t) + g(t)) \, dt \\
+&= \int_0^x cf(t) \, dt + \int_0^x g(t) \, dt \\
+&= c \int_0^x f(t) \, dt + \int_0^x g(t) \, dt \\
+&= c \cdot T(f)(x) + T(g)(x).
+\end{align*}
+Para todo $x$, $T(cf + g) = cT(f) + T(g)$. Por la Propiedad 2 (página 65), $T$ es lineal.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">Inyectividad (one-to-one)</h3>
+Por el Teorema 2.4, $T$ es inyectiva si y solo si $N(T) = \{0\}$. Supongamos que $f \in N(T)$. Entonces para todo $x \in \mathbb{R}$:
+\[
+T(f)(x) = \int_0^x f(t) \, dt = 0.
+\]
+Por el Teorema Fundamental del Cálculo, derivando ambos lados respecto a $x$:
+\[
+\frac{d}{dx} \left( \int_0^x f(t) \, dt \right) = f(x) = 0.
+\]
+Así, $f$ es el polinomio cero. Luego $N(T) = \{0\}$ y $T$ es inyectiva.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">No sobreyectividad (not onto)</h3>
+Observamos que para cualquier $f \in P(R)$, su imagen se anula en $x = 0$:
+\[
+T(f)(0) = \int_0^0 f(t) \, dt = 0.
+\]
+Por lo tanto, cualquier polinomio $g \in P(R)$ con $g(0) \neq 0$ no puede estar en $R(T)$. Por ejemplo, el polinomio constante $g(x) = 1$ no es imagen de ningún polinomio bajo $T$. En consecuencia, $R(T) \neq P(R)$ y $T$ no es sobreyectiva.</div>
+        <button class="btn-revelar" onclick="revelarPaso(this)">Mostrar siguiente paso</button>
+    </div>
+
+    <div class="ejercicio">
+        <h2 class="titulo">Ejercicio 16</h2>
+        <div class="enunciado">Sea $T: P(R) \to P(R)$ definida por $T(f(x)) = f'(x)$. Recordemos que $T$ es lineal. Demostrar que $T$ es sobreyectiva, pero no inyectiva.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">Sobreyectividad (onto)</h3>
+Sea $g(x) \in P(R)$ un polinomio arbitrario. Escribimos:
+\[
+g(x) = a_0 + a_1 x + a_2 x^2 + \dots + a_n x^n.
+\]
+Definimos $f(x) \in P(R)$ como su antiderivada polinómica:
+\[
+f(x) = a_0 x + \frac{a_1}{2} x^2 + \frac{a_2}{3} x^3 + \dots + \frac{a_n}{n+1} x^{n+1}.
+\]
+Entonces $f'(x) = g(x)$, es decir, $T(f) = g$. Como $g$ era arbitrario, $R(T) = P(R)$ y $T$ es sobreyectiva.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">No inyectividad (not one-to-one)</h3>
+Por el Teorema 2.4, $T$ es inyectiva si y solo si $N(T) = \{0\}$. El espacio nulo de $T$ consiste en todos los polinomios $f \in P(R)$ tales que $f'(x) = 0$ para todo $x$. Sabemos que la derivada de un polinomio es cero si y solo si el polinomio es constante:
+\[
+N(T) = \{ f(x) \in P(R) : f(x) = c \text{ para alguna constante } c \in \mathbb{R} \}.
+\]
+Como $N(T)$ contiene polinomios no nulos (por ejemplo, $f(x) = 5$), $N(T) \neq \{0\}$. Por el Teorema 2.4, $T$ no es inyectiva.</div>
+        <button class="btn-revelar" onclick="revelarPaso(this)">Mostrar siguiente paso</button>
+    </div>
+
+    <div class="ejercicio">
+        <h2 class="titulo">Ejercicio 17</h2>
+        <div class="enunciado">Sean $V$ y $W$ espacios vectoriales de dimensión finita y $T: V \to W$ lineal.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">(a) Si $\dim(V) < \dim(W)$, $T$ no puede ser sobreyectiva</h3>
+Por el Teorema de la Dimensión (Teorema 2.3, página 70):
+\[
+\operatorname{nullity}(T) + \operatorname{rank}(T) = \dim(V).
+\]
+Como $\operatorname{nullity}(T) \ge 0$, tenemos $\operatorname{rank}(T) \le \dim(V)$. Además, $R(T)$ es un subespacio de $W$, por lo que $\operatorname{rank}(T) = \dim(R(T)) \le \dim(W)$.<br><br>Si $\dim(V) < \dim(W)$, entonces:
+\[
+\operatorname{rank}(T) \le \dim(V) < \dim(W).
+\]
+Esto implica $\dim(R(T)) < \dim(W)$, por lo que $R(T) \neq W$. Así, $T$ no es sobreyectiva.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">(b) Si $\dim(V) > \dim(W)$, $T$ no puede ser inyectiva</h3>
+Del Teorema de la Dimensión:
+\[
+\operatorname{nullity}(T) = \dim(V) - \operatorname{rank}(T).
+\]
+Dado que $\operatorname{rank}(T) \le \dim(W)$ (por ser $R(T) \subseteq W$), tenemos:
+\[
+\operatorname{nullity}(T) \ge \dim(V) - \dim(W).
+\]
+Si $\dim(V) > \dim(W)$, entonces $\dim(V) - \dim(W) \ge 1$, por lo que $\operatorname{nullity}(T) \ge 1$. Esto significa que $N(T) \neq \{0\}$. Por el Teorema 2.4, $T$ no es inyectiva.</div>
+        <button class="btn-revelar" onclick="revelarPaso(this)">Mostrar siguiente paso</button>
+    </div>
+
+    <div class="ejercicio">
+        <h2 class="titulo">Ejercicio 18</h2>
+        <div class="enunciado">Dar un ejemplo de una transformación lineal $T: \mathbb{R}^2 \to \mathbb{R}^2$ tal que $N(T) = R(T)$.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">Solución</h3>
+Por el Teorema de la Dimensión (Teorema 2.3, página 70):
+\[
+\operatorname{nullity}(T) + \operatorname{rank}(T) = \dim(\mathbb{R}^2) = 2.
+\]
+Si $N(T) = R(T)$, entonces $\operatorname{nullity}(T) = \operatorname{rank}(T) = k$. Luego $2k = 2 \implies k = 1$. Necesitamos que ambos subespacios sean la misma recta por el origen.</div>
+        <div class="paso" style="display: none;">Definimos $T: \mathbb{R}^2 \to \mathbb{R}^2$ por:
+\[
+T(a_1, a_2) = (a_2, 0).
+\]<br><br><strong>Linealidad:</strong> Para $x = (a_1, a_2)$, $y = (b_1, b_2)$ y $c \in \mathbb{R}$:
+\[
+T(cx + y) = T(ca_1 + b_1, ca_2 + b_2) = (ca_2 + b_2, 0) = c(a_2, 0) + (b_2, 0) = cT(x) + T(y).
+\]
+Así, $T$ es lineal.</div>
+        <div class="paso" style="display: none;"><strong>Espacio nulo $N(T)$:</strong>
+\[
+N(T) = \{(a_1, a_2) : T(a_1, a_2) = (0,0)\} = \{(a_1, a_2) : a_2 = 0\} = \{(a_1, 0) : a_1 \in \mathbb{R}\} = \operatorname{span}\{(1,0)\}.
+\]</div>
+        <div class="paso" style="display: none;"><strong>Rango $R(T)$:</strong>
+\[
+R(T) = \{T(a_1, a_2) : (a_1, a_2) \in \mathbb{R}^2\} = \{(a_2, 0) : a_2 \in \mathbb{R}\} = \operatorname{span}\{(1,0)\}.
+\]<br><br>Por lo tanto, $N(T) = R(T) = \operatorname{span}\{(1,0)\}$, que es el eje $x$. Se cumple lo pedido.</div>
+        <button class="btn-revelar" onclick="revelarPaso(this)">Mostrar siguiente paso</button>
+    </div>
+
+    <div class="ejercicio">
+        <h2 class="titulo">Ejercicio 19</h2>
+        <div class="enunciado">Dar un ejemplo de transformaciones lineales distintas $T$ y $U$ tales que $N(T) = N(U)$ y $R(T) = R(U)$.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">Solución</h3>
+Consideremos $V = W = \mathbb{R}^2$ y definamos las siguientes transformaciones lineales:<br><br><strong>Transformación $T$:</strong> Proyección sobre el eje $x$.
+\[
+T(a_1, a_2) = (a_1, 0).
+\]<br><br><strong>Transformación $U$:</strong> Proyección sobre el eje $x$ con escalamiento por $2$.
+\[
+U(a_1, a_2) = (2a_1, 0).
+\]</div>
+        <div class="paso" style="display: none;"><h4 class="subsubseccion">Espacios nulos</h4>
+Para $T$:
+\[
+N(T) = \{(a_1, a_2) : a_1 = 0\} = \{(0, a_2) : a_2 \in \mathbb{R}\} = \operatorname{span}\{(0,1)\}.
+\]
+Para $U$:
+\[
+N(U) = \{(a_1, a_2) : 2a_1 = 0\} = \{(0, a_2) : a_2 \in \mathbb{R}\} = \operatorname{span}\{(0,1)\}.
+\]
+Por lo tanto, $N(T) = N(U)$ (el eje $y$).</div>
+        <div class="paso" style="display: none;"><h4 class="subsubseccion">Rangos</h4>
+Para $T$:
+\[
+R(T) = \{(a_1, 0) : a_1 \in \mathbb{R}\} = \operatorname{span}\{(1,0)\}.
+\]
+Para $U$:
+\[
+R(U) = \{(2a_1, 0) : a_1 \in \mathbb{R}\} = \{(x, 0) : x \in \mathbb{R}\} = \operatorname{span}\{(1,0)\}.
+\]
+Por lo tanto, $R(T) = R(U)$ (el eje $x$).</div>
+        <div class="paso" style="display: none;"><h4 class="subsubseccion">Distinción entre $T$ y $U$</h4>
+Para el vector $(1,0)$:
+\[
+T(1,0) = (1,0), \quad U(1,0) = (2,0).
+\]
+Como $T(1,0) \neq U(1,0)$, las transformaciones son distintas.<br><br>Ambas son lineales (verificación inmediata) y cumplen las condiciones requeridas.</div>
+        <button class="btn-revelar" onclick="revelarPaso(this)">Mostrar siguiente paso</button>
+    </div>
+
+    <div class="ejercicio">
+        <h2 class="titulo">Ejercicio 20</h2>
+        <div class="enunciado">Sean $V$ y $W$ espacios vectoriales con subespacios $V_1$ y $W_1$, respectivamente. Si $T: V \to W$ es lineal, demostrar que $T(V_1)$ es un subespacio de $W$ y que $\{x \in V : T(x) \in W_1\}$ es un subespacio de $V$.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">Parte 1: $T(V_1)$ es un subespacio de $W$</h3>
+Usamos la caracterización de subespacios (Teorema 2.2 del Capítulo 1):
+<ol class="lista-latex">
+<li><strong>Vector cero:</strong> Como $V_1$ es subespacio, $0_V \in V_1$. Por linealidad, $T(0_V) = 0_W$, luego $0_W \in T(V_1)$.
+<li><strong>Cerrado bajo suma:</strong> Sean $w_1, w_2 \in T(V_1)$. Existen $v_1, v_2 \in V_1$ tales que $T(v_1) = w_1$, $T(v_2) = w_2$. Como $V_1$ es subespacio, $v_1 + v_2 \in V_1$. Luego:
+  \[
+  w_1 + w_2 = T(v_1) + T(v_2) = T(v_1 + v_2) \in T(V_1).
+  \]
+<li><strong>Cerrado bajo escalar:</strong> Sea $w \in T(V_1)$ y $c \in F$. Existe $v \in V_1$ con $T(v) = w$. Como $V_1$ es subespacio, $cv \in V_1$. Luego:
+  \[
+  cw = cT(v) = T(cv) \in T(V_1).
+  \]
+</ol>
+Por lo tanto, $T(V_1)$ es un subespacio de $W$.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">Parte 2: $S = \{x \in V : T(x) \in W_1\</h3>$ es un subespacio de $V$}
+<ol class="lista-latex">
+<li><strong>Vector cero:</strong> $T(0_V) = 0_W \in W_1$ (pues $W_1$ es subespacio). Luego $0_V \in S$.
+<li><strong>Cerrado bajo suma:</strong> Sean $x, y \in S$. Entonces $T(x), T(y) \in W_1$. Como $W_1$ es subespacio, $T(x) + T(y) \in W_1$. Por linealidad:
+  \[
+  T(x + y) = T(x) + T(y) \in W_1 \implies x + y \in S.
+  \]
+<li><strong>Cerrado bajo escalar:</strong> Sea $x \in S$ y $c \in F$. Entonces $T(x) \in W_1$. Como $W_1$ es subespacio, $cT(x) \in W_1$. Por linealidad:
+  \[
+  T(cx) = cT(x) \in W_1 \implies cx \in S.
+  \]
+</ol>
+Por lo tanto, $S$ es un subespacio de $V$.</div>
+        <button class="btn-revelar" onclick="revelarPaso(this)">Mostrar siguiente paso</button>
+    </div>
+
+    <div class="ejercicio">
+        <h2 class="titulo">Ejercicio 21</h2>
+        <div class="enunciado">Sea $V$ el espacio vectorial de sucesiones (Ejemplo 5, Sección 1.2). Definimos $T, U: V \to V$ por:
+\[
+T(a_1, a_2, \dots) = (a_2, a_3, \dots), \quad U(a_1, a_2, \dots) = (0, a_1, a_2, \dots).
+\]
+$T$ es el <em>left shift</em> y $U$ el <em>right shift</em>.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">(a) Linealidad de $T$ y $U$</h3>
+Sean $x = (a_1, a_2, \dots)$, $y = (b_1, b_2, \dots)$ y $c \in F$.<br><br><strong>Para $T$:</strong>
+\begin{align*}
+T(cx + y) &= T(ca_1 + b_1, ca_2 + b_2, ca_3 + b_3, \dots) \\
+&= (ca_2 + b_2, ca_3 + b_3, \dots) \\
+&= c(a_2, a_3, \dots) + (b_2, b_3, \dots) = cT(x) + T(y).
+\end{align*}
+<strong>Para $U$:</strong>
+\begin{align*}
+U(cx + y) &= U(ca_1 + b_1, ca_2 + b_2, \dots) \\
+&= (0, ca_1 + b_1, ca_2 + b_2, \dots) \\
+&= c(0, a_1, a_2, \dots) + (0, b_1, b_2, \dots) = cU(x) + U(y).
+\end{align*}
+Ambas son lineales.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">(b) $T$ es sobreyectiva pero no inyectiva</h3>
+<strong>Sobreyectiva:</strong> Dada $y = (b_1, b_2, \dots) \in V$, tomamos $x = (0, b_1, b_2, \dots)$. Entonces $T(x) = y$. Luego $R(T) = V$.<br><br><strong>No inyectiva:</strong> $N(T) = \{(a_1, a_2, \dots) : (a_2, a_3, \dots) = (0,0,\dots)\} = \{(a, 0, 0, \dots) : a \in F\} \neq \{0\}$. Por Teorema 2.4, $T$ no es inyectiva.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">(c) $U$ es inyectiva pero no sobreyectiva</h3>
+<strong>Inyectiva:</strong> $N(U) = \{(a_1, a_2, \dots) : (0, a_1, a_2, \dots) = (0,0,0,\dots)\}$. Esto implica $a_1 = 0, a_2 = 0, \dots$, luego $N(U) = \{0\}$. Por Teorema 2.4, $U$ es inyectiva.<br><br><strong>No sobreyectiva:</strong> Para cualquier $x \in V$, $U(x)$ tiene primera componente $0$. Así, $y = (1, 0, 0, \dots) \in V$ no puede estar en $R(U)$. Luego $R(U) \neq V$.</div>
+        <button class="btn-revelar" onclick="revelarPaso(this)">Mostrar siguiente paso</button>
+    </div>
+
+    <div class="ejercicio">
+        <h2 class="titulo">Ejercicio 22</h2>
+        <div class="enunciado">Sea $T: \mathbb{R}^3 \to \mathbb{R}$ lineal. Demostrar que existen escalares $a, b, c$ tales que $T(x, y, z) = ax + by + cz$ para todo $(x, y, z) \in \mathbb{R}^3$. Generalizar para $T: F^n \to F$ y para $T: F^n \to F^m$.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">Caso $T: \mathbb{R</h3>^3 \to \mathbb{R}$}
+Sea $\{e_1, e_2, e_3\}$ la base canónica de $\mathbb{R}^3$. Para cualquier $(x, y, z) \in \mathbb{R}^3$:
+\[
+(x, y, z) = x e_1 + y e_2 + z e_3.
+\]
+Por linealidad de $T$:
+\[
+T(x, y, z) = x T(e_1) + y T(e_2) + z T(e_3).
+\]
+Definimos $a = T(e_1)$, $b = T(e_2)$, $c = T(e_3) \in \mathbb{R}$. Entonces $T(x, y, z) = ax + by + cz$.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">Generalización a $T: F^n \to F$</h3>
+Sea $\{e_1, \dots, e_n\}$ la base canónica de $F^n$. Para $x = (x_1, \dots, x_n) \in F^n$:
+\[
+x = \sum_{i=1}^n x_i e_i \implies T(x) = \sum_{i=1}^n x_i T(e_i).
+\]
+Definiendo $a_i = T(e_i) \in F$, obtenemos $T(x_1, \dots, x_n) = \sum_{i=1}^n a_i x_i$.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">Generalización a $T: F^n \to F^m$</h3>
+Sea $\{e_1, \dots, e_n\}$ base canónica de $F^n$ y $\{f_1, \dots, f_m\}$ base canónica de $F^m$. Para cada $j = 1, \dots, n$:
+\[
+T(e_j) = (a_{1j}, a_{2j}, \dots, a_{mj}) = \sum_{i=1}^m a_{ij} f_i.
+\]
+Para $x = (x_1, \dots, x_n) = \sum_{j=1}^n x_j e_j$, por linealidad:
+\[
+T(x) = \sum_{j=1}^n x_j T(e_j) = \sum_{j=1}^n x_j (a_{1j}, a_{2j}, \dots, a_{mj}).
+\]
+La $i$-ésima componente de $T(x)$ es $(T(x))_i = \sum_{j=1}^n a_{ij} x_j$. Por lo tanto:
+\[
+T(x_1, \dots, x_n) = \left( \sum_{j=1}^n a_{1j} x_j, \sum_{j=1}^n a_{2j} x_j, \dots, \sum_{j=1}^n a_{mj} x_j \right).
+\]
+Esto corresponde a la multiplicación por una matriz $A = (a_{ij})$ de tamaño $m \times n$.</div>
+        <button class="btn-revelar" onclick="revelarPaso(this)">Mostrar siguiente paso</button>
+    </div>
+
+    <div class="ejercicio">
+        <h2 class="titulo">Ejercicio 23</h2>
+        <div class="enunciado">Sea $T: \mathbb{R}^3 \to \mathbb{R}$ lineal. Describir geométricamente las posibilidades para el espacio nulo de $T$. (Sugerencia: Usar el Ejercicio 22).</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">Solución</h3>
+Por el Ejercicio 22, $T$ es de la forma $T(x, y, z) = ax + by + cz$ para algunos $a, b, c \in \mathbb{R}$. El espacio nulo es:
+\[
+N(T) = \{(x, y, z) \in \mathbb{R}^3 : ax + by + cz = 0\}.
+\]</div>
+        <div class="paso" style="display: none;"><h4 class="subsubseccion">Caso 1: $a = b = c = 0$</h4>
+$T$ es la transformación cero. $N(T) = \mathbb{R}^3$. Geométricamente, es todo el espacio tridimensional. Nulidad: $3$.</div>
+        <div class="paso" style="display: none;"><h4 class="subsubseccion">Caso 2: Al menos un coeficiente es no nulo</h4>
+La ecuación $ax + by + cz = 0$ define un plano que pasa por el origen en $\mathbb{R}^3$. El vector $\mathbf{n} = (a, b, c)$ es normal al plano. Nulidad: $2$.</div>
+        <div class="paso" style="display: none;"><h4 class="subsubseccion">¿Puede ser una recta?</h4>
+Por el Teorema de la Dimensión, $\operatorname{nullity}(T) + \operatorname{rank}(T) = 3$. Como $R(T) \subseteq \mathbb{R}$, $\operatorname{rank}(T) \le 1$. Así:
+<ul class="lista-latex">
+<li>Si $\operatorname{rank}(T) = 0$, $\operatorname{nullity}(T) = 3$ (todo $\mathbb{R}^3$).
+<li>Si $\operatorname{rank}(T) = 1$, $\operatorname{nullity}(T) = 2$ (un plano).
+</ul>
+No es posible nulidad $1$. Por lo tanto, $N(T)$ nunca es una recta.<br><br><strong>Conclusión:</strong> Geométricamente, $N(T)$ es o bien todo $\mathbb{R}^3$ (si $T \equiv 0$), o bien un plano que pasa por el origen (si $T \not\equiv 0$).</div>
+        <button class="btn-revelar" onclick="revelarPaso(this)">Mostrar siguiente paso</button>
+    </div>
+
+    <div class="ejercicio">
+        <h2 class="titulo">Ejercicio 24</h2>
+        <div class="enunciado">Sea $T: \mathbb{R}^2 \to \mathbb{R}^2$. Incluir figuras para cada parte.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">(a) Proyección sobre el eje $y$ a lo largo del eje $x$</h3>
+Descomponemos $(a,b) = (a,0) + (0,b)$, con $(a,0)$ en el eje $x$ y $(0,b)$ en el eje $y$. La proyección es $T(a,b) = (0,b)$.<br><br>\begin{center}
+\begin{tikzpicture}[scale=1.5]
+    \draw[->] (-0.5,0) -- (3,0) node[right] {$x$};
+    \draw[->] (0,-0.5) -- (0,3) node[above] {$y$};
+    \draw[blue, thick] (0,0) -- (0,2.5) node[left] {$W_1$ (eje $y$)};
+    \draw[red, thick] (0,0) -- (2.5,0) node[below] {$W_2$ (eje $x$)};
+    
+    \filldraw (2,1.5) circle (1pt) node[above right] {$(a,b)$};
+    \draw[dashed, gray] (2,1.5) -- (2,0) node[below] {$(a,0)$};
+    \draw[dashed, gray] (2,1.5) -- (0,1.5) node[left] {$(0,b)$};
+    \draw[->, purple, thick] (2,1.5) -- (0,1.5);
+    
+    \filldraw[blue] (0,1.5) circle (1.5pt);
+\end{tikzpicture}
+\end{center}</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">(b) Proyección sobre el eje $y$ a lo largo de $L = \{(s,s) : s \in \mathbb{R</h3>\}$}
+Descomponemos $(a,b) = (0, b-a) + (a,a)$, con $(0,b-a) \in W_1$ (eje $y$) y $(a,a) \in W_2$ (recta $L$). La proyección es $T(a,b) = (0, b-a)$.<br><br>\begin{center}
+\begin{tikzpicture}[scale=1.5]
+    \draw[->] (-0.5,0) -- (3,0) node[right] {$x$};
+    \draw[->] (0,-0.5) -- (0,3) node[above] {$y$};
+    \draw[blue, thick] (0,0) -- (0,2.5) node[left] {$W_1$ (eje $y$)};
+    \draw[red, thick] (0,0) -- (2.5,2.5) node[above right] {$W_2$ (recta $L$)};
+    
+    \filldraw (2,1.5) circle (1pt) node[above right] {$(a,b)$};
+    \draw[dashed, gray] (2,1.5) -- (2,2) -- (2,2) node[right] {$(a,a)$};
+    \draw[dashed, gray] (2,1.5) -- (0,0.5) node[left] {$(0,b-a)$};
+    
+    % Línea paralela a L que pasa por (a,b)
+    \draw[dashed, gray] (0.5,0) -- (2.5,2.0);
+    \draw[->, purple, thick] (2,1.5) -- (0,0.5);
+    
+    \filldraw[blue] (0,0.5) circle (1.5pt);
+    \filldraw[red] (2,2) circle (1pt);
+\end{tikzpicture}
+\end{center}<br><br><strong>Fórmulas:</strong>
+<ul class="lista-latex">
+<li><strong>(a)</strong> $T(a,b) = (0, b)$
+<li><strong>(b)</strong> $T(a,b) = (0, b-a)$
+</ul></div>
+        <button class="btn-revelar" onclick="revelarPaso(this)">Mostrar siguiente paso</button>
+    </div>
+
+    <div class="ejercicio">
+        <h2 class="titulo">Ejercicio 25</h2>
+        <div class="enunciado">Sea $T: \mathbb{R}^3 \to \mathbb{R}^3$.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">(a) $T(a,b,c) = (a,b,0)$ es proyección sobre $xy$ a lo largo del eje $z$</h3>
+Identificamos $W_1 = \{(x,y,0) : x,y \in \mathbb{R}\}$ (plano $xy$) y $W_2 = \{(0,0,z) : z \in \mathbb{R}\}$ (eje $z$). 
+Para $(a,b,c) \in \mathbb{R}^3$, la descomposición única es:
+\[
+(a,b,c) = (a,b,0) + (0,0,c),
+\]
+con $(a,b,0) \in W_1$ y $(0,0,c) \in W_2$. 
+$T$ toma la componente en $W_1$, por lo que es la proyección sobre el plano $xy$ a lo largo del eje $z$.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">(b) Proyección sobre el eje $z$ a lo largo del plano $xy$</h3>
+Ahora $W_1 = \{(0,0,z) : z \in \mathbb{R}\}$ (eje $z$) y $W_2 = \{(x,y,0) : x,y \in \mathbb{R}\}$ (plano $xy$).
+La descomposición de $(a,b,c)$ es la misma:
+\[
+(a,b,c) = (0,0,c) + (a,b,0),
+\]
+con $(0,0,c) \in W_1$ y $(a,b,0) \in W_2$.
+La proyección sobre $W_1$ es $T(a,b,c) = (0,0,c)$.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">(c) $T(a,b,c) = (a-c, b, 0)$ es proyección sobre $xy$ a lo largo de $L = \{(a,0,a) : a \in \mathbb{R</h3>\}$}
+Aquí $W_1 = \{(x,y,0) : x,y \in \mathbb{R}\}$ (plano $xy$) y $W_2 = L = \operatorname{span}\{(1,0,1)\}$.
+Descomponemos $(a,b,c) = (x,y,0) + (s,0,s)$:
+\[
+\begin{cases}
+x + s = a \\
+y = b \\
+s = c
+\end{cases}
+\implies s = c, \quad y = b, \quad x = a - c.
+\]
+La descomposición es $(a,b,c) = (a-c, b, 0) + (c,0,c)$. La proyección toma la componente en $W_1$:
+\[
+T(a,b,c) = (a-c, b, 0).
+\]
+Esto coincide con la fórmula dada.</div>
+        <button class="btn-revelar" onclick="revelarPaso(this)">Mostrar siguiente paso</button>
+    </div>
+
+    <div class="ejercicio">
+        <h2 class="titulo">Ejercicio 26</h2>
+        <div class="enunciado">Sea $T: V \to V$ la proyección sobre $W_1$ a lo largo de $W_2$, donde $V = W_1 \oplus W_2$.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">(a) $T$ es lineal y $W_1 = \{x \in V : T(x) = x\</h3>$}
+<strong>Linealidad:</strong> Sean $x = x_1 + x_2$, $y = y_1 + y_2$ con $x_1, y_1 \in W_1$, $x_2, y_2 \in W_2$. Para $c \in F$:
+\[
+cx + y = (cx_1 + y_1) + (cx_2 + y_2),
+\]
+con $cx_1 + y_1 \in W_1$ y $cx_2 + y_2 \in W_2$. Luego:
+\[
+T(cx + y) = cx_1 + y_1 = cT(x) + T(y).
+\]
+Así, $T$ es lineal.<br><br><strong>Igualdad:</strong> Si $x \in W_1$, $x = x + 0 \implies T(x) = x$. 
+Si $T(x) = x$, y $x = x_1 + x_2$, entonces $T(x) = x_1 = x \implies x_2 = 0 \implies x = x_1 \in W_1$. 
+Por lo tanto, $W_1 = \{x \in V : T(x) = x\}$.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">(b) $W_1 = R(T)$ y $W_2 = N(T)$</h3>
+<strong>$W_1 = R(T)$:</strong> Si $x_1 \in W_1$, $x_1 = T(x_1) \in R(T)$. Si $y \in R(T)$, $y = T(x) = x_1 \in W_1$. 
+<strong>$W_2 = N(T)$:</strong> Si $x_2 \in W_2$, $x_2 = 0 + x_2 \implies T(x_2) = 0 \implies x_2 \in N(T)$. 
+Si $x \in N(T)$, $x = x_1 + x_2 \implies 0 = T(x) = x_1 \implies x = x_2 \in W_2$.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">(c) $W_1 = V$</h3>
+Si $W_1 = V$, entonces $W_2 = \{0\}$. Para todo $x \in V$, $x = x + 0 \implies T(x) = x$. 
+$T$ es la transformación identidad $I_V$.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">(d) $W_1 = \{0\</h3>$}
+Si $W_1 = \{0\}$, entonces $W_2 = V$. Para todo $x \in V$, $x = 0 + x \implies T(x) = 0$. 
+$T$ es la transformación cero $T_0$.</div>
+        <button class="btn-revelar" onclick="revelarPaso(this)">Mostrar siguiente paso</button>
+    </div>
+
+    <div class="ejercicio">
+        <h2 class="titulo">Ejercicio 27</h2>
+        <div class="enunciado">Sea $W$ un subespacio de un espacio vectorial $V$ de dimensión finita.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">(a) Existencia de $W'$ y proyección $T$</h3>
+Sea $\beta_W = \{w_1, \dots, w_k\}$ una base de $W$. Por el Teorema de Extensión de Bases (Corolario 5.9 del Capítulo 1), extendemos a una base de $V$: $\beta = \{w_1, \dots, w_k, v_1, \dots, v_{n-k}\}$. Definimos $W' = \operatorname{span}\{v_1, \dots, v_{n-k}\}$. Entonces $V = W \oplus W'$. La proyección $T$ sobre $W$ a lo largo de $W'$ es la función lineal deseada.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">(b) Ejemplo con dos proyecciones distintas sobre $W$</h3>
+Sea $V = \mathbb{R}^2$ y $W = \operatorname{span}\{(1,0)\}$ (eje $x$).
+<ul class="lista-latex">
+<li><strong>Complemento 1:</strong> $W'_1 = \operatorname{span}\{(0,1)\}$ (eje $y$). La proyección es $T_1(a,b) = (a,0)$.
+<li><strong>Complemento 2:</strong> $W'_2 = \operatorname{span}\{(1,1)\}$ (recta $y = x$). La proyección es $T_2(a,b) = (a-b, 0)$.
+</ul>
+Ambas son proyecciones sobre $W$, pero $T_1 \neq T_2$ (por ejemplo, $T_1(1,1) = (1,0)$ y $T_2(1,1) = (0,0)$).</div>
+        <button class="btn-revelar" onclick="revelarPaso(this)">Mostrar siguiente paso</button>
+    </div>
+
+    <div class="ejercicio">
+        <h2 class="titulo">Ejercicio 28</h2>
+        <div class="enunciado">Demostrar que los subespacios $\{0\}$, $V$, $R(T)$ y $N(T)$ son todos $T$-invariantes.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">Definición</h3>
+Un subespacio $W \subseteq V$ es $T$-invariante si $T(W) \subseteq W$, es decir, $T(x) \in W$ para todo $x \in W$.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">Subespacio $\{0\</h3>$}
+Si $x \in \{0\}$, entonces $x = 0_V$. Por linealidad, $T(0_V) = 0_V \in \{0\}$. Luego $\{0\}$ es $T$-invariante.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">Subespacio $V$</h3>
+Para todo $x \in V$, $T(x) \in V$ por definición de $T: V \to V$. Luego $V$ es $T$-invariante.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">Rango $R(T)$</h3>
+Sea $y \in R(T)$. Existe $x \in V$ tal que $T(x) = y$. Entonces $T(y) = T(T(x))$. Como $T(x) \in V$, su imagen bajo $T$ pertenece a $R(T)$. Luego $T(y) \in R(T)$, y $R(T)$ es $T$-invariante.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">Espacio nulo $N(T)$</h3>
+Sea $x \in N(T)$. Entonces $T(x) = 0_V$. Aplicando $T$ de nuevo: $T(T(x)) = T(0_V) = 0_V$. Por lo tanto, $T(x) \in N(T)$, y $N(T)$ es $T$-invariante.</div>
+        <button class="btn-revelar" onclick="revelarPaso(this)">Mostrar siguiente paso</button>
+    </div>
+
+    <div class="ejercicio">
+        <h2 class="titulo">Ejercicio 29</h2>
+        <div class="enunciado">Si $W$ es $T$-invariante, demostrar que $T_W$ es lineal.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">Demostración</h3>
+Recordemos que $T_W: W \to W$ se define por $T_W(x) = T(x)$ para todo $x \in W$.<br><br><h4 class="subsubseccion">1. Preservación de la suma</h4>
+Sean $x, y \in W$. Entonces:
+\[
+T_W(x + y) = T(x + y) \quad \text{(definición de $T_W$)}
+\]
+\[
+= T(x) + T(y) \quad \text{(linealidad de $T$)}
+\]
+\[
+= T_W(x) + T_W(y) \quad \text{(definición de $T_W$)}.
+\]<br><br><h4 class="subsubseccion">2. Preservación del producto escalar</h4>
+Sea $x \in W$ y $c \in F$. Entonces:
+\[
+T_W(cx) = T(cx) \quad \text{(definición de $T_W$)}
+\]
+\[
+= c T(x) \quad \text{(linealidad de $T$)}
+\]
+\[
+= c T_W(x) \quad \text{(definición de $T_W$)}.
+\]<br><br>Dado que $W$ es $T$-invariante, $T_W(x) = T(x) \in W$ para todo $x \in W$, por lo que $T_W$ mapea $W$ en $W$. Habiendo verificado las dos propiedades de linealidad, concluimos que $T_W$ es una transformación lineal.</div>
+        <button class="btn-revelar" onclick="revelarPaso(this)">Mostrar siguiente paso</button>
+    </div>
+
+    <div class="ejercicio">
+        <h2 class="titulo">Ejercicio 30</h2>
+        <div class="enunciado">Supongamos que $T$ es la proyección sobre $W$ a lo largo de algún subespacio $W'$. Demostrar que $W$ es $T$-invariante y que $T_W = I_W$.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">Demostración</h3>
+Recordemos que $V = W \oplus W'$, y para $x = x_1 + x_2$ con $x_1 \in W$, $x_2 \in W'$, se tiene $T(x) = x_1$.<br><br><h4 class="subsubseccion">$W$ es $T$-invariante</h4>
+Sea $x \in W$. Descomponemos $x = x + 0$, donde $x \in W$ y $0 \in W'$. Por definición de proyección:
+\[
+T(x) = x \in W.
+\]
+Como $T(x) \in W$ para todo $x \in W$, $W$ es $T$-invariante.</div>
+        <div class="paso" style="display: none;"><h4 class="subsubseccion">$T_W = I_W$</h4>
+Dado que $W$ es $T$-invariante, la restricción $T_W: W \to W$ está bien definida por $T_W(x) = T(x)$ para $x \in W$. Para todo $x \in W$:
+\[
+T_W(x) = T(x) = x = I_W(x).
+\]
+Por lo tanto, $T_W = I_W$.</div>
+        <button class="btn-revelar" onclick="revelarPaso(this)">Mostrar siguiente paso</button>
+    </div>
+
+    <div class="ejercicio">
+        <h2 class="titulo">Ejercicio 31</h2>
+        <div class="enunciado">Supongamos que $V = R(T) \oplus W$ y $W$ es $T$-invariante.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">(a) $W \subseteq N(T)$</h3>
+Sea $w \in W$. Como $W$ es $T$-invariante, $T(w) \in W$. Además, $T(w) \in R(T)$. Luego $T(w) \in R(T) \cap W = \{0\}$ (por suma directa). Así, $T(w) = 0$ y $w \in N(T)$. Por lo tanto, $W \subseteq N(T)$.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">(b) Si $V$ es de dimensión finita, $W = N(T)$</h3>
+Por (a), $W \subseteq N(T)$. Del Teorema de la Dimensión aplicado a $T: V \to V$:
+\[
+\operatorname{nullity}(T) + \operatorname{rank}(T) = \dim(V).
+\]
+Como $V = R(T) \oplus W$, $\dim(V) = \operatorname{rank}(T) + \dim(W)$. Igualando:
+\[
+\operatorname{nullity}(T) + \operatorname{rank}(T) = \operatorname{rank}(T) + \dim(W) \implies \operatorname{nullity}(T) = \dim(W).
+\]
+Dado que $W \subseteq N(T)$ y tienen la misma dimensión finita, $W = N(T)$.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">(c) Contraejemplo en dimensión infinita</h3>
+Sea $V = P(\mathbb{R})$ (polinomios reales) y $T: V \to V$ la derivación: $T(f) = f'$. Entonces:
+<ul class="lista-latex">
+<li>$R(T) = V$ (todo polinomio tiene antiderivada).
+<li>$N(T) = \{ \text{constantes} \} = P_0(\mathbb{R})$, con $\dim(N(T)) = 1$.
+</ul>
+Tomamos $W = \{0\}$. Entonces:
+<ul class="lista-latex">
+<li>$V = R(T) \oplus W = V \oplus \{0\}$ (suma directa).
+<li>$W = \{0\}$ es $T$-invariante (Ejercicio 28).
+<li>$W \subseteq N(T)$ pero $W \neq N(T)$.
+</ul>
+Así, la igualdad $W = N(T)$ no se cumple en dimensión infinita.</div>
+        <button class="btn-revelar" onclick="revelarPaso(this)">Mostrar siguiente paso</button>
+    </div>
+
+    <div class="ejercicio">
+        <h2 class="titulo">Ejercicio 32</h2>
+        <div class="enunciado">Supongamos que $W$ es $T$-invariante. Demostrar que $N(T_W) = N(T) \cap W$ y $R(T_W) = T(W)$.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">Demostración</h3>
+Recordemos que $T_W: W \to W$ está definida por $T_W(x) = T(x)$ para $x \in W$.<br><br><h4 class="subsubseccion">1. $N(T_W) = N(T) \cap W$</h4>
+<strong>($\subseteq$)</strong> Sea $x \in N(T_W)$. Entonces $x \in W$ y $T_W(x) = 0$. Como $T_W(x) = T(x)$, tenemos $T(x) = 0$, luego $x \in N(T)$. Así, $x \in N(T) \cap W$.<br><br><strong>($\supseteq$)</strong> Sea $x \in N(T) \cap W$. Entonces $x \in W$ y $T(x) = 0$. Aplicando $T_W$: $T_W(x) = T(x) = 0$, luego $x \in N(T_W)$.<br><br>Por lo tanto, $N(T_W) = N(T) \cap W$.</div>
+        <div class="paso" style="display: none;"><h4 class="subsubseccion">2. $R(T_W) = T(W)$</h4>
+<strong>($\subseteq$)</strong> Sea $y \in R(T_W)$. Existe $x \in W$ tal que $T_W(x) = y$. Entonces $y = T_W(x) = T(x)$ con $x \in W$, por lo que $y \in T(W)$.<br><br><strong>($\supseteq$)</strong> Sea $y \in T(W)$. Existe $x \in W$ tal que $T(x) = y$. Como $x \in W$, $T_W(x) = T(x) = y$, luego $y \in R(T_W)$.<br><br>Por lo tanto, $R(T_W) = T(W)$.</div>
+        <button class="btn-revelar" onclick="revelarPaso(this)">Mostrar siguiente paso</button>
+    </div>
+
+    <div class="ejercicio">
+        <h2 class="titulo">Ejercicio 33</h2>
+        <div class="enunciado">Demostrar el Teorema 2.2 para el caso en que $\beta$ es infinita, es decir, $R(T) = \operatorname{span}(\{T(v) : v \in \beta\})$.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">Demostración</h3>
+Sea $\beta$ una base (posiblemente infinita) de $V$. Denotamos $S = \operatorname{span}(\{T(v) : v \in \beta\})$.<br><br><h4 class="subsubseccion">1. $R(T) \subseteq S$</h4>
+Sea $w \in R(T)$. Existe $x \in V$ con $T(x) = w$. Como $\beta$ es base, $x$ es combinación lineal finita de vectores de $\beta$: $x = \sum_{i=1}^k c_i v_i$, con $v_i \in \beta$. Aplicando $T$:
+\[
+w = T(x) = \sum_{i=1}^k c_i T(v_i) \in \operatorname{span}(\{T(v) : v \in \beta\}) = S.
+\]</div>
+        <div class="paso" style="display: none;"><h4 class="subsubseccion">2. $S \subseteq R(T)$</h4>
+Sea $w \in S$. Entonces $w$ es combinación lineal finita: $w = \sum_{i=1}^k a_i T(v_i)$ con $v_i \in \beta$. Por linealidad de $T$:
+\[
+w = \sum_{i=1}^k a_i T(v_i) = T\left(\sum_{i=1}^k a_i v_i\right) \in R(T).
+\]<br><br>Por doble contención, $R(T) = S = \operatorname{span}(\{T(v) : v \in \beta\})$.</div>
+        <button class="btn-revelar" onclick="revelarPaso(this)">Mostrar siguiente paso</button>
+    </div>
+
+    <div class="ejercicio">
+        <h2 class="titulo">Ejercicio 34</h2>
+        <div class="enunciado">Demostrar la siguiente generalización del Teorema 2.6: Sean $V$ y $W$ espacios vectoriales sobre un cuerpo común, y sea $\beta$ una base de $V$. Entonces para cualquier función $f: \beta \to W$ existe exactamente una transformación lineal $T: V \to W$ tal que $T(x) = f(x)$ para todo $x \in \beta$.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">Demostración</h3><br><br><h4 class="subsubseccion">Existencia</h4>
+Dado $x \in V$, por ser $\beta$ base, $x$ se escribe de manera única como combinación lineal finita de vectores de $\beta$: $x = \sum_{i=1}^k c_i v_i$, con $v_i \in \beta$, $c_i \in F$. Definimos:
+\[
+T(x) = \sum_{i=1}^k c_i f(v_i).
+\]
+La unicidad de la representación garantiza que $T$ está bien definida.<br><br><strong>Linealidad:</strong> Para $x = \sum a_i v_i$, $y = \sum b_i v_i$ (usando un conjunto común finito de vectores de $\beta$) y $c \in F$:
+\begin{align*}
+T(cx + y) &= T\left(\sum (c a_i + b_i) v_i\right) = \sum (c a_i + b_i) f(v_i) \\
+&= c \sum a_i f(v_i) + \sum b_i f(v_i) = c T(x) + T(y).
+\end{align*}
+Además, si $v \in \beta$, $v = 1 \cdot v \implies T(v) = f(v)$. Así, $T$ extiende $f$.</div>
+        <div class="paso" style="display: none;"><h4 class="subsubseccion">Unicidad</h4>
+Supongamos que $U: V \to W$ es lineal y $U(v) = f(v)$ para todo $v \in \beta$. Para cualquier $x = \sum_{i=1}^k c_i v_i \in V$:
+\[
+U(x) = U\left(\sum_{i=1}^k c_i v_i\right) = \sum_{i=1}^k c_i U(v_i) = \sum_{i=1}^k c_i f(v_i) = T(x).
+\]
+Por lo tanto, $U = T$.</div>
+        <button class="btn-revelar" onclick="revelarPaso(this)">Mostrar siguiente paso</button>
+    </div>
+
+    <div class="ejercicio">
+        <h2 class="titulo">Ejercicio 35</h2>
+        <div class="enunciado">Sea $V$ un espacio vectorial de dimensión finita y $T: V \to V$ lineal.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">(a) Si $V = R(T) + N(T)$, entonces $V = R(T) \oplus N(T)$</h3>
+Por la fórmula de dimensiones para suma de subespacios:
+\[
+\dim(R(T) + N(T)) = \dim(R(T)) + \dim(N(T)) - \dim(R(T) \cap N(T)).
+\]
+Por hipótesis, $R(T) + N(T) = V$, luego $\dim(R(T) + N(T)) = \dim(V)$. Por el Teorema de la Dimensión, $\dim(V) = \dim(R(T)) + \dim(N(T))$. Sustituyendo:
+\[
+\dim(V) = \dim(V) - \dim(R(T) \cap N(T)) \implies \dim(R(T) \cap N(T)) = 0.
+\]
+Por lo tanto, $R(T) \cap N(T) = \{0\}$ y $V = R(T) \oplus N(T)$.
+<em>Uso de dimensión finita:</em> La cancelación de términos en la ecuación dimensional requiere que todas las dimensiones sean finitas.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">(b) Si $R(T) \cap N(T) = \{0\</h3>$, entonces $V = R(T) \oplus N(T)$}
+La hipótesis implica que la suma es directa. Entonces:
+\[
+\dim(R(T) \oplus N(T)) = \dim(R(T)) + \dim(N(T)) = \dim(V) \quad \text{(Teorema de la Dimensión)}.
+\]
+Como $R(T) \oplus N(T)$ es un subespacio de $V$ con la misma dimensión finita que $V$, debe ser igual a $V$. Así, $V = R(T) \oplus N(T)$.
+<em>Uso de dimensión finita:</em> En dimensión infinita, un subespacio propio puede tener la misma dimensión que el espacio total, por lo que la igualdad de dimensiones no implicaría igualdad de espacios.</div>
+        <button class="btn-revelar" onclick="revelarPaso(this)">Mostrar siguiente paso</button>
+    </div>
+
+    <div class="ejercicio">
+        <h2 class="titulo">Ejercicio 36</h2>
+        <div class="enunciado">Sean $V$ y $T$ como en el Ejercicio 21.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">(a) $V = R(T) + N(T)$ pero no es suma directa</h3>
+Recordemos: $T$ es el <em>left shift</em>: $T(a_1, a_2, \dots) = (a_2, a_3, \dots)$.
+<ul class="lista-latex">
+<li>$N(T) = \{(a, 0, 0, \dots) : a \in F\}$.
+<li>$R(T) = V$ (todo vector es imagen de otro con un $0$ al inicio).
+</ul>
+Entonces $V = R(T) + N(T)$ porque cualquier $x \in V$ se escribe $x = x + 0$ con $x \in R(T)$ y $0 \in N(T)$.
+Sin embargo, $R(T) \cap N(T) = V \cap N(T) = N(T) \neq \{0\}$ (por ejemplo, $(1,0,0,\dots)$ está en ambos). Así, la suma no es directa. Esto muestra que el Ejercicio 35(a) falla sin dimensión finita.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">(b) Operador $T_1$ con $R(T_1) \cap N(T_1) = \{0\</h3>$ pero $V \neq R(T_1) \oplus N(T_1)$}
+Sea $T_1$ el <em>right shift</em>: $T_1(a_1, a_2, \dots) = (0, a_1, a_2, \dots)$.
+<ul class="lista-latex">
+<li>$N(T_1) = \{0\}$ (es inyectiva).
+<li>$R(T_1) = \{(0, a_1, a_2, \dots) : a_i \in F\} \subsetneq V$.
+</ul>
+Entonces $R(T_1) \cap N(T_1) = \{0\}$, pero $R(T_1) \oplus N(T_1) = R(T_1) \neq V$ (la sucesión $(1,0,0,\dots)$ no está en $R(T_1)$). Esto muestra que el Ejercicio 35(b) también requiere dimensión finita.</div>
+        <button class="btn-revelar" onclick="revelarPaso(this)">Mostrar siguiente paso</button>
+    </div>
+
+    <div class="ejercicio">
+        <h2 class="titulo">Ejercicio 37</h2>
+        <div class="enunciado">Una función $T: V \to W$ entre espacios vectoriales se llama <strong>aditiva</strong> si $T(x + y) = T(x) + T(y)$ para todo $x, y \in V$. Demostrar que si $V$ y $W$ son espacios vectoriales sobre $\mathbb{Q}$, entonces cualquier función aditiva es una transformación lineal.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">Demostración</h3>
+Debemos probar que $T(cx) = cT(x)$ para todo $c \in \mathbb{Q}$.<br><br><ol class="lista-latex">
+<li><strong>$T(0) = 0$:</strong> $T(0) = T(0 + 0) = T(0) + T(0) \implies T(0) = 0$.
+<li><strong>$T(-x) = -T(x)$:</strong> $0 = T(0) = T(x + (-x)) = T(x) + T(-x) \implies T(-x) = -T(x)$.
+<li><strong>$T(nx) = nT(x)$ para $n \in \mathbb{N</strong>$:} Por inducción. $n=1$ es trivial. Si vale para $k$, $T((k+1)x) = T(kx + x) = T(kx) + T(x) = kT(x) + T(x) = (k+1)T(x)$.
+<li><strong>$T(nx) = nT(x)$ para $n \in \mathbb{Z</strong>$:} Para $n=0$, $T(0x) = T(0) = 0$. Para $n < 0$, $n = -m$ con $m > 0$: $T(nx) = T(-(mx)) = -T(mx) = -mT(x) = nT(x)$.
+<li><strong>$T(\frac{1</strong>{n}x) = \frac{1}{n}T(x)$ para $n \in \mathbb{Z} \setminus \{0\}$:} $T(x) = T(n \cdot \frac{1}{n}x) = nT(\frac{1}{n}x) \implies T(\frac{1}{n}x) = \frac{1}{n}T(x)$.
+<li><strong>Caso general $c = \frac{p</strong>{q} \in \mathbb{Q}$:}
+\[
+T(cx) = T\left(\frac{p}{q}x\right) = T\left(p \cdot \left(\frac{1}{q}x\right)\right) = p \cdot T\left(\frac{1}{q}x\right) = p \cdot \left(\frac{1}{q}T(x)\right) = \frac{p}{q}T(x) = cT(x).
+\]
+</ol>
+Como $T$ preserva sumas (por hipótesis) y multiplicación por escalares racionales, es una transformación lineal.</div>
+        <button class="btn-revelar" onclick="revelarPaso(this)">Mostrar siguiente paso</button>
+    </div>
+
+    <div class="ejercicio">
+        <h2 class="titulo">Ejercicio 38</h2>
+        <div class="enunciado">Sea $T: \mathbb{C} \to \mathbb{C}$ definida por $T(z) = \overline{z}$. Demostrar que $T$ es aditiva (ver Ejercicio 37) pero no lineal.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">Demostración</h3><br><br><h4 class="subsubseccion">$T$ es aditiva</h4>
+Sean $z = a + bi$, $w = c + di \in \mathbb{C}$. Entonces:
+\begin{align*}
+T(z + w) &= T((a+c) + (b+d)i) = (a+c) - (b+d)i \\
+&= (a - bi) + (c - di) = T(z) + T(w).
+\end{align*}
+Así, $T(z + w) = T(z) + T(w)$ para todo $z, w \in \mathbb{C}$. $T$ es aditiva.</div>
+        <div class="paso" style="display: none;"><h4 class="subsubseccion">$T$ no es lineal sobre $\mathbb{C</h4>$}
+Para que $T$ sea lineal sobre $\mathbb{C}$, debe cumplir $T(cz) = cT(z)$ para todo $c \in \mathbb{C}$. Tomamos $c = i$ y $z = 1$:
+\begin{align*}
+T(i \cdot 1) &= T(i) = \overline{i} = -i. \\
+i \cdot T(1) &= i \cdot \overline{1} = i \cdot 1 = i.
+\end{align*}
+Como $-i \neq i$, $T(i \cdot 1) \neq i \cdot T(1)$. Por lo tanto, $T$ no es lineal sobre $\mathbb{C}$.<br><br><h4 class="subsubseccion">Observación</h4>
+Si $\mathbb{C}$ se considera como espacio vectorial sobre $\mathbb{R}$, entonces $T$ sí es lineal, ya que para $r \in \mathbb{R}$, $\overline{r} = r$ y $T(rz) = \overline{rz} = \overline{r}\,\overline{z} = r\overline{z} = rT(z)$. La no linealidad sobre $\mathbb{C}$ resalta la dependencia del cuerpo base en la definición de transformación lineal.</div>
+        <button class="btn-revelar" onclick="revelarPaso(this)">Mostrar siguiente paso</button>
+    </div>
+
+    <div class="ejercicio">
+        <h2 class="titulo">Ejercicio 39</h2>
+        <div class="enunciado">Demostrar que existe una función aditiva $T: \mathbb{R} \to \mathbb{R}$ (ver Ejercicio 37) que no es lineal.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">Demostración</h3>
+Consideremos $V = \mathbb{R}$ como espacio vectorial sobre $\mathbb{Q}$. Por el Teorema 6.6 (todo espacio vectorial tiene una base), $V$ posee una base $\beta$ (base de Hamel).</div>
+        <div class="paso" style="display: none;">Sean $x, y \in \beta$ con $x \neq y$. Definimos $f: \beta \to V$ por intercambio:
+\[
+f(v) = 
+\begin{cases}
+y, & \text{si } v = x, \\
+x, & \text{si } v = y, \\
+v, & \text{si } v \in \beta \setminus \{x, y\}.
+\end{cases}
+\]
+Por el Ejercicio 34, existe una única transformación $\mathbb{Q}$-lineal $T: V \to V$ que extiende $f$. En particular, $T$ es aditiva.</div>
+        <div class="paso" style="display: none;"><strong>No linealidad sobre $\mathbb{R</strong>$:} Tomamos $c = y/x \in \mathbb{R}$.
+<ul class="lista-latex">
+<li>$T(cx) = T(y) = x$ (porque $T(y) = f(y) = x$).
+<li>$cT(x) = \frac{y}{x} \cdot T(x) = \frac{y}{x} \cdot y = \frac{y^2}{x}$.
+</ul>
+Si $T$ fuera $\mathbb{R}$-lineal, tendríamos $x = y^2/x \implies x^2 = y^2 \implies y = \pm x$. Pero $x, y$ son elementos distintos de una base, por lo que son linealmente independientes sobre $\mathbb{Q}$. Esto excluye $y = x$ y también $y = -x$ (pues $1 \cdot x + 1 \cdot (-x) = 0$ sería dependencia lineal). Así, $x^2 \neq y^2$, y $T(cx) \neq cT(x)$. Por lo tanto, $T$ no es $\mathbb{R}$-lineal.<br><br><em>Nota:</em> Esta construcción depende del Axioma de Elección para la existencia de la base de Hamel.</div>
+        <button class="btn-revelar" onclick="revelarPaso(this)">Mostrar siguiente paso</button>
+    </div>
+
+    <div class="ejercicio">
+        <h2 class="titulo">Ejercicio 40</h2>
+        <div class="enunciado">Sea $V$ un espacio vectorial y $W$ un subespacio de $V$. Definimos $\eta: V \to V/W$ por $\eta(v) = v + W$.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">(a) $\eta$ es lineal, sobreyectiva y $N(\eta) = W$</h3>
+<strong>Linealidad:</strong> Para $u, v \in V$ y $c \in F$:
+\begin{align*}
+\eta(u + v) &= (u + v) + W = (u + W) + (v + W) = \eta(u) + \eta(v). \\
+\eta(cv) &= (cv) + W = c(v + W) = c\eta(v).
+\end{align*}
+<strong>Sobreyectividad:</strong> Dado $v + W \in V/W$, $\eta(v) = v + W$. Así, $R(\eta) = V/W$.
+<strong>Núcleo:</strong> $N(\eta) = \{v \in V : v + W = W\} = \{v \in V : v \in W\} = W$.</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">(b) Fórmula de dimensión para $V/W$</h3>
+Supongamos $V$ de dimensión finita. Aplicamos el Teorema de la Dimensión a $\eta$:
+\[
+\operatorname{nullity}(\eta) + \operatorname{rank}(\eta) = \dim(V).
+\]
+Por (a), $\operatorname{nullity}(\eta) = \dim(W)$ y $\operatorname{rank}(\eta) = \dim(V/W)$. Sustituyendo:
+\[
+\dim(W) + \dim(V/W) = \dim(V) \implies \dim(V/W) = \dim(V) - \dim(W).
+\]</div>
+        <div class="paso" style="display: none;"><h3 class="subseccion">(c) Comparación con Ejercicio 35 de la Sección 1.6</h3>
+El método tradicional construye una base de $V/W$ extendiendo una base de $W$ a una de $V$ y tomando clases laterales. Es un método constructivo y directo con bases. El método de (b) usa la proyección canónica $\eta$ y aplica el Teorema de la Dimensión, encapsulando la construcción en un resultado general ya probado. Es más algebraico y conceptual. Ambos métodos son equivalentes y producen la misma fórmula.</div>
+        <button class="btn-revelar" onclick="revelarPaso(this)">Mostrar siguiente paso</button>
+    </div>
+
+</body>
+</html>

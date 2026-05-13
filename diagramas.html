@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Conjuntos</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            background-color: #f8f9fa; 
+            margin-top: 30px;
+        }
+        h2 { color: #333; }
+        /* Estilos del lienzo */
+        canvas { 
+            background-color: white; 
+            border: 2px solid #ccc; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+            cursor: grab; 
+        }
+        canvas:active { cursor: grabbing; }
+        /* Panel de controles */
+        .controles { 
+            margin-top: 20px; 
+            display: flex; 
+            gap: 10px; 
+            flex-wrap: wrap; 
+            justify-content: center; 
+            max-width: 600px;
+        }
+        button { 
+            padding: 10px 20px; 
+            border: none; 
+            border-radius: 6px; 
+            background-color: #2b5876; 
+            color: white; 
+            cursor: pointer; 
+            font-size: 16px; 
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+        button:hover { background-color: #4e4376; }
+        .btn-limpiar { background-color: #dc3545; }
+        .btn-limpiar:hover { background-color: #c82333; }
+    </style>
+</head>
+<body>
+
+    <h2>Conjuntos</h2>
+    
+    <!-- Nuestro "motor" de renderizado -->
+    <canvas id="lienzo" width="600" height="400"></canvas>
+    
+    <div class="controles">
+        <button onclick="setOperacion('A_UNION_B')">A ∪ B</button>
+        <button onclick="setOperacion('A_INTER_B')">A ∩ B</button>
+        <button onclick="setOperacion('A_MENOS_B')">A \ B</button>
+        <button onclick="setOperacion('INTER_TODOS')">A ∩ B ∩ C</button>
+        <button class="btn-limpiar" onclick="setOperacion('NINGUNA')">Limpiar</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('lienzo');
+        const ctx = canvas.getContext('2d');
+
+        // Estado inicial de los nodos (conjuntos) en el plano
+        const conjuntos = [
+            { id: 'A', x: 250, y: 180, r: 90 },
+            { id: 'B', x: 350, y: 180, r: 90 },
+            { id: 'C', x: 300, y: 260, r: 90 }
+        ];
+
+        let circuloArrastrado = null;
+        let operacionActual = 'NINGUNA';
+
+        // Desfase para que el círculo no "salte" al centro del ratón al hacer clic
+        let offsetX = 0;
+        let offsetY = 0;
+
+        // Función principal de renderizado
+        function dibujar() {
+            // Limpiamos el frame anterior
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Si hay una operación seleccionada, calculamos la matriz de píxeles
+            if (operacionActual !== 'NINGUNA') {
+                sombrearOperacion();
+            }
+
+            // Dibujamos los contornos por encima del sombreado
+            conjuntos.forEach(c => {
+                ctx.beginPath();
+                ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
+                ctx.strokeStyle = '#333';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                
+                // Etiqueta del conjunto
+                ctx.font = '22px Arial';
+                ctx.fillStyle = '#000';
+                ctx.fillText(c.id, c.x - 8, c.y - c.r - 10);
+            });
+        }
+
+        // Lógica de evaluación de píxeles (Álgebra de conjuntos pura)
+        function sombrearOperacion() {
+            // Obtenemos todos los píxeles del canvas
+            const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imgData.data;
+
+            // Recorremos la matriz del lienzo
+            for (let y = 0; y < canvas.height; y++) {
+                for (let x = 0; x < canvas.width; x++) {
+                    
+                    // Cálculo de distancia euclidiana d = sqrt((x2-x1)^2 + (y2-y1)^2)
+                    let enA = Math.hypot(x - conjuntos[0].x, y - conjuntos[0].y) <= conjuntos[0].r;
+                    let enB = Math.hypot(x - conjuntos[1].x, y - conjuntos[1].y) <= conjuntos[1].r;
+                    let enC = Math.hypot(x - conjuntos[2].x, y - conjuntos[2].y) <= conjuntos[2].r;
+
+                    let pintar = false;
+
+                    // Evaluamos la lógica booleana según el botón pulsado
+                    switch (operacionActual) {
+                        case 'A_UNION_B': pintar = enA || enB; break;
+                        case 'A_INTER_B': pintar = enA && enB; break;
+                        case 'A_MENOS_B': pintar = enA && !enB; break;
+                        case 'INTER_TODOS': pintar = enA && enB && enC; break;
+                    }
+
+                    // Si el píxel pertenece al resultado de la operación, lo coloreamos (RGBA)
+                    if (pintar) {
+                        const indice = (y * canvas.width + x) * 4;
+                        data[indice] = 100;     // Rojo
+                        data[indice + 1] = 150; // Verde
+                        data[indice + 2] = 250; // Azul (Tono azulado)
+                        data[indice + 3] = 160; // Alpha (Transparencia)
+                    }
+                }
+            }
+            // Volcamos los píxeles modificados al lienzo
+            ctx.putImageData(imgData, 0, 0);
+        }
+
+        // Control de los botones HTML
+        window.setOperacion = function(op) {
+            operacionActual = op;
+            dibujar();
+        }
+
+        // --- SISTEMA DE INTERACCIÓN (Eventos del ratón) ---
+
+        canvas.addEventListener('mousedown', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+
+            // Detección de colisión punto-círculo para agarrar el conjunto
+            // Iteramos al revés para seleccionar el conjunto que esté dibujado "arriba"
+            for (let i = conjuntos.length - 1; i >= 0; i--) {
+                const c = conjuntos[i];
+                if (Math.hypot(mouseX - c.x, mouseY - c.y) <= c.r) {
+                    circuloArrastrado = c;
+                    offsetX = mouseX - c.x;
+                    offsetY = mouseY - c.y;
+                    break;
+                }
+            }
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            if (circuloArrastrado) {
+                const rect = canvas.getBoundingClientRect();
+                // Actualizamos las coordenadas del conjunto respetando el desfase
+                circuloArrastrado.x = (e.clientX - rect.left) - offsetX;
+                circuloArrastrado.y = (e.clientY - rect.top) - offsetY;
+                dibujar(); // Forzamos un re-renderizado
+            }
+        });
+
+        // Soltar el conjunto
+        canvas.addEventListener('mouseup', () => {
+            circuloArrastrado = null;
+        });
+
+        // Soltar el conjunto si el ratón sale del área del lienzo
+        canvas.addEventListener('mouseleave', () => {
+            circuloArrastrado = null;
+        });
+
+        // Llamada inicial para dibujar la escena al cargar la página
+        dibujar();
+    </script>
+</body>
+</html>

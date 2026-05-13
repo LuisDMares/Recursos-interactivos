@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Calculadora de Raíces Cuadráticas: Fórmula General y Números Complejos</title>
+    <!-- Fuente moderna y MathJax para notación matemática -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script" async></script>
+    <!-- Chart.js para el plano cartesiano -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: linear-gradient(145deg, #f5f7fc 0%, #eef2f6 100%);
+            font-family: 'Inter', sans-serif;
+            color: #1a2c3e;
+            padding: 30px 20px;
+        }
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-align: center;
+            margin-bottom: 0.3rem;
+            letter-spacing: -0.3px;
+        }
+        .sub {
+            text-align: center;
+            color: #2c3e66;
+            margin-bottom: 2rem;
+            font-weight: 500;
+            border-bottom: 2px solid #cbd5e1;
+            display: inline-block;
+            width: auto;
+            margin-left: auto;
+            margin-right: auto;
+            padding-bottom: 8px;
+        }
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 28px;
+            margin-top: 20px;
+        }
+        /* Panel izquierdo: controles y pasos */
+        .controls-panel {
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(2px);
+            border-radius: 32px;
+            padding: 24px;
+            box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+        .input-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+            justify-content: center;
+            margin-bottom: 28px;
+            background: #f8fafd;
+            padding: 18px;
+            border-radius: 40px;
+        }
+        .coeff {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+        .coeff label {
+            font-weight: 700;
+            font-size: 1.3rem;
+            background: #e9edf2;
+            padding: 5px 12px;
+            border-radius: 40px;
+        }
+        .coeff input {
+            width: 100px;
+            padding: 10px 12px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-align: center;
+            border: 2px solid #cbd5e6;
+            border-radius: 28px;
+            background: white;
+            transition: 0.2s;
+            font-family: monospace;
+        }
+        .coeff input:focus {
+            border-color: #2a5298;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(42,82,152,0.2);
+        }
+        button {
+            background: #1e3c72;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 1rem;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            margin-top: 12px;
+        }
+        button:hover {
+            background: #0f2b50;
+            transform: scale(0.97);
+        }
+        .reset-btn {
+            background: #4a627a;
+            margin-left: 8px;
+        }
+        .solucionario {
+            background: #ffffffda;
+            border-radius: 28px;
+            padding: 20px;
+            margin-top: 20px;
+            border-left: 5px solid #2a5298;
+        }
+        .solucionario h3 {
+            font-weight: 700;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .pasos {
+            background: #f9fbfe;
+            padding: 15px;
+            border-radius: 24px;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            line-height: 1.5;
+            overflow-x: auto;
+        }
+        .discriminante-badge {
+            display: inline-block;
+            background: #eef2ff;
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-weight: 600;
+            margin: 8px 0;
+        }
+        .raices {
+            font-weight: 700;
+            font-size: 1.1rem;
+            background: #e6f0ff;
+            padding: 12px;
+            border-radius: 20px;
+            margin-top: 12px;
+        }
+        /* panel derecho gráfico */
+        .graph-panel {
+            background: white;
+            border-radius: 32px;
+            padding: 16px;
+            box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+        }
+        canvas {
+            max-height: 450px;
+            width: 100%;
+        }
+        .info-graph {
+            text-align: center;
+            margin-top: 12px;
+            font-size: 0.85rem;
+            color: #2c3e66;
+        }
+        footer {
+            text-align: center;
+            margin-top: 35px;
+            font-size: 0.8rem;
+            color: #5a6e85;
+        }
+        @media (max-width: 800px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>📐 Raíces Cuadráticas: Fórmula General + Números Complejos</h1>
+    <div style="text-align: center;">
+        <div class="sub">\( f(x) = ax^2 + bx + c \) &nbsp;&nbsp; con \(a,b,c \in \mathbb{Z}, a \neq 0\)</div>
+    </div>
+
+    <div class="main-grid">
+        <!-- PANEL IZQUIERDO: Interacción y solución paso a paso -->
+        <div class="controls-panel">
+            <div class="input-group">
+                <div class="coeff">
+                    <label>a</label>
+                    <input type="number" id="coeffA" value="1" step="1">
+                </div>
+                <div class="coeff">
+                    <label>b</label>
+                    <input type="number" id="coeffB" value="-4" step="1">
+                </div>
+                <div class="coeff">
+                    <label>c</label>
+                    <input type="number" id="coeffC" value="3" step="1">
+                </div>
+            </div>
+            <div style="display: flex; gap: 12px; justify-content: center;">
+                <button id="calcBtn">🔍 Calcular raíces y graficar</button>
+                <button id="resetExampleBtn" class="reset-btn">✨ Ejemplo: x² -4x +3</button>
+                <button id="complexExampleBtn" class="reset-btn" style="background:#4f46e5;">🧪 Ejemplo complejo: x² + 2x + 5</button>
+            </div>
+
+            <!-- Área de solución paso a paso -->
+            <div class="solucionario">
+                <h3>📖 Solución paso a paso</h3>
+                <div id="stepByStep" class="pasos">
+                    <!-- Se llena dinámicamente con el proceso -->
+                    Ingresa coeficientes enteros (a ≠ 0) y presiona "Calcular raíces".
+                </div>
+                <div id="resultadosFinales" class="raices">
+                    <!-- Resultados resumidos -->
+                </div>
+            </div>
+        </div>
+
+        <!-- PANEL DERECHO: Plano cartesiano -->
+        <div class="graph-panel">
+            <canvas id="quadraticCanvas" width="600" height="400" style="width:100%; height:auto; max-width:600px; margin:0 auto; display:block;"></canvas>
+            <div class="info-graph">
+                📈 Gráfica de \( f(x) = ax^2+bx+c \) | Puntos: raíces reales destacadas • | Ejes Cartesianos
+            </div>
+        </div>
+    </div>
+    <footer>
+        Fórmula general: \( x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a} \). Si discriminante &lt; 0 → raíces complejas conjugadas.
+    </footer>
+</div>
+
+<script>
+    // Referencias DOM
+    const inputA = document.getElementById('coeffA');
+    const inputB = document.getElementById('coeffB');
+    const inputC = document.getElementById('coeffC');
+    const calcBtn = document.getElementById('calcBtn');
+    const resetBtn = document.getElementById('resetExampleBtn');
+    const complexExample = document.getElementById('complexExampleBtn');
+    const stepDiv = document.getElementById('stepByStep');
+    const resultDiv = document.getElementById('resultadosFinales');
+    
+    let chartInstance = null;  // para mantener gráfico Chart.js
+
+    // Función para parsear enteros (forzando entero)
+    function getIntCoeff(id) {
+        let val = parseInt(document.getElementById(id).value);
+        if (isNaN(val)) return 0;
+        return val;
+    }
+
+    // Actualizar todo: resolver, mostrar pasos, graficar
+    function actualizarTodo() {
+        let a = getIntCoeff('coeffA');
+        let b = getIntCoeff('coeffB');
+        let c = getIntCoeff('coeffC');
+        
+        // Validar a != 0
+        if (a === 0) {
+            stepDiv.innerHTML = "❌ Error: El coeficiente 'a' no puede ser 0 (no es una función cuadrática). Introduce un entero distinto de cero.";
+            resultDiv.innerHTML = "";
+            actualizarGrafica(a, b, c);
+            return;
+        }
+        
+        // Calcular discriminante
+        let discriminante = b*b - 4*a*c;
+        
+        // Construir explicación paso a paso con notación matemática (texto + MathJax soportado)
+        let pasosHtml = `<strong>🔢 Función:</strong> \( f(x) = ${a}x^2 ${b >= 0 ? '+' : ''}${b}x ${c >= 0 ? '+' : ''}${c} \)<br><br>`;
+        pasosHtml += `<strong>📐 Fórmula general:</strong> \( x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a} \)<br>`;
+        pasosHtml += `<strong>📌 Identificamos:</strong> \( a = ${a}, \\; b = ${b}, \\; c = ${c} \)<br>`;
+        pasosHtml += `<strong>🔷 Discriminante (Δ):</strong> \( Δ = b^2 - 4ac = (${b})^2 - 4(${a})(${c}) = ${b*b} - ${4*a*c} = ${discriminante} \)<br>`;
+        
+        let raicesHTML = "";
+        let tipoRaices = "";
+        
+        if (discriminante > 0) {
+            tipoRaices = "📌 <span style='color:#2b6e3b;'>Dos raíces reales y distintas</span>";
+            let raizDelta = Math.sqrt(discriminante);
+            let x1 = (-b + raizDelta) / (2*a);
+            let x2 = (-b - raizDelta) / (2*a);
+            // Formato limpio, redondeo a 4 decimales si es necesario
+            let x1f = Number.isInteger(x1) ? x1 : x1.toFixed(5);
+            let x2f = Number.isInteger(x2) ? x2 : x2.toFixed(5);
+            pasosHtml += `<strong>🧮 Cálculo raíces:</strong> \( \\sqrt{Δ} = \\sqrt{${discriminante}} = ${raizDelta.toFixed(5)} \)<br>`;
+            pasosHtml += `\( x_1 = \\frac{-(${b}) + ${raizDelta.toFixed(5)}}{2 \\cdot ${a}} = \\frac{${-b + raizDelta}}{${2*a}} = ${x1f} \)<br>`;
+            pasosHtml += `\( x_2 = \\frac{-(${b}) - ${raizDelta.toFixed(5)}}{2 \\cdot ${a}} = \\frac{${-b - raizDelta}}{${2*a}} = ${x2f} \)<br>`;
+            raicesHTML = `✅ <strong>Raíces reales:</strong> \( x_1 = ${x1f} \)  \( x_2 = ${x2f} \)`;
+        } 
+        else if (discriminante === 0) {
+            tipoRaices = "📌 <span style='color:#c2410c;'>Raíz real doble (única solución)</span>";
+            let raizUnica = -b / (2*a);
+            let raizUnicaForm = Number.isInteger(raizUnica) ? raizUnica : raizUnica.toFixed(5);
+            pasosHtml += `<strong>🧮 Cálculo:</strong> Δ = 0 → \( \\sqrt{Δ} = 0 \)<br>`;
+            pasosHtml += `\( x = \\frac{-b}{2a} = \\frac{-(${b})}{2 \\cdot ${a}} = \\frac{${-b}}{${2*a}} = ${raizUnicaForm} \)<br>`;
+            raicesHTML = `🔁 <strong>Raíz doble (real):</strong> \( x = ${raizUnicaForm} \)`;
+        }
+        else {  // discriminante < 0 -> raíces complejas
+            let absDelta = -discriminante;
+            let sqrtAbs = Math.sqrt(absDelta);
+            tipoRaices = "📌 <span style='color:#9b4d96;'>Raíces complejas conjugadas (números imaginarios)</span>";
+            let parteReal = -b / (2*a);
+            let parteImaginaria = sqrtAbs / (2*a);
+            // Formatear parte real e imaginaria
+            let realForm = (Number.isInteger(parteReal) ? parteReal : parteReal.toFixed(5));
+            let imagForm = (Number.isInteger(parteImaginaria) ? parteImaginaria : parteImaginaria.toFixed(5));
+            // Se muestra con i notación matemática
+            pasosHtml += `<strong>🧮 Cálculo con complejos:</strong> Δ = ${discriminante} < 0 → Usamos \( \\sqrt{Δ} = \\sqrt{${discriminante}} = \\sqrt{${absDelta}} \\cdot i = ${sqrtAbs.toFixed(5)} \\, i \)<br>`;
+            pasosHtml += `\( x = \\frac{-b \\pm \\sqrt{Δ}}{2a} = \\frac{-(${b}) \\pm (${sqrtAbs.toFixed(5)} i)}{2 \\cdot ${a}} \)<br>`;
+            pasosHtml += `Separamos parte real e imaginaria:<br>`;
+            pasosHtml += `\( \\text{Parte Real} = \\frac{-b}{2a} = \\frac{${-b}}{${2*a}} = ${realForm} \)<br>`;
+            pasosHtml += `\( \\text{Parte Imaginaria} = \\frac{\\sqrt{|Δ|}}{2a} = \\frac{${sqrtAbs.toFixed(5)}}{${2*a}} = ${imagForm} \)<br>`;
+            raicesHTML = `🧪 <strong>Raíces complejas:</strong> \( x_1 = ${realForm} + ${imagForm} i \)  \( x_2 = ${realForm} - ${imagForm} i \)<br>
+            <span style="font-size:0.9rem;">✏️ Nota: \( i = \\sqrt{-1} \)</span>`;
+        }
+        
+        // Unir pasos completos
+        pasosHtml += `<div class="discriminante-badge">${tipoRaices}</div>`;
+        stepDiv.innerHTML = pasosHtml;
+        resultDiv.innerHTML = raicesHTML;
+        
+        // refrescar MathJax para mostrar fórmulas correctamente
+        if (window.MathJax) {
+            MathJax.typesetPromise();
+        }
+        
+        // Actualizar gráfica con los coeficientes actuales
+        actualizarGrafica(a, b, c);
+    }
+    
+    // Función para graficar en plano cartesiano con Chart.js (dominio x, rango dinámico)
+    function actualizarGrafica(a, b, c) {
+        const canvas = document.getElementById('quadraticCanvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        
+        // Definir rango de x: mostrar vértice y raíces reales, rango suficiente
+        let centroX = -b / (2*a);
+        let rango = 5;
+        // Si hay raíces reales conocidas, ajustar para mostrarlas bien
+        let discriminante = b*b - 4*a*c;
+        let raicesReales = [];
+        if (discriminante >= 0) {
+            let sqrtVal = Math.sqrt(discriminante);
+            let r1 = (-b + sqrtVal) / (2*a);
+            let r2 = (-b - sqrtVal) / (2*a);
+            raicesReales.push(r1, r2);
+            // Ampliar rango si las raíces están lejos
+            let minR = Math.min(r1, r2);
+            let maxR = Math.max(r1, r2);
+            if (minR < centroX - rango/1.5) rango = Math.max(rango, Math.abs(centroX - minR) + 1);
+            if (maxR > centroX + rango/1.5) rango = Math.max(rango, Math.abs(maxR - centroX) + 1);
+        }
+        // Ajuste por vértice y valores extremos
+        let xMin = centroX - rango;
+        let xMax = centroX + rango;
+        if (xMin > xMax) { xMin = -5; xMax = 5; }
+        // Evitar rangos demasiado pequeños
+        if (xMax - xMin < 4) { xMin -= 1; xMax += 1; }
+        
+        // Evaluar f(x) en muchos puntos
+        const puntos = 200;
+        let xValues = [];
+        let yValues = [];
+        let step = (xMax - xMin) / puntos;
+        for (let i = 0; i <= puntos; i++) {
+            let x = xMin + i * step;
+            let y = a*x*x + b*x + c;
+            xValues.push(x);
+            yValues.push(y);
+        }
+        
+        // Determinar rango Y adecuado (evitar líneas extremas)
+        let yMin = Math.min(...yValues);
+        let yMax = Math.max(...yValues);
+        let paddingY = (Math.abs(yMax - yMin) * 0.2) || 1;
+        yMin = Math.min(yMin - paddingY, -0.5);
+        yMax = Math.max(yMax + paddingY, 0.5);
+        if (yMin === yMax) { yMin -= 1; yMax += 1; }
+        
+        // Preparar datasets: la curva y puntos de raíces reales
+        let datasets = [{
+            label: `f(x) = ${a}x² ${b>=0?'+':''}${b}x ${c>=0?'+':''}${c}`,
+            data: xValues.map((x, idx) => ({x: x, y: yValues[idx]})),
+            borderColor: '#2c5bb0',
+            backgroundColor: 'rgba(44, 91, 176, 0.05)',
+            borderWidth: 3,
+            pointRadius: 0,
+            tension: 0.3,
+            fill: false,
+            cubicInterpolationMode: 'monotone'
+        }];
+        
+        // Si discriminante >= 0, agregar puntos en las raíces reales
+        let raicesMarcadas = [];
+        if (discriminante >= 0 && a !== 0) {
+            let sqrtVal = Math.sqrt(discriminante);
+            let r1 = (-b + sqrtVal) / (2*a);
+            let r2 = (-b - sqrtVal) / (2*a);
+            if (!isNaN(r1) && isFinite(r1)) raicesMarcadas.push(r1);
+            if (!isNaN(r2) && isFinite(r2) && Math.abs(r2 - r1) > 1e-8) raicesMarcadas.push(r2);
+            if (raicesMarcadas.length > 0 && discriminante === 0 && raicesMarcadas.length === 2) raicesMarcadas.pop(); // evitar duplicado exacto
+            
+            if (raicesMarcadas.length) {
+                let puntosRaices = raicesMarcadas.map(r => ({x: r, y: a*r*r + b*r + c}));
+                datasets.push({
+                    label: 'Raíces reales',
+                    data: puntosRaices,
+                    borderColor: '#e63946',
+                    backgroundColor: '#e63946',
+                    pointRadius: 7,
+                    pointBorderColor: 'white',
+                    pointBorderWidth: 2,
+                    pointStyle: 'circle',
+                    type: 'scatter',
+                    showLine: false
+                });
+            }
+        }
+        
+        // Destacar vértice: punto adicional
+        let verticeX = -b/(2*a);
+        let verticeY = a*verticeX*verticeX + b*verticeX + c;
+        if (isFinite(verticeX) && isFinite(verticeY)) {
+            datasets.push({
+                label: 'Vértice',
+                data: [{x: verticeX, y: verticeY}],
+                backgroundColor: '#ff8c42',
+                borderColor: '#ff8c42',
+                pointRadius: 6,
+                pointBorderColor: 'white',
+                pointStyle: 'triangle',
+                showLine: false,
+                type: 'scatter'
+            });
+        }
+        
+        // Configuración del gráfico con ejes centrados
+        if (chartInstance) {
+            chartInstance.destroy();
+        }
+        
+        chartInstance = new Chart(ctx, {
+            type: 'line',
+            data: { datasets },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    tooltip: { mode: 'index', intersect: false },
+                    legend: { position: 'top', labels: { usePointStyle: true, boxWidth: 10 } },
+                },
+                scales: {
+                    x: {
+                        type: 'linear',
+                        title: { display: true, text: 'x', color: '#1f3a5f', font: { weight: 'bold' } },
+                        grid: { color: '#ccc', lineWidth: 0.5 },
+                        ticks: { stepSize: 1, autoSkip: true },
+                        min: xMin,
+                        max: xMax
+                    },
+                    y: {
+                        type: 'linear',
+                        title: { display: true, text: 'f(x)', color: '#1f3a5f' },
+                        grid: { color: '#ccc', lineWidth: 0.5 },
+                        min: yMin,
+                        max: yMax,
+                        ticks: { stepSize: (yMax - yMin) / 5 }
+                    }
+                },
+                elements: { line: { tension: 0.2 } }
+            }
+        });
+        
+        // Dibujar ejes personalizados adicionales (líneas x=0,y=0) con anotación? No es necesario, pero grid ya está.
+        // Solo asegurar que la apariencia tenga el plano cartesiano claro agregando líneas de eje en cero mediante plugin? 
+        // Con grid es suficiente, pero resaltamos con comentario.
+    }
+    
+    // Función cargar ejemplo por defecto: a=1,b=-4,c=3 (x²-4x+3)
+    function cargarEjemploBasico() {
+        inputA.value = 1;
+        inputB.value = -4;
+        inputC.value = 3;
+        actualizarTodo();
+    }
+    
+    // Ejemplo complejo: x² + 2x + 5 → discriminante = 4 - 20 = -16 -> raíces -1 ± 2i
+    function cargarEjemploComplejo() {
+        inputA.value = 1;
+        inputB.value = 2;
+        inputC.value = 5;
+        actualizarTodo();
+    }
+    
+    // Eventos
+    calcBtn.addEventListener('click', () => {
+        // Validar a != 0 antes
+        let aVal = getIntCoeff('coeffA');
+        if (aVal === 0) {
+            stepDiv.innerHTML = "❌ El coeficiente 'a' no puede ser 0. Por favor ingresa un número entero distinto de cero.";
+            resultDiv.innerHTML = "";
+            actualizarGrafica(0, getIntCoeff('coeffB'), getIntCoeff('coeffC'));
+            return;
+        }
+        actualizarTodo();
+    });
+    
+    resetBtn.addEventListener('click', cargarEjemploBasico);
+    complexExample.addEventListener('click', cargarEjemploComplejo);
+    
+    // Inicializar con un ejemplo por defecto: x² -4x +3 (raíces 1 y 3)
+    cargarEjemploBasico();
+    
+    // Adaptar gráfico al redimensionar ventana (opcional)
+    window.addEventListener('resize', () => {
+        if (chartInstance) {
+            let a = getIntCoeff('coeffA');
+            let b = getIntCoeff('coeffB');
+            let c = getIntCoeff('coeffC');
+            actualizarGrafica(a, b, c);
+        }
+    });
+</script>
+</body>
+</html>

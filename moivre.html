@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teorema de De Moivre - Números Complejos</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #1e3c72;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .input-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #1e3c72;
+        }
+        
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus {
+            border-color: #2a5298;
+            outline: none;
+        }
+        
+        .checkbox-group {
+            margin: 15px 0;
+            display: flex;
+            gap: 20px;
+        }
+        
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: normal;
+            cursor: pointer;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-right: 10px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .canvas-section {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        canvas {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+        }
+        
+        .formula-section {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .formula-title {
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        
+        .formula {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-size: 18px;
+            line-height: 2;
+        }
+        
+        .coordinates {
+            color: #1e3c72;
+            font-weight: bold;
+        }
+        
+        .legend {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Teorema de De Moivre</h1>
+        <p class="subtitle">Visualización interactiva de potencias y raíces de números complejos</p>
+        
+        <div class="main-content">
+            <div class="input-section">
+                <h3>📐 Número Complejo z = a + bi</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="input-group">
+                        <label>Parte Real (a):</label>
+                        <input type="number" id="realPart" value="3" placeholder="Parte real">
+                    </div>
+                    <div class="input-group">
+                        <label>Parte Imaginaria (b):</label>
+                        <input type="number" id="imagPart" value="4" placeholder="Parte imaginaria">
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label>Exponente n:</label>
+                    <input type="number" id="exponent" value="2" min="1" max="10" placeholder="Exponente">
+                </div>
+                
+                <div class="checkbox-group">
+                    <label>
+                        <input type="checkbox" id="showPower" checked>
+                        Mostrar Potencia (zⁿ)
+                    </label>
+                    <label>
+                        <input type="checkbox" id="showRoots" checked>
+                        Mostrar Raíces (ⁿ√z)
+                    </label>
+                </div>
+                
+                <button class="btn" onclick="calculate()">Calcular</button>
+                <button class="btn" onclick="clearCanvas()" style="background: #6c757d;">Limpiar</button>
+            </div>
+            
+            <div class="canvas-section">
+                <canvas id="complexPlane" width="500" height="500"></canvas>
+            </div>
+        </div>
+        
+        <div class="formula-section">
+            <div class="formula-title">📝 Aplicación del Teorema de De Moivre:</div>
+            <div id="formulaDisplay" class="formula">
+                Ingrese un número complejo y haga clic en "Calcular"
+            </div>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <span class="legend-color" style="background: #e74c3c;"></span>
+                Número Original (z)
+            </div>
+            <div class="legend-item">
+                <span class="legend-color" style="background: #2ecc71;"></span>
+                Potencia (zⁿ)
+            </div>
+            <div class="legend-item">
+                <span class="legend-color" style="background: #3498db;"></span>
+                Raíces (ⁿ√z)
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let canvas, ctx;
+        
+        window.onload = function() {
+            canvas = document.getElementById('complexPlane');
+            ctx = canvas.getContext('2d');
+            drawPlane();
+        };
+        
+        function drawPlane() {
+            const width = canvas.width;
+            const height = canvas.height;
+            const centerX = width / 2;
+            const centerY = height / 2;
+            const scale = 40;
+            
+            // Limpiar canvas
+            ctx.clearRect(0, 0, width, height);
+            
+            // Fondo blanco
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, width, height);
+            
+            // Dibujar ejes
+            ctx.strokeStyle = '#ccc';
+            ctx.lineWidth = 1;
+            
+            // Ejes principales
+            ctx.beginPath();
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 2;
+            ctx.moveTo(0, centerY);
+            ctx.lineTo(width, centerY);
+            ctx.moveTo(centerX, 0);
+            ctx.lineTo(centerX, height);
+            ctx.stroke();
+            
+            // Cuadrícula
+            ctx.strokeStyle = '#eee';
+            ctx.lineWidth = 1;
+            for (let i = -10; i <= 10; i++) {
+                const x = centerX + i * scale;
+                const y = centerY - i * scale;
+                
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, height);
+                ctx.stroke();
+                
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(width, y);
+                ctx.stroke();
+            }
+            
+            // Etiquetas de ejes
+            ctx.fillStyle = '#333';
+            ctx.font = '12px Arial';
+            ctx.textAlign = 'center';
+            
+            for (let i = -10; i <= 10; i++) {
+                if (i !== 0) {
+                    const x = centerX + i * scale;
+                    const y = centerY - i * scale;
+                    ctx.fillText(i, x, centerY + 15);
+                    ctx.fillText(i, centerX - 20, y + 4);
+                }
+            }
+            
+            // Etiqueta origen
+            ctx.fillText('0', centerX - 15, centerY + 15);
+            
+            // Flechas
+            ctx.fillStyle = '#333';
+            // Flecha X
+            ctx.beginPath();
+            ctx.moveTo(width - 10, centerY - 5);
+            ctx.lineTo(width - 2, centerY);
+            ctx.lineTo(width - 10, centerY + 5);
+            ctx.fill();
+            
+            // Flecha Y
+            ctx.beginPath();
+            ctx.moveTo(centerX - 5, 10);
+            ctx.lineTo(centerX, 2);
+            ctx.lineTo(centerX + 5, 10);
+            ctx.fill();
+            
+            // Etiquetas de ejes
+            ctx.fillText('Real', width - 30, centerY - 15);
+            ctx.fillText('Imag', centerX + 20, 20);
+        }
+        
+        function drawPoint(x, y, color, label, size = 6) {
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const scale = 40;
+            
+            const canvasX = centerX + x * scale;
+            const canvasY = centerY - y * scale;
+            
+            // Dibujar punto
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.arc(canvasX, canvasY, size, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Dibujar etiqueta
+            ctx.fillStyle = color;
+            ctx.font = 'bold 12px Arial';
+            ctx.fillText(label, canvasX + 10, canvasY - 10);
+            
+            // Dibujar línea desde el origen
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.lineTo(canvasX, canvasY);
+            ctx.stroke();
+            ctx.setLineDash([]);
+        }
+        
+        function calculate() {
+            drawPlane();
+            
+            const a = parseInt(document.getElementById('realPart').value) || 0;
+            const b = parseInt(document.getElementById('imagPart').value) || 0;
+            const n = parseInt(document.getElementById('exponent').value) || 2;
+            const showPower = document.getElementById('showPower').checked;
+            const showRoots = document.getElementById('showRoots').checked;
+            
+            const z = { real: a, imag: b };
+            
+            // Calcular forma polar
+            const r = Math.sqrt(a * a + b * b);
+            const theta = Math.atan2(b, a);
+            const thetaDeg = (theta * 180 / Math.PI).toFixed(2);
+            
+            // Dibujar número original
+            drawPoint(a, b, '#e74c3c', `z = ${a} + ${b}i`);
+            
+            let formulaHTML = `
+                <strong>Número original:</strong> <span class="coordinates">z = ${a} + ${b}i</span><br>
+                <strong>Forma polar:</strong> <span class="coordinates">z = ${r.toFixed(2)}(cos(${theta.toFixed(4)}) + i·sin(${theta.toFixed(4)}))</span><br>
+                <strong>Ángulo:</strong> θ = ${thetaDeg}° (${theta.toFixed(4)} rad)<br><br>
+            `;
+            
+            // Calcular y dibujar potencia usando De Moivre
+            if (showPower) {
+                const rPower = Math.pow(r, n);
+                const thetaPower = theta * n;
+                const aPower = rPower * Math.cos(thetaPower);
+                const bPower = rPower * Math.sin(thetaPower);
+                
+                drawPoint(aPower, bPower, '#2ecc71', `z^${n} = ${aPower.toFixed(2)} + ${bPower.toFixed(2)}i`, 8);
+                
+                formulaHTML += `
+                    <strong>Teorema de De Moivre (Potencia):</strong><br>
+                    <span class="coordinates">z^${n} = [r(cos θ + i·sin θ)]^${n} = r^${n}(cos(${n}θ) + i·sin(${n}θ))</span><br>
+                    <span class="coordinates">z^${n} = ${r.toFixed(2)}^${n} · (cos(${n}·${theta.toFixed(4)}) + i·sin(${n}·${theta.toFixed(4)}))</span><br>
+                    <span class="coordinates">z^${n} = ${rPower.toFixed(2)}(cos(${thetaPower.toFixed(4)}) + i·sin(${thetaPower.toFixed(4)}))</span><br>
+                    <span class="coordinates">z^${n} = ${aPower.toFixed(2)} + ${bPower.toFixed(2)}i</span><br><br>
+                `;
+            }
+            
+            // Calcular y dibujar raíces usando De Moivre
+            if (showRoots && n > 0) {
+                const rRoot = Math.pow(r, 1/n);
+                
+                formulaHTML += `
+                    <strong>Teorema de De Moivre (Raíces):</strong><br>
+                    <span class="coordinates">ⁿ√z = ⁿ√r · [cos((θ + 2πk)/n) + i·sin((θ + 2πk)/n)]</span><br>
+                    donde k = 0, 1, 2, ..., n-1<br><br>
+                `;
+                
+                for (let k = 0; k < n; k++) {
+                    const thetaRoot = (theta + 2 * Math.PI * k) / n;
+                    const aRoot = rRoot * Math.cos(thetaRoot);
+                    const bRoot = rRoot * Math.sin(thetaRoot);
+                    
+                    drawPoint(aRoot, bRoot, '#3498db', `w${k}`, 5);
+                    
+                    formulaHTML += `
+                        <strong>k = ${k}:</strong><br>
+                        <span class="coordinates">w${k} = ${rRoot.toFixed(2)}(cos(${thetaRoot.toFixed(4)}) + i·sin(${thetaRoot.toFixed(4)}))</span><br>
+                        <span class="coordinates">w${k} = ${aRoot.toFixed(2)} + ${bRoot.toFixed(2)}i</span><br>
+                        <span class="coordinates">Ángulo: ${(thetaRoot * 180 / Math.PI).toFixed(2)}°</span><br><br>
+                    `;
+                }
+            }
+            
+            // Mostrar círculo unitario para referencia si hay raíces
+            if (showRoots && n > 0) {
+                const rRoot = Math.pow(r, 1/n);
+                const centerX = canvas.width / 2;
+                const centerY = canvas.height / 2;
+                const scale = 40;
+                
+                ctx.strokeStyle = '#3498db';
+                ctx.lineWidth = 1;
+                ctx.setLineDash([3, 3]);
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, rRoot * scale, 0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.setLineDash([]);
+            }
+            
+            document.getElementById('formulaDisplay').innerHTML = formulaHTML;
+        }
+        
+        function clearCanvas() {
+            drawPlane();
+            document.getElementById('formulaDisplay').innerHTML = 'Ingrese un número complejo y haga clic en "Calcular"';
+        }
+        
+        // Calcular automáticamente al cargar la página
+        window.onload = function() {
+            canvas = document.getElementById('complexPlane');
+            ctx = canvas.getContext('2d');
+            drawPlane();
+            calculate();
+        };
+        
+        // Calcular cuando se presiona Enter
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                calculate();
+            }
+        });
+    </script>
+</body>
+</html>

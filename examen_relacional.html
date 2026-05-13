@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen Abierto: Modelo Relacional</title>
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$']],
+          displayMath: [['$$', '$$']]
+        }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    
+    <style>
+        :root {
+            --bg-color: #f0f4f8;
+            --card-bg: #ffffff;
+            --primary: #1e3a8a;
+            --secondary: #3b82f6;
+            --text-dark: #1f2937;
+            --text-light: #6b7280;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            text-align: center;
+            border-bottom: 4px solid var(--secondary);
+            padding-bottom: 10px;
+            font-size: 2.5rem;
+        }
+        .subtitle {
+            color: var(--text-light);
+            margin-bottom: 2rem;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+        .controls {
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1rem;
+        }
+        button {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            background-color: var(--primary);
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        button:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            width: 100%;
+            max-width: 1400px;
+        }
+        .card-container {
+            perspective: 1200px;
+            min-height: 350px; 
+            display: flex;
+        }
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+            transform-style: preserve-3d;
+            cursor: pointer;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.06);
+            border-radius: 12px;
+        }
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            padding: 2rem;
+            box-sizing: border-box;
+            background-color: var(--card-bg);
+            display: flex;
+            flex-direction: column;
+        }
+        .card-front {
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border: 2px solid var(--primary);
+            background: linear-gradient(145deg, #ffffff, #f3f4f6);
+        }
+        .card-front h2 {
+            color: var(--primary);
+            margin: 0;
+            font-size: 1.4rem;
+            line-height: 1.4;
+        }
+        .card-front .question-num {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: var(--secondary);
+            background: rgba(59, 130, 246, 0.1);
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        .card-front p.hint {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-top: 1.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .card-back {
+            transform: rotateY(180deg);
+            background-color: #f8fafc;
+            overflow-y: auto;
+            justify-content: flex-start;
+            border: 2px solid var(--secondary);
+        }
+        .card-back .answer-title {
+            color: var(--secondary);
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #cbd5e1;
+            padding-bottom: 5px;
+        }
+        .card-back p {
+            margin-top: 0;
+            line-height: 1.6;
+            font-size: 1.05rem;
+            color: #334155;
+        }
+        
+        /* Scrollbar styling */
+        .card-back::-webkit-scrollbar {
+            width: 8px;
+        }
+        .card-back::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 4px;
+        }
+        .card-back::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 4px;
+        }
+        .card-back::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary);
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Evaluación: Modelo Relacional</h1>
+    <div class="subtitle">Lee la pregunta, responde en voz alta y haz clic para verificar.</div>
+    
+    <div class="controls">
+        <button onclick="shuffleCards()">🔀 Mezclar Preguntas</button>
+        <button onclick="resetOrder()">🔢 Orden Original</button>
+    </div>
+
+    <div class="grid" id="flashcard-grid">
+
+        <div class="card-container" style="order: 0;" data-original-order="0" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <span class="question-num">Pregunta 1</span>
+                    <h2>¿Qué es el Modelo Relacional y qué tipo de modelo es?</h2>
+                    <p class="hint">Click para ver respuesta</p>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Respuesta Correcta</div>
+                    <p>Es el fundamento de la tecnología moderna de base de datos. Es un modelo puramente lógico (no físico) donde los datos se estructuran en tablas (filas y columnas).</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 1;" data-original-order="1" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <span class="question-num">Pregunta 2</span>
+                    <h2>¿Quién introdujo el modelo relacional y en qué año?</h2>
+                    <p class="hint">Click para ver respuesta</p>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Respuesta Correcta</div>
+                    <p>Fue introducido por el Dr. Edgar Frank Codd (E.F. Codd, investigador de IBM) en el año 1970.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 2;" data-original-order="2" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <span class="question-num">Pregunta 3</span>
+                    <h2>¿Qué establece el 'Principio de Información' de las bases de datos relacionales?</h2>
+                    <p class="hint">Click para ver respuesta</p>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Respuesta Correcta</div>
+                    <p>Establece que todo el contenido de información de la base de datos está representado en una sola forma: como valores explícitos dentro de posiciones de columnas, dentro de filas, dentro de tablas.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 3;" data-original-order="3" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <span class="question-num">Pregunta 4</span>
+                    <h2>¿Cuál es la definición estrictamente matemática de una 'Relación'?</h2>
+                    <p class="hint">Click para ver respuesta</p>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Respuesta Correcta</div>
+                    <p>Una relación definida sobre $n$ dominios $D_1, D_2, \dots$ es un subconjunto del producto cartesiano de estos dominios. Es decir, una tupla es una serie de $n$ valores ordenados donde el primer elemento es de $D_1$, el segundo de $D_2$, etc.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 4;" data-original-order="4" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <span class="question-num">Pregunta 5</span>
+                    <h2>En términos formales, ¿qué es una tupla y qué reglas de orden y duplicidad la rigen?</h2>
+                    <p class="hint">Click para ver respuesta</p>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Respuesta Correcta</div>
+                    <p>Una tupla es cada renglón de la tabla que representa una combinación de valores. Reglas estrictas: Las tuplas deben ser distintas (no hay duplicadas) y su orden no importa (no aporta información).</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 5;" data-original-order="5" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <span class="question-num">Pregunta 6</span>
+                    <h2>¿Qué es un 'Atributo' y qué regla aplica para su nombre dentro de una relación?</h2>
+                    <p class="hint">Click para ver respuesta</p>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Respuesta Correcta</div>
+                    <p>Un atributo representa las propiedades de la relación (columnas). La regla estricta es que no puede haber atributos con el mismo nombre dentro de la misma relación.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 6;" data-original-order="6" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <span class="question-num">Pregunta 7</span>
+                    <h2>Define qué es un 'Dominio' y cuál es su característica fundamental.</h2>
+                    <p class="hint">Click para ver respuesta</p>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Respuesta Correcta</div>
+                    <p>Un dominio indica qué valores pueden ser asumidos por una columna (el conjunto de valores válidos). Su característica fundamental es que deben ser atómicos (indivisibles).</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 7;" data-original-order="7" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <span class="question-num">Pregunta 8</span>
+                    <h2>¿Qué significa que un atributo tenga 'Integridad de Dominio'?</h2>
+                    <p class="hint">Click para ver respuesta</p>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Respuesta Correcta</div>
+                    <p>Significa que todas las entradas para cada atributo sean válidas, respetando el tipo de dato, el intervalo de valores, el formato y restricciones como NOT NULL.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 8;" data-original-order="8" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <span class="question-num">Pregunta 9</span>
+                    <h2>Diferencia entre el 'Grado' y la 'Cardinalidad' de una relación.</h2>
+                    <p class="hint">Click para ver respuesta</p>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Respuesta Correcta</div>
+                    <p>El Grado es el número de atributos (columnas) que contiene una relación. La Cardinalidad es el número de tuplas (filas o registros) que contiene.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 9;" data-original-order="9" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <span class="question-num">Pregunta 10</span>
+                    <h2>¿Qué es una Superclave?</h2>
+                    <p class="hint">Click para ver respuesta</p>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Respuesta Correcta</div>
+                    <p>Es un atributo o conjunto de atributos que identifican de modo único las tuplas de una relación.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 10;" data-original-order="10" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <span class="question-num">Pregunta 11</span>
+                    <h2>¿Cuál es la diferencia exacta entre una Clave Candidata y una Clave Primaria?</h2>
+                    <p class="hint">Click para ver respuesta</p>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Respuesta Correcta</div>
+                    <p>Una Clave Candidata es una superclave 'mínima' (ninguno de sus subconjuntos es una superclave). La Clave Primaria es la clave candidata que el diseñador selecciona formalmente para identificar la tabla.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 11;" data-original-order="11" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <span class="question-num">Pregunta 12</span>
+                    <h2>¿Qué es una Clave Alternativa (o Alterna)?</h2>
+                    <p class="hint">Click para ver respuesta</p>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Respuesta Correcta</div>
+                    <p>Son todas aquellas claves candidatas que no fueron seleccionadas como la clave primaria.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 12;" data-original-order="12" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <span class="question-num">Pregunta 13</span>
+                    <h2>¿Qué es una Clave Ajena (Foránea) y cuál es su propósito?</h2>
+                    <p class="hint">Click para ver respuesta</p>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Respuesta Correcta</div>
+                    <p>Es un atributo (o atributos) que coincide con la clave primaria de otra relación. Su propósito es representar relaciones entre datos (una referencia a otra tupla).</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 13;" data-original-order="13" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <span class="question-num">Pregunta 14</span>
+                    <h2>Menciona ejemplos de restricciones semánticas que el diseñador puede incluir.</h2>
+                    <p class="hint">Click para ver respuesta</p>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Respuesta Correcta</div>
+                    <p>Obligatoriedad (NOT NULL), Clave Primaria (PRIMARY KEY - valores únicos y no vacíos), Unicidad (UNIQUE - no se repiten valores) y Llaves Foráneas (FOREIGN KEY).</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 14;" data-original-order="14" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <span class="question-num">Pregunta 15</span>
+                    <h2>Al actualizar o eliminar un registro con llaves foráneas ligadas, ¿cuáles son las dos reglas principales (ON DELETE / ON UPDATE)?</h2>
+                    <p class="hint">Click para ver respuesta</p>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Respuesta Correcta</div>
+                    <p>1) Restringir (R): Impide la eliminación o actualización si hay registros dependientes. 2) Permitir en cascada (C): Propaga la eliminación o actualización a todos los registros dependientes.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 15;" data-original-order="15" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <span class="question-num">Pregunta 16</span>
+                    <h2>¿Cuál es la diferencia funcional entre CHECK, ASSERTION y TRIGGER?</h2>
+                    <p class="hint">Click para ver respuesta</p>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Respuesta Correcta</div>
+                    <p>CHECK comprueba una condición al operar en una tabla específica. ASSERTION es una regla general independiente de una tabla que siempre debe cumplirse en la BD. TRIGGER es una acción concreta a ejecutarse cuando se cumplen ciertas condiciones.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 16;" data-original-order="16" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <span class="question-num">Pregunta 17</span>
+                    <h2>¿En qué teorías matemáticas se basa la manipulación y consulta en el Modelo Relacional?</h2>
+                    <p class="hint">Click para ver respuesta</p>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Respuesta Correcta</div>
+                    <p>En el Álgebra Relacional (basada en la teoría de conjuntos) y el Cálculo Relacional (basado en lógica de predicados de primer orden).</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 17;" data-original-order="17" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <span class="question-num">Pregunta 18</span>
+                    <h2>(Traducción ER) ¿Cómo se traduce un Atributo Compuesto (monovaluado)?</h2>
+                    <p class="hint">Click para ver respuesta</p>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Respuesta Correcta</div>
+                    <p>No se crea ninguna tabla nueva. Simplemente, cada sub-atributo se convierte en un campo independiente dentro de la tabla de la entidad original.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 18;" data-original-order="18" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <span class="question-num">Pregunta 19</span>
+                    <h2>(Traducción ER) ¿Cuál es la regla para traducir un Atributo Multivaluado?</h2>
+                    <p class="hint">Click para ver respuesta</p>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Respuesta Correcta</div>
+                    <p>Los atributos multivaluados siempre forman una tabla nueva. Esta tabla contendrá campos para el atributo multivaluado y una llave foránea que apunte a la entidad original.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 19;" data-original-order="19" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <span class="question-num">Pregunta 20</span>
+                    <h2>(Traducción ER) ¿Cómo se representa una Entidad Débil en el modelo relacional?</h2>
+                    <p class="hint">Click para ver respuesta</p>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Respuesta Correcta</div>
+                    <p>Se crea una tabla con una llave foránea apuntando a la entidad fuerte de la cual depende. Típicamente se configura con la regla 'ON DELETE CASCADE'.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 20;" data-original-order="20" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <span class="question-num">Pregunta 21</span>
+                    <h2>(Traducción ER) ¿Qué sucede con las Interrelaciones Muchos a Muchos (N:M) y las de orden mayor a 2?</h2>
+                    <p class="hint">Click para ver respuesta</p>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Respuesta Correcta</div>
+                    <p>Siempre generan una tabla nueva. Sus atributos serán los propios de la interrelación, acompañados de las llaves foráneas a las entidades relacionadas.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 21;" data-original-order="21" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <span class="question-num">Pregunta 22</span>
+                    <h2>(Traducción ER) En una interrelación binaria Uno a Muchos (1:N), ¿quién se queda con la llave foránea?</h2>
+                    <p class="hint">Click para ver respuesta</p>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Respuesta Correcta</div>
+                    <p>La tabla del lado 'varios' (N) incluye la clave primaria de la tabla del lado 'uno' (1) y la guarda como llave foránea. Si la interrelación tiene atributos, también pasan al lado 'varios'.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 22;" data-original-order="22" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <span class="question-num">Pregunta 23</span>
+                    <h2>(Traducción ER) ¿Cómo se traduce una interrelación Recursiva?</h2>
+                    <p class="hint">Click para ver respuesta</p>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Respuesta Correcta</div>
+                    <p>Se trata igual que una interrelación normal, pero resulta en la duplicación del atributo identificador dentro de la misma tabla, actuando como una llave foránea hacia la propia tabla.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 23;" data-original-order="23" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <span class="question-num">Pregunta 24</span>
+                    <h2>(Traducción ER) En la Generalización, ¿qué establece la OPCIÓN A?</h2>
+                    <p class="hint">Click para ver respuesta</p>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Respuesta Correcta</div>
+                    <p>Crear una tabla para el supertipo (con sus atributos) y una tabla por cada subtipo (con sus atributos propios). La clave primaria del supertipo pasa a los subtipos como llave foránea.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 24;" data-original-order="24" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <span class="question-num">Pregunta 25</span>
+                    <h2>(Traducción ER) En la Generalización, ¿cuál es la diferencia de uso entre la OPCIÓN C y la OPCIÓN D?</h2>
+                    <p class="hint">Click para ver respuesta</p>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Respuesta Correcta</div>
+                    <p>La Opción C crea una sola tabla con un atributo discriminador 'T', ideal para especializaciones disjuntas (genera nulos). La Opción D crea una sola tabla con atributos lógicos $T_i$ para indicar a qué subtipos pertenece la tupla, utilizada para especializaciones con solapamiento.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const grid = document.getElementById('flashcard-grid');
+        const cards = Array.from(grid.children);
+
+        function shuffleCards() {
+            cards.forEach(card => {
+                card.style.order = Math.floor(Math.random() * 10000);
+                const innerCard = card.querySelector('.card');
+                if(innerCard.classList.contains('flipped')) {
+                    innerCard.classList.remove('flipped');
+                }
+            });
+        }
+
+        function resetOrder() {
+            cards.forEach(card => {
+                card.style.order = card.getAttribute('data-original-order');
+                const innerCard = card.querySelector('.card');
+                if(innerCard.classList.contains('flipped')) {
+                    innerCard.classList.remove('flipped');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

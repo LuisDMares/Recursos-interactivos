@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repaso Visual: Álgebra y Cálculo Relacional</title>
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$']],
+          displayMath: [['$$', '$$']]
+        }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    
+    <style>
+        :root {
+            --primary-bg: #f4f6f9;
+            --card-bg: #ffffff;
+            --accent: #1d3557;
+            --highlight: #e63946;
+            --text-main: #1d3557;
+            --table-border: #457b9d;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            border-bottom: 3px solid var(--highlight);
+            padding-bottom: 10px;
+        }
+        .controls {
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1rem;
+        }
+        button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            background-color: var(--accent);
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        button:hover {
+            background-color: var(--highlight);
+            transform: translateY(-2px);
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            width: 100%;
+            max-width: 1400px;
+        }
+        .card-container {
+            perspective: 1200px;
+            min-height: 420px; 
+            display: flex;
+        }
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+            transform-style: preserve-3d;
+            cursor: pointer;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+            border-radius: 12px;
+        }
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            padding: 1.8rem;
+            box-sizing: border-box;
+            background-color: var(--card-bg);
+            display: flex;
+            flex-direction: column;
+        }
+        .card-front {
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border: 2px solid var(--accent);
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        }
+        .card-front h2 {
+            color: var(--accent);
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        .card-front p.hint {
+            font-size: 0.9rem;
+            color: #8d99ae;
+            margin-top: 1.5rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .card-back {
+            transform: rotateY(180deg);
+            background-color: #f1faee;
+            overflow-y: auto;
+            justify-content: flex-start;
+            border: 2px solid #a8dadc;
+        }
+        .card-back p {
+            margin-top: 0;
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+        .ejemplo {
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background-color: #e8f5e9;
+            border-left: 5px solid #2a9d8f;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            color: #1d3557;
+            font-weight: 500;
+        }
+        
+        /* Estilos específicos para el Diagrama de la Base de Datos */
+        .db-diagram {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            align-items: center;
+            background: #ffffff;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid #ced4da;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .table-box {
+            border: 2px solid var(--table-border);
+            border-radius: 6px;
+            width: 130px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+            font-size: 0.85rem;
+        }
+        .table-title {
+            background-color: var(--table-border);
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            padding: 5px;
+            letter-spacing: 1px;
+        }
+        .table-row {
+            padding: 4px 8px;
+            border-bottom: 1px solid #e9ecef;
+            color: #333;
+        }
+        .table-row:last-child {
+            border-bottom: none;
+        }
+        .pk {
+            font-weight: bold;
+            color: #d90429;
+            background-color: #ffe5d9;
+        }
+        .fk {
+            font-style: italic;
+            color: #0077b6;
+            background-color: #caf0f8;
+        }
+        .relation-arrow {
+            font-weight: bold;
+            color: #6c757d;
+            text-align: center;
+            line-height: 1.1;
+        }
+        
+        .card-back::-webkit-scrollbar { width: 8px; }
+        .card-back::-webkit-scrollbar-track { background: #f1faee; border-radius: 4px; }
+        .card-back::-webkit-scrollbar-thumb { background: #a8dadc; border-radius: 4px; }
+        .card-back::-webkit-scrollbar-thumb:hover { background: var(--table-border); }
+    </style>
+</head>
+<body>
+
+    <h1>Repaso Visual: Álgebra y Cálculo Relacional</h1>
+    
+    <div class="controls">
+        <button onclick="shuffleCards()">🎲 Mezclar Aleatorio</button>
+        <button onclick="resetOrder()">📚 Orden Original</button>
+    </div>
+
+    <div class="grid" id="flashcard-grid">
+
+        <div class="card-container" style="order: 0;" data-original-order="0" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <h2>Álgebra vs. Cálculo Relacional</h2>
+                    <p class="hint">Click para voltear</p>
+                </div>
+                <div class="card-face card-back">
+                    <p>Son las dos teorías matemáticas introducidas por E.F. Codd.<br><br><b>Álgebra Relacional:</b> Es <i>procedimental</i>. Se indica una secuencia de operaciones sobre la BD para calcular el resultado paso a paso.<br><b>Cálculo Relacional:</b> Es <i>no procedimental (declarativo)</i>. Se describe la información deseada sin dar un procedimiento específico, basado en lógica de predicados.</p>
+                    <div class="ejemplo">
+                        En álgebra dices 'Toma esta tabla, filtra estas filas y dame estas columnas'. En cálculo dices 'Dame los elementos $x$ que cumplan esta condición'.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 1;" data-original-order="1" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <h2>Operaciones Fundamentales y Derivadas</h2>
+                    <p class="hint">Click para voltear</p>
+                </div>
+                <div class="card-face card-back">
+                    <p><b>Básicas (Fundamentales):</b><br>1. Unión ($\cup$)<br>2. Diferencia ($-$)<br>3. Producto Cartesiano ($\times$)<br>4. Proyección ($\Pi$)<br>5. Selección ($\sigma$)<br><br><b>Derivadas (Compuestas):</b><br>1. Intersección ($\cap$)<br>2. División ($\div$)<br>3. Reunión Natural / Join ($|x|$)</p>
+                    <div class="ejemplo">
+                        Las operaciones derivadas se llaman así porque pueden construirse combinando únicamente operaciones fundamentales.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 2;" data-original-order="2" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <h2>Selección ( $\sigma$ )</h2>
+                    <p class="hint">Click para voltear</p>
+                </div>
+                <div class="card-face card-back">
+                    <p>Operador unario que filtra tuplas. Compara todas las tuplas y extrae sólo aquellas que satisfacen una condición o predicado específico.</p>
+                    <div class="ejemplo">
+                        $\sigma_{salario > 18000}(EMPLEADO)$<br>Devuelve todas las filas de los empleados que ganan más de 18,000.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 3;" data-original-order="3" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <h2>Proyección ( $\Pi$ )</h2>
+                    <p class="hint">Click para voltear</p>
+                </div>
+                <div class="card-face card-back">
+                    <p>Operador unario que devuelve una relación que contiene <i>sólo</i> los atributos (columnas) especificados. Elimina columnas no deseadas y automáticamente elimina tuplas duplicadas resultantes.</p>
+                    <div class="ejemplo">
+                        $\Pi_{Nombre, Apellido}(EMPLEADO)$<br>Devuelve una tabla únicamente con los nombres y apellidos de todos los empleados.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 4;" data-original-order="4" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <h2>Producto Cartesiano ( $	imes$ )</h2>
+                    <p class="hint">Click para voltear</p>
+                </div>
+                <div class="card-face card-back">
+                    <p>Operador binario que produce todas las posibles combinaciones de tuplas entre dos relaciones $A$ y $B$. El resultado concatena cada tupla de $A$ con cada tupla de $B$.</p>
+                    <div class="ejemplo">
+                        Si $A$ tiene 3 tuplas y $B$ tiene 4, $A \times B$ tendrá $3 \times 4 = 12$ tuplas.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 5;" data-original-order="5" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <h2>BD de Ejemplo (Esquema Visual)</h2>
+                    <p class="hint">Click para voltear</p>
+                </div>
+                <div class="card-face card-back">
+                    <p>
+        <p>Consideremos esta base de datos escolar, estructurada de la siguiente manera para controlar las inscripciones semestrales:</p>
+        <div class="db-diagram">
+            <div class="table-box">
+                <div class="table-title">ALUMNO</div>
+                <div class="table-row pk">NumCta (PK)</div>
+                <div class="table-row">Nombre</div>
+                <div class="table-row">Promedio</div>
+            </div>
+            <div class="relation-arrow">1<br>│<br>N</div>
+            <div class="table-box">
+                <div class="table-title">INSCRITO</div>
+                <div class="table-row fk">NumCta (FK)</div>
+                <div class="table-row fk">Clave (FK)</div>
+            </div>
+            <div class="relation-arrow">N<br>│<br>1</div>
+            <div class="table-box">
+                <div class="table-title">MATERIA</div>
+                <div class="table-row pk">Clave (PK)</div>
+                <div class="table-row">NombreMat</div>
+            </div>
+        </div>
+        </p>
+                    <div class="ejemplo">
+                        La tabla INSCRITO es la tabla intermedia que resuelve la relación Muchos a Muchos (N:M) entre Alumnos y Materias.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 6;" data-original-order="6" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <h2>BD de Ejemplo: Aplicación Álgebra</h2>
+                    <p class="hint">Click para voltear</p>
+                </div>
+                <div class="card-face card-back">
+                    <p><b>Consulta:</b> Obtener los nombres de los alumnos con promedio mayor a 8.<br><br><b>Álgebra Relacional:</b><br>$$\Pi_{Nombre}(\sigma_{Promedio > 8}(ALUMNO))$$</p>
+                    <div class="ejemplo">
+                        Procedimiento: 1. Selecciona ($\sigma$) las tuplas de la tabla ALUMNO que cumplan la condición. 2. Proyecta ($\Pi$) únicamente la columna Nombre.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 7;" data-original-order="7" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <h2>BD de Ejemplo: Aplicación Cálculo</h2>
+                    <p class="hint">Click para voltear</p>
+                </div>
+                <div class="card-face card-back">
+                    <p><b>Consulta:</b> Obtener los nombres de los alumnos con promedio mayor a 8.<br><br><b>Cálculo de Tuplas:</b><br>$\{t.Nombre | ALUMNO(t) \land t.Promedio > 8\}$<br><br><b>Cálculo de Dominios:</b><br>$\{<n> | \exists c, p (ALUMNO(c, n, p) \land p > 8)\}$</p>
+                    <div class="ejemplo">
+                        Nota que en cálculo no dices cómo filtrar la tabla, sólo describes matemáticamente qué elementos conforman el conjunto solución.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 8;" data-original-order="8" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <h2>BD de Ejemplo: Consulta Compleja</h2>
+                    <p class="hint">Click para voltear</p>
+                </div>
+                <div class="card-face card-back">
+                    <p><b>Consulta:</b> Obtener los Nombres de alumnos inscritos en la materia 'Algoritmos'.<br><br><b>Álgebra:</b><br>$$\Pi_{Nombre}(\sigma_{NombreMat='Algoritmos'}(ALUMNO |x| INSCRITO |x| MATERIA))$$</p>
+                    <div class="ejemplo">
+                        <b>Cálculo de Tuplas:</b><br>$\{t.Nombre | ALUMNO(t) \land \exists i (INSCRITO(i) \land i.NumCta = t.NumCta \land \exists m (MATERIA(m) \land m.Clave = i.Clave \land m.NombreMat = 'Algoritmos'))\}$
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const grid = document.getElementById('flashcard-grid');
+        const cards = Array.from(grid.children);
+
+        function shuffleCards() {
+            cards.forEach(card => {
+                card.style.order = Math.floor(Math.random() * 10000);
+                const innerCard = card.querySelector('.card');
+                if(innerCard.classList.contains('flipped')) {
+                    innerCard.classList.remove('flipped');
+                }
+            });
+        }
+
+        function resetOrder() {
+            cards.forEach(card => {
+                card.style.order = card.getAttribute('data-original-order');
+                const innerCard = card.querySelector('.card');
+                if(innerCard.classList.contains('flipped')) {
+                    innerCard.classList.remove('flipped');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

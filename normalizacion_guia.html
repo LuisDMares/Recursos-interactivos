@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Normalización: Teoría y Práctica</title>
+    <script>
+      MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] } };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    
+    <style>
+        :root {
+            --bg-main: #f8fafc;
+            --card-bg: #ffffff;
+            --primary: #0f766e;
+            --secondary: #14b8a6;
+            --text-dark: #1e293b;
+            --border: #cbd5e1;
+            --alert: #ef4444;
+            --success: #10b981;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-main); color: var(--text-dark);
+            margin: 0; padding: 2rem; display: flex; flex-direction: column; align-items: center;
+        }
+        h1, h2, h3 { color: var(--primary); text-align: center; }
+        h1 { border-bottom: 3px solid var(--secondary); padding-bottom: 10px; margin-bottom: 2rem; }
+        
+        /* TARJETAS CSS */
+        .controls { margin-bottom: 2rem; display: flex; gap: 1rem; justify-content: center; width: 100%; }
+        button {
+            padding: 0.75rem 1.5rem; border: none; border-radius: 6px; font-weight: bold;
+            background-color: var(--primary); color: white; cursor: pointer; transition: 0.3s;
+        }
+        button:hover { background-color: var(--secondary); }
+        .grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem; width: 100%; max-width: 1200px; margin-bottom: 4rem;
+        }
+        .card-container { perspective: 1000px; min-height: 320px; display: flex; }
+        .card { width: 100%; height: 100%; position: relative; transition: transform 0.6s; transform-style: preserve-3d; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-radius: 12px; }
+        .card.flipped { transform: rotateY(180deg); }
+        .card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 12px; padding: 1.5rem; box-sizing: border-box; background-color: var(--card-bg); display: flex; flex-direction: column; }
+        .card-front { align-items: center; justify-content: center; text-align: center; border: 2px solid var(--primary); }
+        .card-front h2 { margin: 0; font-size: 1.5rem; }
+        .card-back { transform: rotateY(180deg); overflow-y: auto; justify-content: flex-start; border: 2px solid var(--border); background-color: #f1f5f9; }
+        .card-back p { margin-top: 0; line-height: 1.5; font-size: 1rem; }
+        .ejemplo { margin-top: 1rem; padding: 0.75rem; background-color: #ccfbf1; border-left: 4px solid var(--primary); border-radius: 4px; font-size: 0.95rem; }
+        
+        /* SECCIÓN PASO A PASO CSS */
+        .step-section { width: 100%; max-width: 1200px; background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 2rem; }
+        .step-block { margin-bottom: 3rem; border-left: 4px solid var(--secondary); padding-left: 1.5rem; }
+        table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: 0.9rem; }
+        th, td { border: 1px solid var(--border); padding: 8px 12px; text-align: left; }
+        th { background-color: var(--primary); color: white; }
+        .pk-text { color: var(--alert); font-weight: bold; }
+        .fk-text { color: var(--primary); font-style: italic; font-weight: bold; }
+        .eval-box { background-color: #fffbeb; border: 1px solid #fcd34d; padding: 1rem; border-radius: 6px; margin: 1rem 0; }
+        .result-box { background-color: #ecfdf5; border: 1px solid var(--success); padding: 1rem; border-radius: 6px; margin: 1rem 0; }
+        .arrow-down { text-align: center; font-size: 2rem; color: var(--border); margin: 1rem 0; }
+    </style>
+</head>
+<body>
+
+    <h1>Repaso: Formas Normales</h1>
+    
+    <div class="controls">
+        <button onclick="shuffleCards()">🎲 Mezclar Tarjetas</button>
+        <button onclick="resetOrder()">📚 Orden Original</button>
+    </div>
+
+    <div class="grid" id="flashcard-grid">
+
+        <div class="card-container" style="order: 0;" data-original-order="0" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <h2>Normalización y sus Objetivos</h2>
+                    <p style="color: #64748b; font-size: 0.85rem; margin-top:1rem; text-transform:uppercase;">Click para revelar</p>
+                </div>
+                <div class="card-face card-back">
+                    <p>Proceso incremental definido por E.F. Codd en 1971.<br><br><b>Objetivos:</b><br>1. Lograr eficiencia y flexibilidad.<br>2. Garantizar la integridad de los datos.<br>3. Reducir la redundancia (redundancia controlada).<br>4. Evitar anomalías de inserción, actualización y eliminación.</p>
+                    <div class="ejemplo">Normalizar implica aplicar las formas normales de manera secuencial (1NF $\to$ 2NF $\to$ 3NF $\to$ BCNF).</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 1;" data-original-order="1" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <h2>Dependencia Funcional (DF)</h2>
+                    <p style="color: #64748b; font-size: 0.85rem; margin-top:1rem; text-transform:uppercase;">Click para revelar</p>
+                </div>
+                <div class="card-face card-back">
+                    <p>Dada la relación $R$ con atributos $A$, una Dependencia Funcional $X \Rightarrow Y$ (donde $X, Y \subset A$) implica que:<br><br>Para cualquier par de tuplas $t_1, t_2$, si $t_1[X] = t_2[X]$, entonces obligatoriamente $t_1[Y] = t_2[Y]$.</p>
+                    <div class="ejemplo">Matemáticamente, el valor del subconjunto $X$ determina de manera única el valor del subconjunto $Y$.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 2;" data-original-order="2" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <h2>Primera Forma Normal (1NF)</h2>
+                    <p style="color: #64748b; font-size: 0.85rem; margin-top:1rem; text-transform:uppercase;">Click para revelar</p>
+                </div>
+                <div class="card-face card-back">
+                    <p><b>Reglas:</b><br>1. No permite atributos multivaluados ni compuestos.<br>2. El dominio de todo atributo debe ser <b>atómico</b> (simple/indivisible).<br>3. Cada tupla debe ser única (requiere una Clave Primaria).</p>
+                    <div class="ejemplo">Soluciones: Crear una nueva tabla con el atributo multivaluado, expandir la llave primaria, o aplanar en $n$ atributos atómicos (solo si hay un límite máximo fijo).</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 3;" data-original-order="3" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <h2>Segunda Forma Normal (2NF)</h2>
+                    <p style="color: #64748b; font-size: 0.85rem; margin-top:1rem; text-transform:uppercase;">Click para revelar</p>
+                </div>
+                <div class="card-face card-back">
+                    <p><b>Regla:</b> Está en 1NF y <b>no existen dependencias parciales</b>.<br><br>Todo atributo no primo (que no forma parte de la PK) debe depender funcionalmente de <b>manera total</b> de la llave primaria compuesta.</p>
+                    <div class="ejemplo">Si la PK es $(A, B)$, y un atributo $C$ depende únicamente de $A$ (es decir, $A \Rightarrow C$), existe dependencia parcial y viola la 2NF.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 4;" data-original-order="4" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <h2>Tercera Forma Normal (3NF)</h2>
+                    <p style="color: #64748b; font-size: 0.85rem; margin-top:1rem; text-transform:uppercase;">Click para revelar</p>
+                </div>
+                <div class="card-face card-back">
+                    <p><b>Regla:</b> Está en 2NF y <b>no existen dependencias transitivas</b>.<br><br>Ningún atributo no primo debe depender de otro atributo no primo. Todo atributo debe depender <i>únicamente</i> de la Clave Primaria.</p>
+                    <div class="ejemplo">Si $A$ es PK, y existe $A \Rightarrow B$ y $B \Rightarrow C$ (donde B no es llave), entonces $C$ depende transitivamente de $A$. Viola la 3NF.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 5;" data-original-order="5" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <h2>Forma Normal de Boyce-Codd (BCNF)</h2>
+                    <p style="color: #64748b; font-size: 0.85rem; margin-top:1rem; text-transform:uppercase;">Click para revelar</p>
+                </div>
+                <div class="card-face card-back">
+                    <p>Es una versión más estricta de la 3NF. <br><br><b>Regla:</b> Para cada dependencia funcional no trivial $X \Rightarrow Y$, <b>$X$ debe ser una superllave</b>.</p>
+                    <div class="ejemplo">Si existe $X \Rightarrow A$ (siendo $A$ un atributo primo) y $X$ NO es superllave, la tabla viola BCNF aunque esté en 3NF.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 6;" data-original-order="6" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <h2>Anomalías de Actualización</h2>
+                    <p style="color: #64748b; font-size: 0.85rem; margin-top:1rem; text-transform:uppercase;">Click para revelar</p>
+                </div>
+                <div class="card-face card-back">
+                    <p><b>Inserción:</b> Forzar la repetición de datos para mantener consistencia, o no poder insertar datos por falta de una referencia (nulos).<br><b>Eliminación:</b> Borrar una referencia específica provoca la pérdida accidental de datos generales de la super-relación.<br><b>Actualización:</b> Cambiar un solo dato exige modificar múltiples tuplas manualmente.</p>
+                    <div class="ejemplo">Estas anomalías son la principal 'bandera roja' empírica que indica que un diseño no está bien normalizado.</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <h1>Guía Práctica: Evaluación y Normalización Paso a Paso</h1>
+    <div class="step-section">
+        
+        <h2>1. Primera Forma Normal (1NF)</h2>
+        <p><b>Objetivo:</b> Eliminar atributos multivaluados y asegurar dominios atómicos.</p>
+        
+        <div class="step-block">
+            <h3>Ejemplo A: Correos de Estudiantes</h3>
+            <p><b>Original:</b> ALUMNO(<span class="pk-text">NumCta</span>, Nombre, Correos)</p>
+            <table>
+                <tr><th>NumCta (PK)</th><th>Nombre</th><th>Correos</th></tr>
+                <tr><td>314159265</td><td>Luis Rojas</td><td>luis@ciencias.unam.mx, luis.rojas@gmail.com</td></tr>
+                <tr><td>415161718</td><td>Ana Gómez</td><td>ana.g@gmail.com</td></tr>
+            </table>
+            
+            <div class="eval-box">
+                <b>Evaluación:</b> El atributo <code>Correos</code> contiene múltiples valores separados por comas. Viola la 1NF.
+            </div>
+            <div class="arrow-down">⬇️</div>
+            
+            <div class="result-box">
+                <b>Solución (Nueva Relación):</b> Separar el atributo repetitivo.<br><br>
+                <b>ALUMNO</b>(<span class="pk-text">NumCta</span>, Nombre)<br>
+                <b>ALUMNO_CORREO</b>(<span class="pk-text">NumCta</span>, <span class="pk-text">Correo</span>) <i>*Ambos forman la PK compuesta</i>
+            </div>
+        </div>
+
+        <div class="step-block">
+            <h3>Ejemplo B: Requisitos de Materias</h3>
+            <p><b>Original:</b> MATERIA(<span class="pk-text">Clave</span>, NombreMat, Seriacion_Previa)</p>
+            <table>
+                <tr><th>Clave (PK)</th><th>NombreMat</th><th>Seriacion_Previa</th></tr>
+                <tr><td>0015</td><td>Ecuaciones Diferenciales</td><td>Calculo I, Calculo II, Algebra Lineal</td></tr>
+                <tr><td>0010</td><td>Calculo I</td><td>Ninguno</td></tr>
+            </table>
+            
+            <div class="eval-box">
+                <b>Evaluación:</b> <code>Seriacion_Previa</code> es un atributo compuesto/multivaluado encadenado en texto. Viola 1NF.
+            </div>
+            <div class="arrow-down">⬇️</div>
+            
+            <div class="result-box">
+                <b>Solución (Nueva Relación):</b><br><br>
+                <b>MATERIA</b>(<span class="pk-text">Clave</span>, NombreMat)<br>
+                <b>MATERIA_REQ</b>(<span class="pk-text">Clave_Mat</span>, <span class="pk-text">Clave_Requisito</span>)
+            </div>
+        </div>
+
+        <hr style="border: 1px solid var(--border); margin: 3rem 0;">
+
+        <h2>2. Segunda Forma Normal (2NF)</h2>
+        <p><b>Objetivo:</b> Eliminar Dependencias Parciales (requiere que la PK sea compuesta).</p>
+
+        <div class="step-block">
+            <h3>Ejemplo A: Actas de Calificaciones</h3>
+            <p><b>Original:</b> EVALUACION(<span class="pk-text">NumCta</span>, <span class="pk-text">ClaveMat</span>, Calificacion, NombreAlumno)</p>
+            
+            <div class="eval-box">
+                <b>Evaluación DF:</b> La PK compuesta es $(NumCta, ClaveMat)$.<br>
+                $\rightarrow$ $(NumCta, ClaveMat) \Rightarrow Calificacion$ (Dependencia Total).<br>
+                $\rightarrow$ $NumCta \Rightarrow NombreAlumno$ (<b>Dependencia Parcial</b>, depende solo de una parte de la PK).<br>
+                Viola la 2NF. Genera redundancia del nombre del alumno por cada materia inscrita.
+            </div>
+            <div class="arrow-down">⬇️</div>
+            
+            <div class="result-box">
+                <b>Solución (Extraer Dependencia Parcial):</b><br><br>
+                <b>ALUMNO</b>(<span class="pk-text">NumCta</span>, NombreAlumno)<br>
+                <b>EVALUACION</b>(<span class="pk-text">NumCta</span>, <span class="pk-text">ClaveMat</span>, Calificacion)
+            </div>
+        </div>
+
+        <div class="step-block">
+            <h3>Ejemplo B: Asignación de Ayudantes a Profesores</h3>
+            <p><b>Original:</b> AYUDANTIA(<span class="pk-text">ID_Ayudante</span>, <span class="pk-text">ID_Profesor</span>, Horas_Asignadas, Nom_Profesor)</p>
+            
+            <div class="eval-box">
+                <b>Evaluación DF:</b> La PK compuesta es $(ID\_Ayudante, ID\_Profesor)$.<br>
+                $\rightarrow$ $(ID\_Ayudante, ID\_Profesor) \Rightarrow Horas\_Asignadas$ (Total).<br>
+                $\rightarrow$ $ID\_Profesor \Rightarrow Nom\_Profesor$ (<b>Dependencia Parcial</b>).<br>
+                Viola la 2NF.
+            </div>
+            <div class="arrow-down">⬇️</div>
+            
+            <div class="result-box">
+                <b>Solución:</b><br><br>
+                <b>PROFESOR</b>(<span class="pk-text">ID_Profesor</span>, Nom_Profesor)<br>
+                <b>AYUDANTIA</b>(<span class="pk-text">ID_Ayudante</span>, <span class="pk-text">ID_Profesor</span>, Horas_Asignadas)
+            </div>
+        </div>
+
+        <hr style="border: 1px solid var(--border); margin: 3rem 0;">
+
+        <h2>3. Tercera Forma Normal (3NF)</h2>
+        <p><b>Objetivo:</b> Eliminar Dependencias Transitivas (atributos que dependen de otros atributos que NO son llave).</p>
+
+        <div class="step-block">
+            <h3>Ejemplo A: Adscripción de Profesores a Departamentos</h3>
+            <p><b>Original:</b> PLANTILLA(<span class="pk-text">RFC</span>, Nombre, ID_Depto, Edificio_Depto)</p>
+            
+            <div class="eval-box">
+                <b>Evaluación DF:</b> PK es $RFC$.<br>
+                $\rightarrow$ $RFC \Rightarrow ID\_Depto \Rightarrow Edificio\_Depto$.<br>
+                El atributo <code>Edificio_Depto</code> depende de <code>ID_Depto</code> (el cual no es PK). Es una <b>Dependencia Transitiva</b>. Viola la 3NF.
+            </div>
+            <div class="arrow-down">⬇️</div>
+            
+            <div class="result-box">
+                <b>Solución (Extraer Dependencia Transitiva):</b><br><br>
+                <b>DEPARTAMENTO</b>(<span class="pk-text">ID_Depto</span>, Edificio_Depto)<br>
+                <b>PLANTILLA</b>(<span class="pk-text">RFC</span>, Nombre, <span class="fk-text">ID_Depto</span>)
+            </div>
+        </div>
+
+        <div class="step-block">
+            <h3>Ejemplo B: Inventario de Equipo de Cómputo</h3>
+            <p><b>Original:</b> EQUIPO(<span class="pk-text">Num_Serie</span>, Marca, ID_Proveedor, Tel_Proveedor)</p>
+            
+            <div class="eval-box">
+                <b>Evaluación DF:</b> PK es $Num\_Serie$.<br>
+                $\rightarrow$ $Num\_Serie \Rightarrow ID\_Proveedor \Rightarrow Tel\_Proveedor$.<br>
+                Transitiva. Si el proveedor cambia de teléfono, tendríamos que actualizarlo en cada computadora que nos vendió (Anomalía de actualización).
+            </div>
+            <div class="arrow-down">⬇️</div>
+            
+            <div class="result-box">
+                <b>Solución:</b><br><br>
+                <b>PROVEEDOR</b>(<span class="pk-text">ID_Proveedor</span>, Tel_Proveedor)<br>
+                <b>EQUIPO</b>(<span class="pk-text">Num_Serie</span>, Marca, <span class="fk-text">ID_Proveedor</span>)
+            </div>
+        </div>
+
+        <hr style="border: 1px solid var(--border); margin: 3rem 0;">
+
+        <h2>4. Forma Normal de Boyce-Codd (BCNF)</h2>
+        <p><b>Objetivo:</b> Asegurar que todos los determinantes sean superllaves. Resuelve cruces de dependencias entre claves candidatas compuestas.</p>
+
+        <div class="step-block">
+            <h3>Ejemplo A: Asignación de Tutorías</h3>
+            <p><i>Reglas:</i> Un alumno puede tener varios tutores, pero un tutor solo imparte un área específica (ej. Cálculo, Física).</p>
+            <p><b>Original:</b> TUTORIA(<span class="pk-text">NumCta</span>, <span class="pk-text">Area_Tutoria</span>, ID_Tutor)</p>
+            
+            <div class="eval-box">
+                <b>Evaluación DF:</b> PK candidata es $(NumCta, Area\_Tutoria) \Rightarrow ID\_Tutor$.<br>
+                Sin embargo, por las reglas, existe: $ID\_Tutor \Rightarrow Area\_Tutoria$.<br>
+                ¿Es <code>ID_Tutor</code> una superllave? NO, porque un tutor atiende a múltiples alumnos. Como un atributo no llave ($ID\_Tutor$) determina a un atributo primo ($Area\_Tutoria$), <b>Viola BCNF</b>.
+            </div>
+            <div class="arrow-down">⬇️</div>
+            
+            <div class="result-box">
+                <b>Solución:</b><br><br>
+                <b>TUTOR_ESPECIALIDAD</b>(<span class="pk-text">ID_Tutor</span>, Area_Tutoria)<br>
+                <b>ASIGNACION</b>(<span class="pk-text">NumCta</span>, <span class="pk-text">ID_Tutor</span>)
+            </div>
+        </div>
+
+        <div class="step-block">
+            <h3>Ejemplo B: Clínica Universitaria (Médico y Especialidad)</h3>
+            <p><i>Reglas:</i> Un paciente asiste a una consulta de una especialidad. Cada especialidad tiene varios médicos, pero un médico solo tiene UNA especialidad.</p>
+            <p><b>Original:</b> CONSULTA(<span class="pk-text">ID_Paciente</span>, <span class="pk-text">Especialidad</span>, Medico)</p>
+            
+            <div class="eval-box">
+                <b>Evaluación DF:</b> PK es $(ID\_Paciente, Especialidad) \Rightarrow Medico$.<br>
+                Pero existe la restricción: $Medico \Rightarrow Especialidad$.<br>
+                <code>Medico</code> determina a <code>Especialidad</code>, pero <code>Medico</code> no es una superllave (atiende a muchos pacientes). <b>Viola BCNF</b>.
+            </div>
+            <div class="arrow-down">⬇️</div>
+            
+            <div class="result-box">
+                <b>Solución:</b><br><br>
+                <b>MEDICO_ESP</b>(<span class="pk-text">Medico</span>, Especialidad)<br>
+                <b>CONSULTA_REAL</b>(<span class="pk-text">ID_Paciente</span>, <span class="pk-text">Medico</span>)
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const grid = document.getElementById('flashcard-grid');
+        const cards = Array.from(grid.children);
+
+        function shuffleCards() {
+            cards.forEach(card => {
+                card.style.order = Math.floor(Math.random() * 10000);
+                const innerCard = card.querySelector('.card');
+                if(innerCard.classList.contains('flipped')) {
+                    innerCard.classList.remove('flipped');
+                }
+            });
+        }
+        function resetOrder() {
+            cards.forEach(card => {
+                card.style.order = card.getAttribute('data-original-order');
+                const innerCard = card.querySelector('.card');
+                if(innerCard.classList.contains('flipped')) {
+                    innerCard.classList.remove('flipped');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

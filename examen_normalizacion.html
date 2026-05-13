@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen Final: Normalización de Bases de Datos</title>
+    <script>
+      MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] } };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    
+    <style>
+        :root {
+            --bg-color: #f1f5f9;
+            --card-bg: #ffffff;
+            --primary: #8b5cf6;
+            --secondary: #6d28d9;
+            --text-dark: #334155;
+            --border: #e2e8f0;
+            --highlight: #ede9fe;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+            text-align: center;
+            font-size: 2.2rem;
+        }
+        .subtitle {
+            color: #64748b;
+            margin-bottom: 2.5rem;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+        .controls {
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1rem;
+        }
+        button {
+            padding: 0.8rem 1.8rem;
+            border: none;
+            border-radius: 8px;
+            background-color: var(--primary);
+            color: white;
+            font-size: 1.05rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 4px 6px rgba(139, 92, 246, 0.2);
+        }
+        button:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            width: 100%;
+            max-width: 1400px;
+        }
+        .card-container {
+            perspective: 1500px;
+            min-height: 380px; 
+            display: flex;
+        }
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transition: transform 0.7s cubic-bezier(0.4, 0.2, 0.2, 1);
+            transform-style: preserve-3d;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+            border-radius: 16px;
+        }
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
+        .card-front {
+            background-color: var(--card-bg);
+            border: 2px solid var(--border);
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border-top: 6px solid var(--primary);
+        }
+        .card-front h2 {
+            color: var(--text-dark);
+            margin: 0;
+            font-size: 1.35rem;
+            line-height: 1.5;
+            font-weight: 600;
+        }
+        .card-front .hint {
+            font-size: 0.9rem;
+            color: var(--primary);
+            margin-top: 1.5rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: var(--highlight);
+            padding: 6px 12px;
+            border-radius: 20px;
+        }
+        .card-back {
+            transform: rotateY(180deg);
+            background-color: #f8fafc;
+            overflow-y: auto;
+            justify-content: flex-start;
+            border: 2px solid var(--primary);
+        }
+        .card-back .answer-title {
+            color: var(--secondary);
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 1rem;
+            margin-bottom: 1.2rem;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+        .card-back p {
+            margin-top: 0;
+            line-height: 1.7;
+            font-size: 1.05rem;
+            color: #475569;
+        }
+        .card-back b {
+            color: var(--secondary);
+        }
+        .card-back i {
+            color: #059669; /* Verde para FKs */
+            font-weight: 600;
+        }
+        
+        /* Scrollbar styling */
+        .card-back::-webkit-scrollbar {
+            width: 8px;
+        }
+        .card-back::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 4px;
+        }
+        .card-back::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .card-back::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Examen Final: Normalización</h1>
+    <div class="subtitle">Evalúa dependencias, elimina anomalías y alcanza la Tercera Forma Normal.</div>
+    
+    <div class="controls">
+        <button onclick="shuffleCards()">🔀 Mezclar Preguntas</button>
+        <button onclick="resetOrder()">🔢 Orden de Dificultad</button>
+    </div>
+
+    <div class="grid" id="flashcard-grid">
+
+        <div class="card-container" style="order: 0;" data-original-order="0" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <h2>Teoría: ¿Cuáles son las reglas estrictas para que una relación esté en Primera Forma Normal (1NF)?</h2>
+                    <span class="hint">Click para evaluar</span>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Resolución Paso a Paso</div>
+                    <p>1. No permite atributos multivaluados, compuestos ni combinaciones de ellos.<br>2. El dominio de todo atributo debe ser estrictamente <b>atómico</b> (indivisible).<br>3. Cada tupla debe ser única (debe existir una llave primaria definida).</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 1;" data-original-order="1" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <h2>Teoría: ¿Qué condición matemática define a la Segunda Forma Normal (2NF)?</h2>
+                    <span class="hint">Click para evaluar</span>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Resolución Paso a Paso</div>
+                    <p>Una relación está en 2NF si está en 1NF y <b>no existen dependencias funcionales parciales</b>. Esto significa que cualquier atributo no primo debe depender funcionalmente de manera <i>total</i> de la llave primaria compuesta (y no solo de una parte de ella).</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 2;" data-original-order="2" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <h2>Teoría: ¿Qué es una dependencia transitiva y por qué viola la Tercera Forma Normal (3NF)?</h2>
+                    <span class="hint">Click para evaluar</span>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Resolución Paso a Paso</div>
+                    <p>Una dependencia transitiva ocurre cuando un atributo no primo depende de otro atributo no primo (ej. $A \Rightarrow B$ y $B \Rightarrow C$). Viola la 3NF porque todo atributo debería depender <i>únicamente</i> de la Clave Primaria directa, no a través de intermediarios.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 3;" data-original-order="3" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <h2>Teoría: ¿Cuál es la diferencia principal entre la 3NF y la Forma Normal de Boyce-Codd (BCNF)?</h2>
+                    <span class="hint">Click para evaluar</span>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Resolución Paso a Paso</div>
+                    <p>BCNF es más estricta. Establece que para CADA dependencia funcional $X \Rightarrow Y$, el determinante $X$ <b>debe ser una superllave</b>. Una tabla puede estar en 3NF pero violar BCNF si un atributo no primo determina a un atributo primo (parte de una llave candidata compuesta).</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 4;" data-original-order="4" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <h2>Anomalías: Describe las tres anomalías de actualización que la normalización busca evitar.</h2>
+                    <span class="hint">Click para evaluar</span>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Resolución Paso a Paso</div>
+                    <p><b>1. Inserción:</b> Imposibilidad de insertar un dato por falta de otra referencia (ej. no poder dar de alta un departamento sin asignarle empleados primero), o tener que repetir datos para mantener consistencia.<br><b>2. Eliminación:</b> Borrar un registro secundario provoca la pérdida accidental de información principal (ej. borrar al último alumno de un curso y que el curso desaparezca del sistema).<br><b>3. Actualización:</b> Modificar un solo dato (ej. el teléfono de un proveedor) obliga a buscar y cambiar manualmente múltiples registros dispersos.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 5;" data-original-order="5" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <h2>Ejercicio 1NF: Tienes la relación `MEDICO(ID_Med, Nombre, Especialidades)`. Un médico puede tener varias especialidades. Normaliza a 1NF.</h2>
+                    <span class="hint">Click para evaluar</span>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Resolución Paso a Paso</div>
+                    <p><b>Paso 1:</b> Identificar el problema. `Especialidades` es un atributo multivaluado.<br><b>Paso 2:</b> Aplicar regla 1NF. Se debe crear una nueva tabla con el atributo repetitivo y la llave original.<br><br><b>Resultado:</b><br>MEDICO(<b>ID_Med</b>, Nombre)<br>MEDICO_ESP(<b>ID_Med</b>, <b>Especialidad</b>) <i>(Ambos forman la PK)</i>.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 6;" data-original-order="6" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <h2>Ejercicio 2NF: Tienes `INSCRIPCION(NumCta, ClaveMat, Calificacion, NombreAlumno)`. La PK es (NumCta, ClaveMat). Normaliza a 2NF.</h2>
+                    <span class="hint">Click para evaluar</span>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Resolución Paso a Paso</div>
+                    <p><b>Paso 1:</b> Analizar DF. $(NumCta, ClaveMat) \Rightarrow Calificacion$ (Total). Pero $NumCta \Rightarrow NombreAlumno$ (Parcial, solo depende de la mitad de la PK).<br><b>Paso 2:</b> Extraer la dependencia parcial a una nueva relación.<br><br><b>Resultado:</b><br>ALUMNO(<b>NumCta</b>, NombreAlumno)<br>INSCRIPCION(<b>NumCta</b>, <b>ClaveMat</b>, Calificacion).</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 7;" data-original-order="7" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <h2>Ejercicio 3NF: Tienes `EMPLEADO(RFC, Nombre, ID_Depto, Nombre_Depto)`. La PK es RFC. Normaliza a 3NF.</h2>
+                    <span class="hint">Click para evaluar</span>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Resolución Paso a Paso</div>
+                    <p><b>Paso 1:</b> Analizar DF. $RFC \Rightarrow ID\_Depto \Rightarrow Nombre\_Depto$.<br><b>Paso 2:</b> Identificar dependencia transitiva. `Nombre_Depto` depende de `ID_Depto` (que no es PK).<br><b>Paso 3:</b> Separar el determinante transitivo.<br><br><b>Resultado:</b><br>DEPARTAMENTO(<b>ID_Depto</b>, Nombre_Depto)<br>EMPLEADO(<b>RFC</b>, Nombre, <i>ID_Depto [FK]</i>).</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 8;" data-original-order="8" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <h2>Ejercicio Complejo (Parte 1): Sea `VENTA(IdFolio, Fecha, IdCliente, NomCliente, IdProd, NomProd, Cantidad, Precio)`. Identifica las llaves y llévala a 1NF.</h2>
+                    <span class="hint">Click para evaluar</span>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Resolución Paso a Paso</div>
+                    <p><b>Análisis:</b> Un folio puede tener varios productos. Por tanto, la llave no puede ser solo `IdFolio`.<br><b>PK de la tabla original:</b> (IdFolio, IdProd).<br><b>Paso 1NF:</b> La tabla ya contiene datos atómicos, pero está fuertemente desnormalizada. Al asumir (IdFolio, IdProd) como llave primaria compuesta, la tabla cumple técnicamente con 1NF pero sufre de anomalías masivas.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 9;" data-original-order="9" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <h2>Ejercicio Complejo (Parte 2): Toma la tabla 1NF anterior con PK (IdFolio, IdProd) y llévala a 2NF.</h2>
+                    <span class="hint">Click para evaluar</span>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Resolución Paso a Paso</div>
+                    <p><b>Paso 1 (Dependencias Parciales):</b><br>- Dependen solo de `IdFolio`: Fecha, IdCliente, NomCliente.<br>- Dependen solo de `IdProd`: NomProd, Precio.<br>- Depende de toda la PK (IdFolio, IdProd): Cantidad.<br><b>Paso 2 (Separación):</b><br>ORDEN(<b>IdFolio</b>, Fecha, IdCliente, NomCliente)<br>PRODUCTO(<b>IdProd</b>, NomProd, Precio)<br>DETALLE(<b>IdFolio</b>, <b>IdProd</b>, Cantidad)</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 10;" data-original-order="10" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <h2>Ejercicio Complejo (Parte 3): Toma las tablas resultantes del 2NF y llévalas a 3NF. ¿Cuál es el esquema final?</h2>
+                    <span class="hint">Click para evaluar</span>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Resolución Paso a Paso</div>
+                    <p><b>Paso 1 (Revisar 3NF):</b><br>- PRODUCTO y DETALLE ya están en 3NF (no hay transitividad).<br>- En ORDEN, tenemos $IdFolio \Rightarrow IdCliente \Rightarrow NomCliente$. ¡Dependencia transitiva!<br><b>Paso 2 (Separar Cliente):</b><br>CLIENTE(<b>IdCliente</b>, NomCliente)<br>ORDEN(<b>IdFolio</b>, Fecha, <i>IdCliente [FK]</i>)<br><br><b>Esquema Final Completo:</b><br>1. CLIENTE(<b>IdCliente</b>, NomCliente)<br>2. PRODUCTO(<b>IdProd</b>, NomProd, Precio)<br>3. ORDEN(<b>IdFolio</b>, Fecha, <i>IdCliente</i>)<br>4. DETALLE(<b>IdFolio</b>, <b>IdProd</b>, Cantidad)</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const grid = document.getElementById('flashcard-grid');
+        const cards = Array.from(grid.children);
+
+        function shuffleCards() {
+            cards.forEach(card => {
+                card.style.order = Math.floor(Math.random() * 10000);
+                const innerCard = card.querySelector('.card');
+                if(innerCard.classList.contains('flipped')) {
+                    innerCard.classList.remove('flipped');
+                }
+            });
+        }
+
+        function resetOrder() {
+            cards.forEach(card => {
+                card.style.order = card.getAttribute('data-original-order');
+                const innerCard = card.querySelector('.card');
+                if(innerCard.classList.contains('flipped')) {
+                    innerCard.classList.remove('flipped');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repaso Examen: Modelo Relacional</title>
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$']],
+          displayMath: [['$$', '$$']]
+        }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    
+    <style>
+        :root {
+            --primary-bg: #f4f6f9;
+            --card-bg: #ffffff;
+            --accent: #2b2d42;
+            --highlight: #ef233c;
+            --text-main: #2b2d42;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            border-bottom: 3px solid var(--highlight);
+            padding-bottom: 10px;
+        }
+        .controls {
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1rem;
+        }
+        button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            background-color: var(--accent);
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        button:hover {
+            background-color: var(--highlight);
+            transform: translateY(-2px);
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            width: 100%;
+            max-width: 1400px;
+        }
+        .card-container {
+            perspective: 1200px;
+            min-height: 380px; 
+            display: flex;
+        }
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+            transform-style: preserve-3d;
+            cursor: pointer;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+            border-radius: 12px;
+        }
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            padding: 1.8rem;
+            box-sizing: border-box;
+            background-color: var(--card-bg);
+            display: flex;
+            flex-direction: column;
+        }
+        .card-front {
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border: 2px solid var(--accent);
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        }
+        .card-front h2 {
+            color: var(--accent);
+            margin: 0;
+            font-size: 1.6rem;
+        }
+        .card-front p.hint {
+            font-size: 0.9rem;
+            color: #8d99ae;
+            margin-top: 1.5rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .card-back {
+            transform: rotateY(180deg);
+            background-color: #edf2f4;
+            overflow-y: auto;
+            justify-content: flex-start;
+            border: 2px solid #8d99ae;
+        }
+        .card-back p {
+            margin-top: 0;
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+        .ejemplo {
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background-color: #d8e2dc;
+            border-left: 5px solid var(--highlight);
+            border-radius: 4px;
+            font-size: 0.95rem;
+            color: #2b2d42;
+            font-weight: 500;
+        }
+        code {
+            background-color: #dee2e6;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Consolas', monospace;
+            color: #d90429;
+            font-weight: bold;
+        }
+        
+        /* Modificador para barras de scroll estilizadas */
+        .card-back::-webkit-scrollbar {
+            width: 8px;
+        }
+        .card-back::-webkit-scrollbar-track {
+            background: #edf2f4;
+            border-radius: 4px;
+        }
+        .card-back::-webkit-scrollbar-thumb {
+            background: #8d99ae;
+            border-radius: 4px;
+        }
+        .card-back::-webkit-scrollbar-thumb:hover {
+            background: var(--accent);
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Repaso Exhaustivo: Modelo Relacional</h1>
+    
+    <div class="controls">
+        <button onclick="shuffleCards()">🎲 Mezclar Aleatorio</button>
+        <button onclick="resetOrder()">📚 Orden del PDF</button>
+    </div>
+
+    <div class="grid" id="flashcard-grid">
+
+        <div class="card-container" style="order: 0;" data-original-order="0" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <h2>Historia y Origen</h2>
+                    <p class="hint">Click para voltear</p>
+                </div>
+                <div class="card-face card-back">
+                    <p>Introducido en 1970 por el Dr. Edgar Frank Codd (investigador de IBM) en su artículo 'Relational Model of Data for Large Shared Data Banks'. Representa la segunda generación de Sistemas Manejadores de Bases de Datos (SMBD).</p>
+                    <div class="ejemplo">
+                        Dato de examen: ORACLE (1979) fue el primer SGBDR comercial, y ANSI/ISO estandarizaron SQL a finales de los 80s.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 1;" data-original-order="1" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <h2>Principio de Información</h2>
+                    <p class="hint">Click para voltear</p>
+                </div>
+                <div class="card-face card-back">
+                    <p>El modelo relacional es estrictamente una estructura lógica (independiente de cómo se guarde físicamente). Su regla de oro es el Principio de Información: Todo el contenido de la base de datos está representado en una sola forma; como valores explícitos en columnas dentro de filas en tablas.</p>
+                    <div class="ejemplo">
+                        Ejemplo: No existen punteros físicos ni jerarquías ocultas visibles al usuario, solo valores atómicos en celdas.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 2;" data-original-order="2" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <h2>Relación (Definición Matemática)</h2>
+                    <p class="hint">Click para voltear</p>
+                </div>
+                <div class="card-face card-back">
+                    <p>Una relación definida sobre $n$ dominios $D_1, D_2, \dots$ (no necesariamente distintos) es un subconjunto del producto cartesiano de estos dominios: $$R \subseteq D_1 \times D_2 \times \dots \times D_n$$</p>
+                    <div class="ejemplo">
+                        Nota: Es un concepto basado en la teoría de conjuntos. En nomenclatura de bases de datos equivale a una 'Tabla' o un 'Fichero'.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 3;" data-original-order="3" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <h2>Tupla y Cardinalidad</h2>
+                    <p class="hint">Click para voltear</p>
+                </div>
+                <div class="card-face card-back">
+                    <p>Una tupla es una serie de $n$ valores ordenados que pertenecen a sus respectivos dominios (equivale a una fila o registro). La Cardinalidad es el número total de tuplas que contiene una relación.</p>
+                    <div class="ejemplo">
+                        Regla estricta: Todas las tuplas deben ser distintas (no hay duplicadas) y su orden no importa ni aporta información.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 4;" data-original-order="4" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <h2>Atributo, Dominio y Grado</h2>
+                    <p class="hint">Click para voltear</p>
+                </div>
+                <div class="card-face card-back">
+                    <p>Un atributo representa las propiedades (columnas). Su Dominio es el conjunto de valores atómicos válidos para esa columna. El Grado es el número total de atributos de la relación.</p>
+                    <div class="ejemplo">
+                        Ejemplo: El grado de <code>ALUMNO(Num_Cuenta, Nombre, Promedio)</code> es 3. El dominio de 'Promedio' podría ser el intervalo de reales $[0, 10]$.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 5;" data-original-order="5" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <h2>Superclave y Clave Candidata</h2>
+                    <p class="hint">Click para voltear</p>
+                </div>
+                <div class="card-face card-back">
+                    <p>Una Superclave es un atributo o conjunto de atributos que identifican de modo único las tuplas. Una Clave Candidata es una superclave 'mínima', es decir, ninguno de sus subconjuntos es una superclave por sí solo.</p>
+                    <div class="ejemplo">
+                        Ejemplo: {CURP, Nombre} es superclave, pero {CURP} es clave candidata porque es el identificador mínimo.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 6;" data-original-order="6" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <h2>Clave Primaria, Compuesta y Alternativa</h2>
+                    <p class="hint">Click para voltear</p>
+                </div>
+                <div class="card-face card-back">
+                    <p>La Clave Primaria es la clave candidata seleccionada por el diseñador. Si tiene más de un atributo, es una Clave Compuesta. Las claves candidatas que no fueron seleccionadas se denominan Claves Alternativas.</p>
+                    <div class="ejemplo">
+                        Ejemplo: Si un libro tiene ISBN y Código Interno (ambas candidatas), si elegimos el ISBN como primaria, el Código Interno se vuelve alternativa.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 7;" data-original-order="7" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <h2>Clave Ajena (Foránea)</h2>
+                    <p class="hint">Click para voltear</p>
+                </div>
+                <div class="card-face card-back">
+                    <p>Atributo o conjunto de atributos que coinciden con la clave primaria de otra relación. Representan referencias o vínculos entre distintas tuplas.</p>
+                    <div class="ejemplo">
+                        Ejemplo: En <code>EMPLEADO(DNI, Nombre, Departamento)</code>, el atributo 'Departamento' es clave foránea referenciando a la tabla <code>DEPARTAMENTO(Cod_Dep, Nombre)</code>.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 8;" data-original-order="8" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <h2>Restricciones Inherentes</h2>
+                    <p class="hint">Click para voltear</p>
+                </div>
+                <div class="card-face card-back">
+                    <p>Son las condiciones de cumplimiento obligatorio dadas por la propia definición del modelo relacional. Incluyen que los valores sean atómicos, que no existan tuplas duplicadas, y que no haya atributos con el mismo nombre.</p>
+                    <div class="ejemplo">
+                        Dato clave: El diseñador no tiene que programarlas, el SGBD las asume por el simple hecho de ser relacional.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 9;" data-original-order="9" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <h2>Restricciones Semánticas (Integridad)</h2>
+                    <p class="hint">Click para voltear</p>
+                </div>
+                <div class="card-face card-back">
+                    <p>Reglas añadidas por el diseñador. Incluyen:<br>1. <b>NOT NULL</b> (Obligatoriedad).<br>2. <b>UNIQUE</b> (Unicidad para claves alternas).<br>3. <b>PRIMARY KEY</b> (Únicos y no nulos).</p>
+                    <div class="ejemplo">
+                        Ejemplo de integridad de dominio: Asegurar que todas las entradas pertenezcan a los tipos de datos e intervalos correctos.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 10;" data-original-order="10" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <h2>Actualización de Foráneas (DELETE/UPDATE)</h2>
+                    <p class="hint">Click para voltear</p>
+                </div>
+                <div class="card-face card-back">
+                    <p>Define qué pasa cuando se modifica o elimina la tupla referenciada por una clave foránea. Puede ser <b>Restringir (R)</b> (impide la acción) o <b>Cascada (C)</b> (propaga la eliminación/actualización a las tuplas dependientes).</p>
+                    <div class="ejemplo">
+                        Ejemplo: Si eliminas un Cliente, el modo Cascada eliminará todos los Pedidos asociados a ese Cliente automáticamente.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 11;" data-original-order="11" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <h2>CHECK, ASSERTION y TRIGGERS</h2>
+                    <p class="hint">Click para voltear</p>
+                </div>
+                <div class="card-face card-back">
+                    <p><b>CHECK</b>: Valida una condición local en la tabla al insertar/actualizar.<br><b>ASSERTION</b>: Regla general a nivel BD que siempre debe cumplirse (puede involucrar varias tablas).<br><b>TRIGGER</b>: Disparador que ejecuta acciones ante eventos específicos.</p>
+                    <div class="ejemplo">
+                        Dato de examen: Las Aserciones a veces no son soportadas por el SGBD y deben emularse usando Triggers o Vistas Materializadas.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 12;" data-original-order="12" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <h2>Manipulación y Consultas</h2>
+                    <p class="hint">Click para voltear</p>
+                </div>
+                <div class="card-face card-back">
+                    <p>La consulta de datos se respalda en dos bases teóricas introducidas por Codd:<br>1. <b>Álgebra Relacional</b> (basada en teoría de conjuntos).<br>2. <b>Cálculo Relacional</b> (basado en lógica de predicados de primer orden).</p>
+                    <div class="ejemplo">
+                        Ejemplo: SQL es el lenguaje de alto nivel estándar que implementa de forma práctica estos fundamentos matemáticos.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 13;" data-original-order="13" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <h2>Equivalencia: Atributos Compuestos y Multivaluados</h2>
+                    <p class="hint">Click para voltear</p>
+                </div>
+                <div class="card-face card-back">
+                    <p><b>Compuesto (monovaluado):</b> Cada sub-atributo se convierte en un campo individual en la tabla.<br><b>Multivaluado:</b> Se debe crear una <i>nueva tabla</i> con el atributo y una llave foránea apuntando a la entidad original.</p>
+                    <div class="ejemplo">
+                        Ejemplo: Un teléfono multivaluado crea la tabla <code>Tel_Usuario(ID_Usuario [FK], Numero)</code>. Un atributo derivado (ej. Edad a partir de Fecha de Nacimiento) NO se incluye físicamente.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 14;" data-original-order="14" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <h2>Equivalencia: Entidad Débil</h2>
+                    <p class="hint">Click para voltear</p>
+                </div>
+                <div class="card-face card-back">
+                    <p>Una entidad débil se traduce como una tabla que incluye una llave foránea referenciando a la entidad fuerte de la que depende. Usualmente lleva la restricción <code>ON DELETE CASCADE</code>.</p>
+                    <div class="ejemplo">
+                        Ejemplo: Los 'Dependientes' de un 'Empleado' se borran si el empleado es dado de baja.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 15;" data-original-order="15" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <h2>Equivalencia: Interrelación N:M y Orden N</h2>
+                    <p class="hint">Click para voltear</p>
+                </div>
+                <div class="card-face card-back">
+                    <p>Las interrelaciones 'Muchos a Muchos' o de orden superior a 2 SIEMPRE generan una tabla nueva. Sus atributos serán los de la interrelación misma, más las llaves foráneas de las entidades conectadas.</p>
+                    <div class="ejemplo">
+                        Ejemplo: Profesor y Materia (N:M) genera la tabla <code>Imparte(ID_Profesor, ID_Materia, Semestre)</code>.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 16;" data-original-order="16" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <h2>Equivalencia: Interrelación 1:N</h2>
+                    <p class="hint">Click para voltear</p>
+                </div>
+                <div class="card-face card-back">
+                    <p>En relaciones 'Uno a Muchos', la tabla del lado 'Muchos (N)' absorbe la clave primaria de la tabla del lado 'Uno (1)' como llave foránea. Si la interrelación tiene atributos propios, también pasan al lado 'Muchos'.</p>
+                    <div class="ejemplo">
+                        Ejemplo: 1 Departamento tiene N Empleados. La tabla <code>EMPLEADO</code> recibe la columna <code>ID_Departamento</code>.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 17;" data-original-order="17" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <h2>Equivalencia: 1:1 y Recursivas</h2>
+                    <p class="hint">Click para voltear</p>
+                </div>
+                <div class="card-face card-back">
+                    <p><b>1:1</b>: La clave de una tabla pasa a la otra como foránea (generalmente a la que participa totalmente).<br><b>Recursivas</b>: Resulta en la duplicación del atributo identificador dentro de la misma tabla, actuando como llave foránea hacia sí misma.</p>
+                    <div class="ejemplo">
+                        Ejemplo Recursivo: <code>EMPLEADO(ID_Emp, Nombre, ID_Jefe)</code> donde ID_Jefe referencia al ID_Emp.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 18;" data-original-order="18" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <h2>Generalización (Opciones A y B)</h2>
+                    <p class="hint">Click para voltear</p>
+                </div>
+                <div class="card-face card-back">
+                    <p><b>A:</b> 1 tabla para supertipo y 1 tabla por cada subtipo (ligadas por FK). Aplica si hay validaciones (A1 para disjuntos usa triggers).<br><b>B:</b> Solo tablas para los subtipos (heredando atributos del supertipo). <i>Válida solo para especializaciones totales disjuntas</i>.</p>
+                    <div class="ejemplo">
+                        Opción A es la más estándar en implementaciones genéricas de herencia.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 19;" data-original-order="19" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <h2>Generalización (Opciones C y D)</h2>
+                    <p class="hint">Click para voltear</p>
+                </div>
+                <div class="card-face card-back">
+                    <p><b>C:</b> Una sola tabla gigante con un atributo discriminador 'T' (genera valores nulos). Para disjuntas.<br><b>D:</b> Una sola tabla con varios booleanos $T_i$ para indicar a qué subtipos pertenece. Para especializaciones con solapamiento.</p>
+                    <div class="ejemplo">
+                        Ejemplo C: <code>VEHICULO(Placa, Tipo, Num_Puertas, Carga)</code> donde 'Tipo' discrimina si usamos puertas o carga.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 20;" data-original-order="20" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <h2>Glosario (Relacional vs Físico)</h2>
+                    <p class="hint">Click para voltear</p>
+                </div>
+                <div class="card-face card-back">
+                    <p>Para no confundir términos en el examen:<br>Relación = Tabla = Fichero<br>Tupla = Fila = Registro<br>Atributo = Columna = Campo</p>
+                    <div class="ejemplo">
+                        En la práctica se usa la nomenclatura de Tabla (Fila/Columna), pero formalmente (en exámenes teóricos) se usa Relación (Tupla/Atributo).
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const grid = document.getElementById('flashcard-grid');
+        const cards = Array.from(grid.children);
+
+        function shuffleCards() {
+            cards.forEach(card => {
+                card.style.order = Math.floor(Math.random() * 10000);
+                const innerCard = card.querySelector('.card');
+                if(innerCard.classList.contains('flipped')) {
+                    innerCard.classList.remove('flipped');
+                }
+            });
+        }
+
+        function resetOrder() {
+            cards.forEach(card => {
+                card.style.order = card.getAttribute('data-original-order');
+                const innerCard = card.querySelector('.card');
+                if(innerCard.classList.contains('flipped')) {
+                    innerCard.classList.remove('flipped');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

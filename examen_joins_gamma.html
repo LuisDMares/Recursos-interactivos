@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen Avanzado: Joins y Gamma</title>
+    <script>
+      MathJax = {
+        tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --primary: #38bdf8;
+            --secondary: #818cf8;
+            --text-dark: #f8fafc;
+            --text-light: #94a3b8;
+            --border-color: #334155;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            text-align: center;
+            border-bottom: 2px solid var(--secondary);
+            padding-bottom: 10px;
+        }
+        
+        /* Contenedor del Esquema Fijo */
+        .schema-container {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            width: 100%;
+            max-width: 900px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        .schema-container h3 { margin-top: 0; color: var(--primary); text-align: center; }
+        .db-diagram {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 1rem;
+        }
+        .table-box {
+            border: 1px solid var(--secondary);
+            border-radius: 6px;
+            width: 200px;
+            background-color: #0f172a;
+            overflow: hidden;
+            font-size: 0.9rem;
+        }
+        .table-title { background-color: var(--secondary); color: white; font-weight: bold; text-align: center; padding: 6px; }
+        .table-row { padding: 6px 10px; border-bottom: 1px solid var(--border-color); }
+        .table-row:last-child { border-bottom: none; }
+        .pk { color: #fbbf24; font-weight: bold; }
+        .fk { color: #38bdf8; font-style: italic; }
+        .rel-line { color: var(--text-light); font-weight: bold; text-align: center; }
+
+        .controls { margin-bottom: 2rem; display: flex; gap: 1rem; }
+        button {
+            padding: 0.8rem 1.5rem; border: none; border-radius: 6px;
+            background-color: var(--primary); color: #0f172a; font-size: 1rem;
+            cursor: pointer; font-weight: bold; transition: all 0.3s;
+        }
+        button:hover { background-color: var(--secondary); color: white; }
+        
+        .grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem; width: 100%; max-width: 1200px;
+        }
+        .card-container { perspective: 1000px; min-height: 300px; display: flex; }
+        .card {
+            width: 100%; height: 100%; position: relative;
+            transition: transform 0.6s; transform-style: preserve-3d; cursor: pointer;
+        }
+        .card.flipped { transform: rotateY(180deg); }
+        .card-face {
+            position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+            border-radius: 12px; padding: 2rem; box-sizing: border-box;
+            background-color: var(--card-bg); border: 1px solid var(--border-color);
+            display: flex; flex-direction: column;
+        }
+        .card-front { align-items: center; justify-content: center; text-align: center; }
+        .card-front h2 { color: var(--text-dark); font-size: 1.2rem; font-weight: 500; line-height: 1.5; }
+        .card-front .hint { color: var(--secondary); font-size: 0.85rem; margin-top: 1rem; text-transform: uppercase; letter-spacing: 1px; }
+        .question-num { position: absolute; top: 10px; left: 10px; color: var(--primary); font-size: 0.8rem; font-weight: bold; }
+        
+        .card-back {
+            transform: rotateY(180deg); overflow-y: auto; justify-content: flex-start;
+        }
+        .card-back .answer-title { color: var(--primary); font-weight: bold; text-transform: uppercase; font-size: 0.9rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 5px; }
+        .card-back p { margin: 0; line-height: 1.6; font-size: 1rem; }
+        
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-color); }
+        ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--secondary); }
+    </style>
+</head>
+<body>
+
+    <h1>Práctica Avanzada: Álgebra y Cálculo Relacional</h1>
+    
+    <div class="schema-container">
+        <h3>Esquema de la Base de Datos</h3>
+        <div class="db-diagram">
+            <div class="table-box">
+                <div class="table-title">INVESTIGADOR</div>
+                <div class="table-row pk">ID_Inv (PK)</div>
+                <div class="table-row">Nombre</div>
+                <div class="table-row">Instituto</div>
+                <div class="table-row">Salario</div>
+            </div>
+            <div class="rel-line">1<br>─<br>N</div>
+            <div class="table-box">
+                <div class="table-title">PARTICIPA</div>
+                <div class="table-row fk">ID_Inv (FK)</div>
+                <div class="table-row fk">ID_Proy (FK)</div>
+                <div class="table-row">Horas</div>
+            </div>
+            <div class="rel-line">N<br>─<br>1</div>
+            <div class="table-box">
+                <div class="table-title">PROYECTO</div>
+                <div class="table-row pk">ID_Proy (PK)</div>
+                <div class="table-row">Nombre_Proy</div>
+                <div class="table-row">Presupuesto</div>
+                <div class="table-row fk">ID_Lider (FK)</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="controls">
+        <button onclick="shuffleCards()">Aleatorio</button>
+        <button onclick="resetOrder()">Orden Original</button>
+    </div>
+
+    <div class="grid" id="flashcard-grid">
+
+        <div class="card-container" style="order: 0;" data-original-order="0" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <span class="question-num">Q1</span>
+                    <h2>Álgebra: Obtener los nombres de los investigadores que pertenecen al instituto de 'Matemáticas'.</h2>
+                    <p class="hint">Ver respuesta</p>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Expresión Relacional</div>
+                    <p>$$\Pi_{Nombre}(\sigma_{Instituto='Matemáticas'}(INVESTIGADOR))$$<br><br><i>Explicación:</i> Primero filtramos las filas con $\sigma$ y luego proyectamos solo la columna Nombre con $\Pi$.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 1;" data-original-order="1" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <span class="question-num">Q2</span>
+                    <h2>Álgebra (Join): Obtener los nombres de los investigadores y los nombres de los proyectos en los que participan.</h2>
+                    <p class="hint">Ver respuesta</p>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Expresión Relacional</div>
+                    <p>$$\Pi_{Nombre, Nombre\_Proy}(INVESTIGADOR \bowtie PARTICIPA \bowtie PROYECTO)$$<br><br><i>Explicación:</i> El Natural Join ($\bowtie$ o $|x|$) enlaza las tres tablas usando los atributos comunes (ID_Inv e ID_Proy). Luego proyectamos las columnas deseadas.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 2;" data-original-order="2" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <span class="question-num">Q3</span>
+                    <h2>Álgebra (Join): Obtener el nombre de los líderes de proyecto junto con el nombre del proyecto que dirigen.</h2>
+                    <p class="hint">Ver respuesta</p>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Expresión Relacional</div>
+                    <p>$$\Pi_{Nombre, Nombre\_Proy}(INVESTIGADOR \bowtie_{ID\_Inv = ID\_Lider} PROYECTO)$$<br><br><i>Explicación:</i> Como el atributo común no se llama igual (ID_Inv vs ID_Lider), usamos un Theta-Join especificando la condición de igualdad.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 3;" data-original-order="3" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <span class="question-num">Q4</span>
+                    <h2>Álgebra (Gamma): Obtener el salario máximo y mínimo de los investigadores por cada Instituto.</h2>
+                    <p class="hint">Ver respuesta</p>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Expresión Relacional</div>
+                    <p>$$\gamma_{Instituto, max(Salario), min(Salario)}(INVESTIGADOR)$$<br><br><i>Explicación:</i> Agrupamos por 'Instituto' y calculamos las funciones de agregación sobre el 'Salario'.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 4;" data-original-order="4" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <span class="question-num">Q5</span>
+                    <h2>Álgebra (Gamma): Calcular el número total de horas que se han invertido en cada proyecto (mostrando ID_Proy y la suma de horas).</h2>
+                    <p class="hint">Ver respuesta</p>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Expresión Relacional</div>
+                    <p>$$\gamma_{ID\_Proy, sum(Horas)}(PARTICIPA)$$<br><br><i>Explicación:</i> La agrupación ($\gamma$) se hace sobre ID_Proy, y la agregación es la suma sobre el campo Horas.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 5;" data-original-order="5" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <span class="question-num">Q6</span>
+                    <h2>Álgebra (Gamma + Join): Obtener el presupuesto total gestionado por cada Instituto.</h2>
+                    <p class="hint">Ver respuesta</p>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Expresión Relacional</div>
+                    <p>$$\gamma_{Instituto, sum(Presupuesto)}(INVESTIGADOR \bowtie_{ID\_Inv = ID\_Lider} PROYECTO)$$<br><br><i>Explicación:</i> Primero cruzamos a los líderes con sus proyectos. Sobre ese cruce, agrupamos por 'Instituto' y sumamos el 'Presupuesto'.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 6;" data-original-order="6" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <span class="question-num">Q7</span>
+                    <h2>Álgebra (Gamma): Obtener la cantidad total de investigadores inscritos por cada instituto.</h2>
+                    <p class="hint">Ver respuesta</p>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Expresión Relacional</div>
+                    <p>$$\gamma_{Instituto, count(ID\_Inv)}(INVESTIGADOR)$$<br><br><i>Explicación:</i> Agrupamos por Instituto y contamos cuántos identificadores únicos hay en cada bloque.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 7;" data-original-order="7" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <span class="question-num">Q8</span>
+                    <h2>Álgebra (Diferencia): Encontrar los IDs de los investigadores que NO participan en ningún proyecto.</h2>
+                    <p class="hint">Ver respuesta</p>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Expresión Relacional</div>
+                    <p>$$\Pi_{ID\_Inv}(INVESTIGADOR) - \Pi_{ID\_Inv}(PARTICIPA)$$<br><br><i>Explicación:</i> Al conjunto de todos los investigadores le restamos el conjunto de investigadores que aparecen en la tabla de participaciones.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 8;" data-original-order="8" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <span class="question-num">Q9</span>
+                    <h2>Álgebra (Join múltiple + Selección): Mostrar el Nombre del investigador, el Nombre del proyecto y las Horas, pero solo para participaciones mayores a 20 horas.</h2>
+                    <p class="hint">Ver respuesta</p>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Expresión Relacional</div>
+                    <p>$$\Pi_{Nombre, Nombre\_Proy, Horas}(\sigma_{Horas > 20}(INVESTIGADOR \bowtie PARTICIPA \bowtie PROYECTO))$$</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 9;" data-original-order="9" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <span class="question-num">Q10</span>
+                    <h2>Álgebra (Gamma + Selección): Obtener los Institutos que pagan un salario promedio mayor a 25,000.</h2>
+                    <p class="hint">Ver respuesta</p>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Expresión Relacional</div>
+                    <p>$$\sigma_{Prom > 25000}(\gamma_{Instituto, avg(Salario) \to Prom}(INVESTIGADOR))$$<br><br><i>Explicación:</i> Calculamos el promedio renombrándolo como 'Prom'. El resultado es una nueva tabla sobre la cual aplicamos la selección.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 10;" data-original-order="10" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <span class="question-num">Q11</span>
+                    <h2>Cálculo (Tuplas): Obtener los nombres de los investigadores que participan en el proyecto con ID 'P1'.</h2>
+                    <p class="hint">Ver respuesta</p>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Expresión Relacional</div>
+                    <p>$\{t.Nombre | INVESTIGADOR(t) \wedge \exists p (PARTICIPA(p) \wedge p.ID\_Inv = t.ID\_Inv \wedge p.ID\_Proy = 'P1')\}$<br><br><i>Explicación:</i> Buscamos la tupla $t$ tal que exista una tupla $p$ en PARTICIPA que conecte el ID del investigador con el proyecto 'P1'.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 11;" data-original-order="11" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <span class="question-num">Q12</span>
+                    <h2>Cálculo (Dominios): Obtener el Nombre y Presupuesto de los proyectos liderados por un investigador con un salario mayor a 30,000.</h2>
+                    <p class="hint">Ver respuesta</p>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Expresión Relacional</div>
+                    <p>$\{<n, p> | \exists id, pre, lid, nom, inst, sal (PROYECTO(id, n, p, lid) \wedge INVESTIGADOR(lid, nom, inst, sal) \wedge sal > 30000)\}$</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 12;" data-original-order="12" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <span class="question-num">Q13</span>
+                    <h2>Álgebra (Join + Gamma): Obtener el nombre del proyecto y la cantidad de investigadores que participan en él.</h2>
+                    <p class="hint">Ver respuesta</p>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Expresión Relacional</div>
+                    <p>$$\Pi_{Nombre\_Proy, Cantidad}(\gamma_{ID\_Proy, count(ID\_Inv)\to Cantidad}(PARTICIPA) \bowtie PROYECTO)$$<br><br><i>Explicación:</i> Agrupamos en PARTICIPA para contar investigadores por proyecto, renombramos el conteo, y hacemos Join con PROYECTO para obtener el nombre.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 13;" data-original-order="13" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <span class="question-num">Q14</span>
+                    <h2>Álgebra (Renombramiento + Join): Encontrar pares de investigadores (Nombres) que pertenecen al mismo Instituto.</h2>
+                    <p class="hint">Ver respuesta</p>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Expresión Relacional</div>
+                    <p>$$\Pi_{I1.Nombre, I2.Nombre}(\sigma_{I1.Instituto = I2.Instituto \wedge I1.ID\_Inv < I2.ID\_Inv}(\rho_{I1}(INVESTIGADOR) \times \rho_{I2}(INVESTIGADOR)))$$<br><br><i>Explicación:</i> Es el clásico 'Auto-Join'. Renombramos la tabla dos veces ($I1$ e $I2$), hacemos producto cartesiano, filtramos por mismo instituto y aseguramos que no se emparejen consigo mismos usando $<$.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="order: 14;" data-original-order="14" onclick="this.querySelector('.card').classList.toggle('flipped')">
+            <div class="card">
+                <div class="card-face card-front">
+                    <span class="question-num">Q15</span>
+                    <h2>Álgebra (División): Encontrar el ID de los investigadores que participan en TODOS los proyectos existentes.</h2>
+                    <p class="hint">Ver respuesta</p>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-title">Expresión Relacional</div>
+                    <p>$$\Pi_{ID\_Inv, ID\_Proy}(PARTICIPA) \div \Pi_{ID\_Proy}(PROYECTO)$$<br><br><i>Explicación:</i> La división ($\div$) devuelve el atributo dividendo (ID_Inv) que está acompañado de absolutamente todos los valores del divisor (ID_Proy).</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const grid = document.getElementById('flashcard-grid');
+        const cards = Array.from(grid.children);
+
+        function shuffleCards() {
+            cards.forEach(card => {
+                card.style.order = Math.floor(Math.random() * 10000);
+                const innerCard = card.querySelector('.card');
+                if(innerCard.classList.contains('flipped')) {
+                    innerCard.classList.remove('flipped');
+                }
+            });
+        }
+        function resetOrder() {
+            cards.forEach(card => {
+                card.style.order = card.getAttribute('data-original-order');
+                const innerCard = card.querySelector('.card');
+                if(innerCard.classList.contains('flipped')) {
+                    innerCard.classList.remove('flipped');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

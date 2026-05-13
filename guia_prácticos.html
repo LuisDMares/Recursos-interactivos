@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Interactiva de Álgebra Lineal</title>
+    
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']],
+                macros: {
+                    R: "\\mathbb{R}",
+                    F: "\\mathbb{F}",
+                    C: "\\mathbb{C}",
+                    Q: "\\mathbb{Q}",
+                    Z: "\\mathbb{Z}",
+                    M: "\\mathbf{M}",
+                    P: "\\mathbf{P}",
+                    0: "\\mathbf{0}",
+                    span: "\\operatorname{span}",
+                    tr: "\\operatorname{tr}"
+                }
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; line-height: 1.6; max-width: 800px; margin: auto; padding: 20px; color: #2c3e50; background-color: #fcfcfc;}
+        h1, h2 { color: #2980b9; border-bottom: 2px solid #ecf0f1; padding-bottom: 5px; }
+        .ejercicio { background: #ffffff; padding: 20px; border-left: 5px solid #2980b9; margin-top: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .solucion { margin-top: 20px; padding-left: 10px; font-size: 0.95em; }
+        .solucion-title { font-weight: bold; color: #27ae60; margin-bottom: 10px; display: inline-block; }
+        details { background: #f8f9fa; border: 1px solid #e9ecef; padding: 12px; margin-top: 15px; border-radius: 6px; }
+        summary { font-weight: bold; color: #e67e22; cursor: pointer; outline: none; padding: 5px; user-select: none; }
+        summary:hover { color: #d35400; }
+        ol { margin-top: 10px; margin-bottom: 10px; }
+        li { margin-bottom: 8px; }
+    </style>
+</head>
+<body>
+    <h1>Guía de Estudio de Álgebra Lineal</h1>
+<div class="ejercicio">
+<strong><strong>Pág. 33, Ej. 3</strong></strong><br>
+Para cada una de las siguientes listas de vectores en \(\R^3\), determina si el primer vector puede expresarse como combinación lineal de los otros dos.
+<ol type="a">
+<li> \(( -2, 0, 3), (1, 3, -1), (2, 4, 0)\)
+<li> \((1, 2, -3), (-3, 2, 1), (2, -1, -1)\)
+</ol>
+</div>
+<div class="solucion">
+<span class="solucion-title">Solución paso a paso:</span><br>
+<strong>(a)</strong> Queremos ver si existen escalares \(\alpha, \beta \in \R\) tales que:
+\[
+(-2, 0, 3) = \alpha(1, 3, -1) + \beta(2, 4, 0)
+\]
+
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+Esto nos da el sistema:
+\[
+\begin{cases}
+\alpha + 2\beta = -2 \\
+3\alpha + 4\beta = 0 \\
+-\alpha = 3
+\end{cases}
+\]
+<br>
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+De la tercera ecuación: \(\alpha = -3\). Sustituyendo en la primera: \(-3 + 2\beta = -2 \Rightarrow 2\beta = 1 \Rightarrow \beta = \frac{1}{2}\). Verificamos en la segunda: \(3(-3) + 4(\frac{1}{2}) = -9 + 2 = -7 \neq 0\). El sistema es inconsistente, por lo tanto <strong>no</strong> es combinación lineal.
+<br>
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+<strong>(b)</strong> Buscamos \(\alpha, \beta \in \R\) tales que:
+\[
+(1, 2, -3) = \alpha(-3, 2, 1) + \beta(2, -1, -1)
+\]
+<br>
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+Sistema:
+\[
+\begin{cases}
+-3\alpha + 2\beta = 1 \\
+2\alpha - \beta = 2 \\
+\alpha - \beta = -3
+\end{cases}
+\]
+<br>
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+De la segunda ecuación: \(\beta = 2\alpha - 2\). Sustituyendo en la tercera: \(\alpha - (2\alpha - 2) = -3 \Rightarrow -\alpha + 2 = -3 \Rightarrow \alpha = 5\). Entonces \(\beta = 2(5) - 2 = 8\). Verificamos en la primera: \(-3(5) + 2(8) = -15 + 16 = 1\). Se cumple. Por lo tanto, <strong>sí</strong> es combinación lineal:
+\[
+(1, 2, -3) = 5(-3, 2, 1) + 8(2, -1, -1)
+\]
+<br>
+</details>
+</details>
+</details>
+</details>
+</details>
+</div>
+<div class="ejercicio">
+<strong><strong>Pág. 33, Ej. 4</strong></strong><br>
+Para cada lista de polinomios en \(P_3(\R)\), determina si el primer polinomio puede expresarse como combinación lineal de los otros dos.
+<ol type="a">
+<li> \(2x^3 - x^2 + 4x + 2\); \(x^3 + 2x - 1\), \(2x^2 + x + 1\)
+</ol>
+</div>
+<div class="solucion">
+<span class="solucion-title">Solución paso a paso:</span><br>
+Buscamos \(\alpha, \beta \in \R\) tales que:
+\[
+2x^3 - x^2 + 4x + 2 = \alpha(x^3 + 2x - 1) + \beta(2x^2 + x + 1)
+\]
+
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+Desarrollando:
+\[
+= \alpha x^3 + 2\beta x^2 + (2\alpha + \beta)x + (-\alpha + \beta)
+\]
+<br>
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+Igualando coeficientes:
+\[
+\begin{cases}
+\alpha = 2 \\
+2\beta = -1 \Rightarrow \beta = -\frac{1}{2} \\
+2\alpha + \beta = 4 \\
+-\alpha + \beta = 2
+\end{cases}
+\]
+<br>
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+Sustituyendo \(\alpha = 2, \beta = -\frac{1}{2}\) en la tercera: \(2(2) + (-\frac{1}{2}) = 4 - 0.5 = 3.5 \neq 4\). No se cumple. Por lo tanto, <strong>no</strong> es combinación lineal.
+<br>
+</details>
+</details>
+</details>
+</div>
+<div class="ejercicio">
+<strong><strong>Pág. 34, Ej. 5</strong></strong><br>
+En cada parte, determina si el vector dado está en el span de \(S\).
+<ol type="a">
+<li> \(v = (2, -1, 1, -3)\), \(S = \{(1, 0, 1, -1), (0, 1, 1, 1), (1, 1, 2, 0)\}\) en \(\R^4\)
+</ol>
+</div>
+<div class="solucion">
+<span class="solucion-title">Solución paso a paso:</span><br>
+\(v \in \span(S)\) si existen escalares \(a, b, c \in \R\) tales que:
+\[
+a(1, 0, 1, -1) + b(0, 1, 1, 1) + c(1, 1, 2, 0) = (2, -1, 1, -3)
+\]
+
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+Sumando:
+\[
+(a + c, \; b + c, \; a + b + 2c, \; -a + b) = (2, -1, 1, -3)
+\]
+<br>
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+Sistema:
+\[
+\begin{cases}
+a + c = 2 \quad (1) \\
+b + c = -1 \quad (2) \\
+a + b + 2c = 1 \quad (3) \\
+-a + b = -3 \quad (4)
+\end{cases}
+\]
+<br>
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+De (4): \(b = a - 3\). Sustituyendo en (2): \(a - 3 + c = -1 \Rightarrow a + c = 2\) (que es la ecuación (1), redundante).
+Sustituyendo \(b = a - 3\) en (3): \(a + (a - 3) + 2c = 1 \Rightarrow 2a + 2c = 4 \Rightarrow a + c = 2\) (nuevamente redundante). Tenemos infinitas soluciones. Por ejemplo, tomando \(a = 2\), entonces \(c = 0\) y \(b = -1\). Verificamos todas las ecuaciones: se cumplen. Por lo tanto, \(v \in \span(S)\).
+<br>
+</details>
+</details>
+</details>
+</div>
+<div class="ejercicio">
+<strong><strong>Pág. 40, Ej. 2</strong></strong><br>
+Determina si los siguientes conjuntos son linealmente dependientes o independientes.
+<ol type="a">
+<li> \(\left\{ \begin{pmatrix} 1 & -3 \\ -2 & 4 \end{pmatrix}, \begin{pmatrix} -2 & 6 \\ 4 & -8 \end{pmatrix} \right\}\) en \(\M_{2\times 2}(\R)\)
+<li> \(\left\{ x^3 + 2x^2, -x^2 + 3x + 1, x^3 - x^2 + 2x - 1 \right\}\) en \(P_3(\R)\)
+</ol>
+</div>
+<div class="solucion">
+<span class="solucion-title">Solución paso a paso:</span><br>
+<strong>(a)</strong> Sean \(A = \begin{pmatrix} 1 & -3 \\ -2 & 4 \end{pmatrix}\) y \(B = \begin{pmatrix} -2 & 6 \\ 4 & -8 \end{pmatrix}\). 
+
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+Observamos que \(B = -2 \cdot A\). Por lo tanto, el conjunto es <strong>linealmente dependiente</strong> (uno es múltiplo escalar del otro).
+<br>
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+<strong>(b)</strong> Sean \(p_1(x) = x^3 + 2x^2\), \(p_2(x) = -x^2 + 3x + 1\), \(p_3(x) = x^3 - x^2 + 2x - 1\). Buscamos \(\alpha, \beta, \gamma \in \R\) no todos cero tales que:
+\[
+\alpha(x^3 + 2x^2) + \beta(-x^2 + 3x + 1) + \gamma(x^3 - x^2 + 2x - 1) = 0
+\]
+<br>
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+Agrupando términos:
+\[
+(\alpha + \gamma)x^3 + (2\alpha - \beta - \gamma)x^2 + (3\beta + 2\gamma)x + (\beta - \gamma) = 0
+\]
+<br>
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+Sistema homogéneo:
+\[
+\begin{cases}
+\alpha + \gamma = 0 \quad (1) \\
+2\alpha - \beta - \gamma = 0 \quad (2) \\
+3\beta + 2\gamma = 0 \quad (3) \\
+\beta - \gamma = 0 \quad (4)
+\end{cases}
+\]
+<br>
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+De (4): \(\beta = \gamma\). Sustituyendo en (3): \(3\gamma + 2\gamma = 0 \Rightarrow 5\gamma = 0 \Rightarrow \gamma = 0\). Luego \(\beta = 0\). De (1): \(\alpha + 0 = 0 \Rightarrow \alpha = 0\). La única solución es la trivial, por lo tanto el conjunto es <strong>linealmente independiente</strong>.
+<br>
+</details>
+</details>
+</details>
+</details>
+</details>
+</div>
+<div class="ejercicio">
+<strong><strong>Pág. 41, Ej. 4</strong></strong><br>
+En \(\F^n\), sea \(e_j\) el vector cuya \(j\)-ésima coordenada es 1 y las demás son 0. Prueba que \(\{e_1, e_2, \ldots, e_n\}\) es linealmente independiente.
+</div>
+<div class="solucion">
+<span class="solucion-title">Solución paso a paso:</span><br>
+Supongamos que existen escalares \(a_1, a_2, \ldots, a_n \in \F\) tales que:
+\[
+a_1 e_1 + a_2 e_2 + \cdots + a_n e_n = \0
+\]
+
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+El vector de la izquierda es:
+\[
+(a_1, a_2, \ldots, a_n) = (0, 0, \ldots, 0)
+\]
+<br>
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+Por igualdad de vectores, tenemos \(a_i = 0\) para todo \(i = 1, \ldots, n\). Por lo tanto, la única combinación lineal que da el vector cero es la trivial, lo que demuestra que el conjunto es linealmente independiente.
+<br>
+</details>
+</details>
+</div>
+<div class="ejercicio">
+<strong><strong>Pág. 41, Ej. 5</strong></strong><br>
+Demuestra que \(\{1, x, x^2, \ldots, x^n\}\) es linealmente independiente en \(P_n(F)\).
+</div>
+<div class="solucion">
+<span class="solucion-title">Solución paso a paso:</span><br>
+Supongamos que existen escalares \(a_0, a_1, \ldots, a_n \in F\) tales que:
+\[
+a_0 + a_1 x + a_2 x^2 + \cdots + a_n x^n = 0 \quad (\text{polinomio cero})
+\]
+
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+Dos polinomios son iguales si y solo si todos sus coeficientes son iguales. El polinomio cero tiene todos sus coeficientes iguales a 0. Por lo tanto:
+\[
+a_0 = 0, a_1 = 0, \ldots, a_n = 0
+\]
+Esto demuestra que el conjunto es linealmente independiente.
+<br>
+</details>
+</div>
+<div class="ejercicio">
+<strong><strong>Pág. 41, Ej. 8</strong></strong><br>
+Sea \(S = \{(1,1,0), (1,0,1), (0,1,1)\}\) un subconjunto de \(\F^3\).
+<ol type="a">
+<li> Prueba que si \(F = \R\), entonces \(S\) es linealmente independiente.
+<li> Prueba que si \(F\) tiene característica 2, entonces \(S\) es linealmente dependiente.
+</ol>
+</div>
+<div class="solucion">
+<span class="solucion-title">Solución paso a paso:</span><br>
+<strong>(a)</strong> Sean \(a, b, c \in \R\) tales que:
+\[
+a(1,1,0) + b(1,0,1) + c(0,1,1) = (0,0,0)
+\]
+
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+Esto da el sistema:
+\[
+\begin{cases}
+a + b = 0 \\
+a + c = 0 \\
+b + c = 0
+\end{cases}
+\]
+<br>
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+De la primera: \(b = -a\). De la segunda: \(c = -a\). Sustituyendo en la tercera: \((-a) + (-a) = -2a = 0 \Rightarrow a = 0\). Entonces \(b = 0\) y \(c = 0\). La única solución es la trivial, por lo tanto es linealmente independiente en \(\R\).
+<br>
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+<strong>(b)</strong> Si \(F\) tiene característica 2, entonces \(1 + 1 = 0\) (es decir, \(2 = 0\)). Tomando \(a = b = c = 1\):
+\[
+1(1,1,0) + 1(1,0,1) + 1(0,1,1) = (1+1+0, 1+0+1, 0+1+1) = (0,0,0)
+\]
+<br>
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+Esto es una combinación lineal no trivial (los coeficientes son 1, no todos cero) que da el vector cero. Por lo tanto, en característica 2, \(S\) es linealmente dependiente.
+<br>
+</details>
+</details>
+</details>
+</details>
+</div>
+<div class="ejercicio">
+<strong><strong>Pág. 53, Ej. 2</strong></strong><br>
+Determina cuáles de los siguientes conjuntos son bases para \(\R^3\).
+<ol type="a">
+<li> \(\{(1,0,-1), (2,5,1), (0,-4,3)\}\)
+<li> \(\{(2,-4,1), (0,3,-1), (6,0,-1)\}\)
+</ol>
+</div>
+<div class="solucion">
+<span class="solucion-title">Solución paso a paso:</span><br>
+Para que 3 vectores en \(\R^3\) sean una base, deben ser linealmente independientes (o equivalentemente, generar \(\R^3\)). Comprobamos la independencia lineal viendo si la única solución a la combinación lineal igual a cero es la trivial.
+
+<strong>(a)</strong> Sean \(a, b, c \in \R\) tales que:
+\[
+a(1,0,-1) + b(2,5,1) + c(0,-4,3) = (0,0,0)
+\]
+
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+Sistema:
+\[
+\begin{cases}
+a + 2b = 0 \quad (1) \\
+5b - 4c = 0 \quad (2) \\
+-a + b + 3c = 0 \quad (3)
+\end{cases}
+\]
+<br>
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+De (1): \(a = -2b\). Sustituyendo en (3): \(-(-2b) + b + 3c = 2b + b + 3c = 3b + 3c = 0 \Rightarrow b + c = 0 \Rightarrow c = -b\). Sustituyendo en (2): \(5b - 4(-b) = 5b + 4b = 9b = 0 \Rightarrow b = 0\). Entonces \(a = 0\) y \(c = 0\). Son linealmente independientes, por lo tanto <strong>sí son base</strong>.
+<br>
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+<strong>(b)</strong> Sean \(a, b, c \in \R\) tales que:
+\[
+a(2,-4,1) + b(0,3,-1) + c(6,0,-1) = (0,0,0)
+\]
+<br>
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+Sistema:
+\[
+\begin{cases}
+2a + 6c = 0 \quad (1) \\
+-4a + 3b = 0 \quad (2) \\
+a - b - c = 0 \quad (3)
+\end{cases}
+\]
+<br>
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+De (1): \(a = -3c\). Sustituyendo en (3): \(-3c - b - c = -b - 4c = 0 \Rightarrow b = -4c\). Sustituyendo en (2): \(-4(-3c) + 3(-4c) = 12c - 12c = 0\). Esto se cumple para cualquier \(c\). Por ejemplo, tomando \(c = 1\), tenemos \(a = -3\), \(b = -4\), que es una solución no trivial. Por lo tanto, son linealmente dependientes, así que <strong>no son base</strong>.
+<br>
+</details>
+</details>
+</details>
+</details>
+</details>
+</div>
+<div class="ejercicio">
+<strong><strong>Pág. 54, Ej. 3</strong></strong><br>
+Determina cuáles de los siguientes conjuntos son bases para \(P_2(\R)\).
+<ol type="a">
+<li> \(\{-1 - x + 2x^2, 2 + x - 2x^2, 1 - 2x + 4x^2\}\)
+</ol>
+</div>
+<div class="solucion">
+<span class="solucion-title">Solución paso a paso:</span><br>
+En \(P_2(\R)\), la dimensión es 3. Para que 3 polinomios sean una base, deben ser linealmente independientes. Sean \(p_1(x) = -1 - x + 2x^2\), \(p_2(x) = 2 + x - 2x^2\), \(p_3(x) = 1 - 2x + 4x^2\). Buscamos \(\alpha, \beta, \gamma \in \R\) tales que:
+\[
+\alpha p_1 + \beta p_2 + \gamma p_3 = 0
+\]
+
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+Desarrollando:
+\[
+\alpha(-1 - x + 2x^2) + \beta(2 + x - 2x^2) + \gamma(1 - 2x + 4x^2) = 0
+\]
+<br>
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+Agrupamos términos constantes, de \(x\) y de \(x^2\):
+\[
+(-\alpha + 2\beta + \gamma) + (-\alpha + \beta - 2\gamma)x + (2\alpha - 2\beta + 4\gamma)x^2 = 0
+\]
+<br>
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+Sistema homogéneo:
+\[
+\begin{cases}
+-\alpha + 2\beta + \gamma = 0 \quad (1) \\
+-\alpha + \beta - 2\gamma = 0 \quad (2) \\
+2\alpha - 2\beta + 4\gamma = 0 \quad (3)
+\end{cases}
+\]
+<br>
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+Restando (2) de (1): \((-\alpha + 2\beta + \gamma) - (-\alpha + \beta - 2\gamma) = 0 \Rightarrow \beta + 3\gamma = 0 \Rightarrow \beta = -3\gamma\). Sustituyendo en (2): \(-\alpha + (-3\gamma) - 2\gamma = -\alpha -5\gamma = 0 \Rightarrow \alpha = -5\gamma\). Sustituyendo \(\alpha\) y \(\beta\) en (3): \(2(-5\gamma) - 2(-3\gamma) + 4\gamma = -10\gamma + 6\gamma + 4\gamma = 0\). Se cumple para cualquier \(\gamma\). Por ejemplo, con \(\gamma = 1\) tenemos \(\alpha = -5\), \(\beta = -3\), que es una solución no trivial. Por lo tanto, son linealmente dependientes y <strong>no son base</strong>.
+<br>
+</details>
+</details>
+</details>
+</details>
+</div>
+<div class="ejercicio">
+<strong><strong>Pág. 55, Ej. 14</strong></strong><br>
+Encuentra bases para los siguientes subespacios de \(\F^5\):
+\[
+W_1 = \{(a_1,a_2,a_3,a_4,a_5) \in \F^5 : a_1 - a_3 - a_4 = 0\}
+\]
+\[
+W_2 = \{(a_1,a_2,a_3,a_4,a_5) \in \F^5 : a_2 = a_3 = a_4 \text{ y } a_1 + a_5 = 0\}
+\]
+¿Cuáles son las dimensiones de \(W_1\) y \(W_2\)?
+</div>
+<div class="solucion">
+<span class="solucion-title">Solución paso a paso:</span><br>
+<strong>Para \(W_1\):</strong> La condición es \(a_1 = a_3 + a_4\). Las variables \(a_2, a_3, a_4, a_5\) son libres. 
+
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+Un vector genérico es:
+\[
+(a_3 + a_4, \; a_2, \; a_3, \; a_4, \; a_5) = a_2(0,1,0,0,0) + a_3(1,0,1,0,0) + a_4(1,0,0,1,0) + a_5(0,0,0,0,1)
+\]
+<br>
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+Por lo tanto, una base para \(W_1\) es:
+\[
+\beta_1 = \{(0,1,0,0,0), (1,0,1,0,0), (1,0,0,1,0), (0,0,0,0,1)\}
+\]
+Estos 4 vectores son linealmente independientes (cada uno aporta un 1 en una posición única). Entonces \(\dim(W_1) = 4\).
+<br>
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+<strong>Para \(W_2\):</strong> Las condiciones son \(a_2 = a_3 = a_4\) (llamemos a este valor común \(t\)) y \(a_5 = -a_1\). Sean \(a_1 = s\) y \(a_2 = t\).
+<br>
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+Entonces:
+\[
+(s, t, t, t, -s) = s(1,0,0,0,-1) + t(0,1,1,1,0)
+\]
+<br>
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+Por lo tanto, una base para \(W_2\) es:
+\[
+\beta_2 = \{(1,0,0,0,-1), (0,1,1,1,0)\}
+\]
+Estos 2 vectores son linealmente independientes (no son múltiplos). Entonces \(\dim(W_2) = 2\).
+<br>
+</details>
+</details>
+</details>
+</details>
+</details>
+</div>
+<div class="ejercicio">
+<strong><strong>Pág. 55, Ej. 15</strong></strong><br>
+El conjunto de todas las matrices \(n \times n\) con traza igual a cero es un subespacio \(W\) de \(\M_{n\times n}(F)\). Encuentra una base para \(W\). ¿Cuál es la dimensión de \(W\)?
+</div>
+<div class="solucion">
+<span class="solucion-title">Solución paso a paso:</span><br>
+La traza de una matriz \(A = (a_{ij})\) es \(\tr(A) = a_{11} + a_{22} + \cdots + a_{nn}\). La condición para estar en \(W\) es \(\tr(A) = 0\).
+
+
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+\subsection*{Paso 1: Recordemos la base canónica de \(\M_{n\times n}(F)\)}
+Las matrices \(E^{ij}\) (con un 1 en la posición \((i,j)\) y 0 en las demás) forman una base. Por ejemplo, para \(n = 3\):
+\[
+E^{11} = \begin{pmatrix}
+1 & 0 & 0 \\
+0 & 0 & 0 \\
+0 & 0 & 0
+\end{pmatrix},\quad
+E^{12} = \begin{pmatrix}
+0 & 1 & 0 \\
+0 & 0 & 0 \\
+0 & 0 & 0
+\end{pmatrix},\quad
+E^{23} = \begin{pmatrix}
+0 & 0 & 0 \\
+0 & 0 & 1 \\
+0 & 0 & 0
+\end{pmatrix},\quad \text{etc.}
+\]
+<br>
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+\subsection*{Paso 2: Matrices fuera de la diagonal}
+Para \(i \neq j\), las matrices \(E^{ij}\) ya están en \(W\) porque todos sus elementos diagonales son cero. Por ejemplo:
+\[
+E^{12} = \begin{pmatrix}
+0 & 1 & 0 \\
+0 & 0 & 0 \\
+0 & 0 & 0
+\end{pmatrix} \Rightarrow \tr(E^{12}) = 0
+\]
+Hay \(n^2 - n\) matrices de este tipo (todas las posiciones excepto la diagonal principal).
+<br>
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+\subsection*{Paso 3: Matrices en la diagonal}
+Las matrices \(E^{ii}\) (con \(i = j\)) tienen traza 1, por lo tanto no están en \(W\) individualmente. Necesitamos combinaciones de matrices diagonales que tengan traza cero. La idea es tomar \(n-1\) matrices de la forma \(E^{ii} - E^{nn}\) para \(i = 1, 2, \ldots, n-1\). Por ejemplo, para \(n = 3\):
+\[
+E^{11} - E^{33} = \begin{pmatrix}
+1 & 0 & 0 \\
+0 & 0 & 0 \\
+0 & 0 & -1
+\end{pmatrix} \Rightarrow \tr = 1 + 0 + (-1) = 0
+\]
+<br>
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+\subsection*{Paso 4: Base completa para \(W\)}
+La base de \(W\) está formada por:
+<ol>
+<li> Todas las matrices \(E^{ij}\) con \(i \neq j\) (hay \(n^2 - n\)).
+<li> Las \(n-1\) matrices \(E^{ii} - E^{nn}\) para \(i = 1, 2, \ldots, n-1\).
+</ol>
+<br>
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+\subsection*{Paso 5: Dimensión}
+El número total de matrices en la base es:
+\[
+(n^2 - n) + (n - 1) = n^2 - 1
+\]
+Por lo tanto, \(\dim(W) = n^2 - 1\).
+<br>
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+\subsection*{Paso 6: Verificación de independencia lineal}
+Las matrices \(E^{ij}\) con \(i \neq j\) son linealmente independientes porque cada una tiene un 1 en una posición única. Las matrices \(E^{ii} - E^{nn}\) también son independientes entre sí y con respecto a las anteriores.
+<br>
+</details>
+</details>
+</details>
+</details>
+</details>
+</details>
+</div>
+<div class="ejercicio">
+<strong>Ejercicio:</strong><br>
+Determina si el vector \(v = (4, 1, -3)\) es una combinación lineal de los vectores \(u_1 = (1, 0, 0)\), \(u_2 = (0, 1, 0)\) y \(u_3 = (0, 0, 1)\). Luego, determina si \(v = (4, 1, -3)\) es combinación lineal de \(w_1 = (1, 1, 1)\), \(w_2 = (1, -1, 1)\) y \(w_3 = (1, 1, -1)\).
+</div>
+<div class="solucion">
+<span class="solucion-title">Solución paso a paso:</span><br>
+Para los vectores \(u_i\) (base canónica), claramente:
+\[
+(4,1,-3) = 4(1,0,0) + 1(0,1,0) - 3(0,0,1)
+\]
+Sí es combinación lineal.
+
+
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+Para los vectores \(w_i\), buscamos \(\alpha, \beta, \gamma \in \R\) tales que:
+\[
+\alpha(1,1,1) + \beta(1,-1,1) + \gamma(1,1,-1) = (4,1,-3)
+\]
+<br>
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+Sistema:
+\[
+\begin{cases}
+\alpha + \beta + \gamma = 4 \quad (1) \\
+\alpha - \beta + \gamma = 1 \quad (2) \\
+\alpha + \beta - \gamma = -3 \quad (3)
+\end{cases}
+\]
+<br>
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+Restando (2) de (1): \(2\beta = 3 \Rightarrow \beta = \frac{3}{2}\). Restando (3) de (1): \(2\gamma = 7 \Rightarrow \gamma = \frac{7}{2}\). Sustituyendo en (1): \(\alpha + \frac{3}{2} + \frac{7}{2} = 4 \Rightarrow \alpha + 5 = 4 \Rightarrow \alpha = -1\). Verificamos en (2): \(-1 - \frac{3}{2} + \frac{7}{2} = -1 + 2 = 1\). Se cumple. Por lo tanto:
+\[
+(4,1,-3) = -1(1,1,1) + \frac{3}{2}(1,-1,1) + \frac{7}{2}(1,1,-1)
+\]
+<br>
+</details>
+</details>
+</details>
+</div>
+<div class="ejercicio">
+<strong>Ejercicio:</strong><br>
+Determina si los siguientes conjuntos son linealmente independientes en \(\R^3\):
+\[
+\{(1, -2, 3), (2, 1, -1), (0, 5, -7)\}
+\]
+\[
+\{(1, 0, 0), (1, 1, 0), (1, 1, 1)\}
+\]
+</div>
+<div class="solucion">
+<span class="solucion-title">Solución paso a paso:</span><br>
+Para el primer conjunto, sean \(a, b, c \in \R\) tales que:
+\[
+a(1,-2,3) + b(2,1,-1) + c(0,5,-7) = (0,0,0)
+\]
+
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+Sistema:
+\[
+\begin{cases}
+a + 2b = 0 \quad (1) \\
+-2a + b + 5c = 0 \quad (2) \\
+3a - b - 7c = 0 \quad (3)
+\end{cases}
+\]
+<br>
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+De (1): \(a = -2b\). Sustituyendo en (2): \(-2(-2b) + b + 5c = 4b + b + 5c = 5b + 5c = 0 \Rightarrow b + c = 0 \Rightarrow c = -b\). Sustituyendo en (3): \(3(-2b) - b - 7(-b) = -6b - b + 7b = 0\). Se cumple para cualquier \(b\). Por ejemplo, con \(b = 1\), tenemos \(a = -2, c = -1\). Hay solución no trivial, por lo tanto son <strong>linealmente dependientes</strong>.
+<br>
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+Para el segundo conjunto, sean \(a, b, c \in \R\) tales que:
+\[
+a(1,0,0) + b(1,1,0) + c(1,1,1) = (0,0,0)
+\]
+<br>
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+Sumando:
+\[
+(a + b + c, \; b + c, \; c) = (0,0,0)
+\]
+De la tercera componente: \(c = 0\). De la segunda: \(b + 0 = 0 \Rightarrow b = 0\). De la primera: \(a + 0 + 0 = 0 \Rightarrow a = 0\). Solo solución trivial, por lo tanto son <strong>linealmente independientes</strong>.
+<br>
+</details>
+</details>
+</details>
+</details>
+</div>
+<div class="ejercicio">
+<strong>Ejercicio:</strong><br>
+Encuentra una base y la dimensión para el siguiente subespacio de \(\R^4\):
+\[
+W = \{ (a, b, c, d) \in \R^4 \mid a - b + c = 0 \text{ y } b + d = 0 \}
+\]
+</div>
+<div class="solucion">
+<span class="solucion-title">Solución paso a paso:</span><br>
+Las condiciones son:
+\[
+a - b + c = 0 \Rightarrow a = b - c
+\]
+\[
+b + d = 0 \Rightarrow d = -b
+\]
+
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+Las variables libres son \(b\) y \(c\). Un vector genérico es:
+\[
+(b - c, \; b, \; c, \; -b) = b(1,1,0,-1) + c(-1,0,1,0)
+\]
+<br>
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+Por lo tanto, una base para \(W\) es:
+\[
+\beta = \{(1,1,0,-1), (-1,0,1,0)\}
+\]
+Estos dos vectores son linealmente independientes (no son múltiplos). Entonces \(\dim(W) = 2\).
+<br>
+</details>
+</details>
+</div>
+<div class="ejercicio">
+<strong><strong>Demostración</strong></strong><br>
+Demuestra que si \(\{A_1, A_2, \ldots, A_k\}\) es un subconjunto linealmente independiente de \(\M_{n\times n}(F)\), entonces \(\{A_1^t, A_2^t, \ldots, A_k^t\}\) también es linealmente independiente.
+</div>
+<div class="solucion">
+<span class="solucion-title">Solución paso a paso:</span><br>
+Supongamos que existen escalares \(a_1, \ldots, a_k \in F\) tales que:
+\[
+a_1 A_1^t + a_2 A_2^t + \cdots + a_k A_k^t = 0
+\]
+
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+Tomando transpuesta a ambos lados de la ecuación, y usando que \((A^t)^t = A\) y que la transpuesta de una combinación lineal es la combinación lineal de las transpuestas:
+\[
+(a_1 A_1^t + \cdots + a_k A_k^t)^t = 0^t = 0
+\]
+<br>
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+\[
+a_1 (A_1^t)^t + \cdots + a_k (A_k^t)^t = a_1 A_1 + \cdots + a_k A_k = 0
+\]
+<br>
+<details>
+<summary>Desplegar siguiente paso ▾</summary>
+Como el conjunto \(\{A_1, \ldots, A_k\}\) es linealmente independiente, tenemos que \(a_1 = a_2 = \cdots = a_k = 0\). Por lo tanto, el conjunto de las transpuestas también es linealmente independiente.
+<br>
+</details>
+</details>
+</details>
+</div>
+
+</body>
+</html>

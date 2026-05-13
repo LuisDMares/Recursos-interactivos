@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teoremario Interactvo</title>
+    
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        }
+      };
+    </script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #3498db;
+            color: white;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .card {
+            background: white;
+            border-left: 5px solid #34495e;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+        .card-header {
+            padding: 15px 20px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.1em;
+            background-color: #ecf0f1;
+            display: flex;
+            justify-content: space-between;
+        }
+        .card-header:hover {
+            background-color: #e2e6e7;
+        }
+        .card-content {
+            padding: 20px;
+            display: none; /* Oculto por defecto */
+            border-top: 1px solid #ddd;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Teoremario: Transformaciones Lineales y Matrices</h1>
+    
+    <div class="controls">
+        <button onclick="shuffleCards()">🔀 Desordenar Aleatoriamente</button>
+        <button onclick="resetOrder()">⬇️ Regresar al Orden Original</button>
+    </div>
+
+    <div id="cards-container">
+        
+        <div class="card" data-index="0">
+            <div class="card-header" onclick="toggleCard(this)">
+                <span>Definición 1.1: Transformación lineal</span>
+                <span>▼</span>
+            </div>
+            <div class="card-content">
+                Sean $V$ y $W$ espacios vectoriales (sobre $F$). Llamamos a una función $T:V\rightarrow W$ una transformación lineal de $V$ a $W$ si, para todo $x, y\in V$ y $c\in F$ tenemos: (a) $T(x+y)=T(x)+T(y)$ y (b) $T(cx)=cT(x)$.
+            </div>
+        </div>
+    
+        <div class="card" data-index="1">
+            <div class="card-header" onclick="toggleCard(this)">
+                <span>Definición 1.2: Transformación Identidad y Cero</span>
+                <span>▼</span>
+            </div>
+            <div class="card-content">
+                Para los espacios vectoriales $V$ y $W$ (sobre $F$), definimos la transformación identidad $I_{V}:V\rightarrow V$ como $I_{V}(x)=x$ para todo $x\in V$ y la transformación cero $T_{0}:V\rightarrow W$ como $T_{0}(x)=0$ para todo $x\in V$.
+            </div>
+        </div>
+    
+        <div class="card" data-index="2">
+            <div class="card-header" onclick="toggleCard(this)">
+                <span>Definición 1.3: Espacio Nulo $N(T)$ y Rango $R(T)$</span>
+                <span>▼</span>
+            </div>
+            <div class="card-content">
+                Definimos el espacio nulo (o kernel) $N(T)$ de $T$ como el conjunto de todos los vectores $x$ en $V$ tales que $T(x)=0$; es decir, $N(T)=\{x\in V:T(x)=0\}$. Definimos el rango (o imagen) $R(T)$ de $T$ como el subconjunto de $W$ que consiste en todas las imágenes (bajo $T$) de los vectores en $V$; es decir, $R(T)=\{T(x):x\in V\}$.
+            </div>
+        </div>
+    
+        <div class="card" data-index="3">
+            <div class="card-header" onclick="toggleCard(this)">
+                <span>Teorema 1.1: Subespacios N(T) y R(T)</span>
+                <span>▼</span>
+            </div>
+            <div class="card-content">
+                Sean $V$ y $W$ espacios vectoriales y $T: V\rightarrow W$ lineal. Entonces $N(T)$ y $R(T)$ son subespacios de $V$ y $W$, respectivamente.
+            </div>
+        </div>
+    
+        <div class="card" data-index="4">
+            <div class="card-header" onclick="toggleCard(this)">
+                <span>Teorema 1.2: Generación del Rango por una Base</span>
+                <span>▼</span>
+            </div>
+            <div class="card-content">
+                Sean $V$ y $W$ espacios vectoriales, y sea $T:V\rightarrow W$ lineal. Si $\beta=\{v_{1},v_{2},...,v_{n}\}$ es una base para $V$, entonces $R(T)=\text{span}(T(\beta))=\text{span}(\{T(v_{1}),T(v_{2}),...,T(v_{n})\})$.
+            </div>
+        </div>
+    
+        <div class="card" data-index="5">
+            <div class="card-header" onclick="toggleCard(this)">
+                <span>Definición 1.4: Nulidad y Rango (Dimensiones)</span>
+                <span>▼</span>
+            </div>
+            <div class="card-content">
+                Si $N(T)$ y $R(T)$ son de dimensión finita, entonces definimos la nulidad de $T$, denotada como $\text{nullity}(T)$, y el rango de $T$, denotado como $\text{rank}(T)$, como las dimensiones de $N(T)$ y $R(T)$, respectivamente.
+            </div>
+        </div>
+    
+        <div class="card" data-index="6">
+            <div class="card-header" onclick="toggleCard(this)">
+                <span>Teorema 1.3: Teorema de la Dimensión</span>
+                <span>▼</span>
+            </div>
+            <div class="card-content">
+                Sean $V$ y $W$ espacios vectoriales, y sea $T:V\rightarrow W$ lineal. Si $V$ es de dimensión finita, entonces $\text{nullity}(T)+\text{rank}(T)=\text{dim}(V)$.
+            </div>
+        </div>
+    
+        <div class="card" data-index="7">
+            <div class="card-header" onclick="toggleCard(this)">
+                <span>Teorema 1.4: Condición de Inyectividad ($1$ a $1$)</span>
+                <span>▼</span>
+            </div>
+            <div class="card-content">
+                Sean $V$ y $W$ espacios vectoriales, y sea $T:V\rightarrow W$ lineal. Entonces $T$ es uno a uno si y solo si $N(T)=\{0\}$.
+            </div>
+        </div>
+    
+        <div class="card" data-index="8">
+            <div class="card-header" onclick="toggleCard(this)">
+                <span>Teorema 1.5: Equivalencias en igual dimensión finita</span>
+                <span>▼</span>
+            </div>
+            <div class="card-content">
+                Sean $V$ y $W$ espacios vectoriales de igual (finita) dimensión, y sea $T:V\rightarrow W$ lineal. Entonces las siguientes afirmaciones son equivalentes: (a) $T$ es uno a uno. (b) $T$ es sobreyectiva (onto). (c) $\text{rank}(T)=\text{dim}(V)$.
+            </div>
+        </div>
+    
+        <div class="card" data-index="9">
+            <div class="card-header" onclick="toggleCard(this)">
+                <span>Teorema 1.6: Determinación por una Base</span>
+                <span>▼</span>
+            </div>
+            <div class="card-content">
+                Sean $V$ y $W$ espacios vectoriales sobre $F$, y supongamos que $\{v_{1},v_{2},...,v_{n}\}$ es una base para $V$. Para $w_{1},w_{2},...,w_{n}$ en $W$, existe exactamente una transformación lineal $T:V\rightarrow W$ tal que $T(v_{i})=w_{i}$ para $i=1,2,...,n$.
+            </div>
+        </div>
+    
+        <div class="card" data-index="10">
+            <div class="card-header" onclick="toggleCard(this)">
+                <span>Corolario 1.6.1: Igualdad de Transformaciones</span>
+                <span>▼</span>
+            </div>
+            <div class="card-content">
+                Sean $V$ y $W$ espacios vectoriales, y supongamos que $V$ tiene una base finita $\{v_{1},v_{2},...,v_{n}\}$. Si $U,T:V\rightarrow W$ son lineales y $U(v_{i})=T(v_{i})$ para $i=1,2,...,n$, entonces $U=T$.
+            </div>
+        </div>
+    
+        <div class="card" data-index="11">
+            <div class="card-header" onclick="toggleCard(this)">
+                <span>Definición 1.5: Proyección a lo largo de un subespacio</span>
+                <span>▼</span>
+            </div>
+            <div class="card-content">
+                Sea $V$ un espacio vectorial y $W_1$ y $W_2$ subespacios de $V$ tales que $V = W_1 \oplus W_2$. Una función $T:V\rightarrow V$ se llama proyección sobre $W_{1}$ a lo largo de $W_{2}$ si, para $x=x_{1}+x_{2}$ con $x_{1}\in W_{1}$ y $x_{2}\in W_{2}$, tenemos $T(x)=x_{1}$.
+            </div>
+        </div>
+    
+        <div class="card" data-index="12">
+            <div class="card-header" onclick="toggleCard(this)">
+                <span>Definición 1.6: Subespacio $T$-invariante y Restricción</span>
+                <span>▼</span>
+            </div>
+            <div class="card-content">
+                Un subespacio $W$ de $V$ se dice que es invariante bajo $T$ (T-invariante) si $T(x)\in W$ para cada $x\in W$, es decir, $T(W)\subseteq W$. Si $W$ es T-invariante, definimos la restricción de $T$ en $W$ como la función $T_{W}:W\rightarrow W$ definida por $T_{W}(x)=T(x)$ para todo $x\in W$.
+            </div>
+        </div>
+    
+        <div class="card" data-index="13">
+            <div class="card-header" onclick="toggleCard(this)">
+                <span>Definición 2.1: Base Ordenada</span>
+                <span>▼</span>
+            </div>
+            <div class="card-content">
+                Sea $V$ un espacio vectorial de dimensión finita. Una base ordenada para $V$ es una base para $V$ dotada de un orden específico; es decir, una base ordenada para $V$ es una secuencia finita de vectores linealmente independientes en $V$ que genera $V$.
+            </div>
+        </div>
+    
+        <div class="card" data-index="14">
+            <div class="card-header" onclick="toggleCard(this)">
+                <span>Definición 2.2: Vector de Coordenadas</span>
+                <span>▼</span>
+            </div>
+            <div class="card-content">
+                Sea $\beta=\{u_{1},u_{2},...,u_{n}\}$ una base ordenada para un espacio vectorial de dimensión finita $V$. Para $x\in V$, sean $a_{1},a_{2},...,a_{n}$ los escalares únicos tales que $x=\sum_{i=1}^{n}a_{i}u_{i}$. Definimos el vector de coordenadas de $x$ relativo a $\beta$, denotado $[x]_{\beta}$, como el vector columna compuesto por los escalares $a_1$ hasta $a_n$.
+            </div>
+        </div>
+    
+        <div class="card" data-index="15">
+            <div class="card-header" onclick="toggleCard(this)">
+                <span>Definición 2.3: Representación Matricial</span>
+                <span>▼</span>
+            </div>
+            <div class="card-content">
+                Supongamos que $V$ y $W$ son espacios vectoriales de dimensión finita con bases ordenadas $\beta=\{v_{1},v_{2},...,v_{n}\}$ y $\gamma=\{w_{1},w_{2},...,w_{m}\}$ respectivamente. Sea $T: V\rightarrow W$ lineal. Entonces para cada $j$, $1\le j\le n$, existen escalares únicos $a_{ij}\in F$ ($1\le i\le m$), tales que $T(v_{j})=\sum_{i=1}^{m}a_{ij}w_{i}$. Llamamos a la matriz $A$ de $m\times n$ definida por $A_{ij}=a_{ij}$ la representación matricial de $T$ en las bases ordenadas $\beta$ y $\gamma$, y escribimos $A=[T]_{\beta}^{\gamma}$. Si $V=W$ y $\beta=\gamma$, entonces escribimos $A=[T]_{\beta}$.
+            </div>
+        </div>
+    
+        <div class="card" data-index="16">
+            <div class="card-header" onclick="toggleCard(this)">
+                <span>Definición 2.4: Suma y Mult. Escalar de Transformaciones</span>
+                <span>▼</span>
+            </div>
+            <div class="card-content">
+                Sean $T,U:V\rightarrow W$ funciones arbitrarias, donde $V$ y $W$ son espacios vectoriales sobre $F$, y sea $a\in F$. Definimos $T+U: V\rightarrow W$ como $(T+U)(x)=T(x)+U(x)$ para todo $x\in V$, y $aT: V\rightarrow W$ como $(aT)(x)=aT(x)$ para todo $x\in V$.
+            </div>
+        </div>
+    
+        <div class="card" data-index="17">
+            <div class="card-header" onclick="toggleCard(this)">
+                <span>Teorema 2.1: Espacio Vectorial de Transformaciones Lineales</span>
+                <span>▼</span>
+            </div>
+            <div class="card-content">
+                Sean $V$ y $W$ espacios vectoriales sobre un campo $F$, y sean $T,U: V\rightarrow W$ lineales. (a) Para todo $a\in F$, $aT+U$ es lineal. (b) Utilizando las operaciones de suma y multiplicación escalar de la definición anterior, la colección de todas las transformaciones lineales de $V$ a $W$ es un espacio vectorial sobre $F$.
+            </div>
+        </div>
+    
+        <div class="card" data-index="18">
+            <div class="card-header" onclick="toggleCard(this)">
+                <span>Definición 2.5: Espacio $\mathcal{L}(V,W)$</span>
+                <span>▼</span>
+            </div>
+            <div class="card-content">
+                Sean $V$ y $W$ espacios vectoriales sobre $F$. Denotamos el espacio vectorial de todas las transformaciones lineales de $V$ a $W$ por $\mathcal{L}(V,W)$. En el caso de que $V=W$, escribimos $\mathcal{L}(V)$ en lugar de $\mathcal{L}(V,W)$.
+            </div>
+        </div>
+    
+        <div class="card" data-index="19">
+            <div class="card-header" onclick="toggleCard(this)">
+                <span>Teorema 2.2: Linealidad de la Representación Matricial</span>
+                <span>▼</span>
+            </div>
+            <div class="card-content">
+                Sean $V$ y $W$ espacios vectoriales de dimensión finita con bases ordenadas $\beta$ y $\gamma$, respectivamente, y sean $T, U: V\rightarrow W$ transformaciones lineales. Entonces: (a) $[T+U]_{\beta}^{\gamma}=[T]_{\beta}^{\gamma}+[U]_{\beta}^{\gamma}$ y (b) $[aT]_{\beta}^{\gamma}=a[T]_{\beta}^{\gamma}$ para todos los escalares $a$.
+            </div>
+        </div>
+    
+        <div class="card" data-index="20">
+            <div class="card-header" onclick="toggleCard(this)">
+                <span>Teorema 3.1: Linealidad de la Composición</span>
+                <span>▼</span>
+            </div>
+            <div class="card-content">
+                Sean $V$, $W$ y $Z$ espacios vectoriales sobre el mismo campo $F$, y sean $T: V\rightarrow W$ y $U:W\rightarrow Z$ lineales. Entonces $UT: V\rightarrow Z$ es lineal.
+            </div>
+        </div>
+    
+    </div>
+
+    <script>
+        // Función para mostrar/ocultar el contenido de la tarjeta
+        function toggleCard(element) {
+            const content = element.nextElementSibling;
+            if (content.style.display === "block") {
+                content.style.display = "none";
+            } else {
+                content.style.display = "block";
+            }
+        }
+
+        // Función para desordenar
+        function shuffleCards() {
+            const container = document.getElementById('cards-container');
+            const cards = Array.from(container.getElementsByClassName('card'));
+            
+            // Algoritmo de Fisher-Yates
+            for (let i = cards.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                container.appendChild(cards[j]);
+            }
+        }
+
+        // Función para ordenar por el índice original
+        function resetOrder() {
+            const container = document.getElementById('cards-container');
+            const cards = Array.from(container.getElementsByClassName('card'));
+            
+            cards.sort((a, b) => {
+                return parseInt(a.getAttribute('data-index')) - parseInt(b.getAttribute('data-index'));
+            });
+            
+            cards.forEach(card => container.appendChild(card));
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operaciones con Números Complejos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .controls {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .complex-input {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 2px solid #dee2e6;
+        }
+
+        .complex-input.z1 {
+            border-color: #007bff;
+            background: #f0f7ff;
+        }
+
+        .complex-input.z2 {
+            border-color: #ffc107;
+            background: #fffbf0;
+        }
+
+        .complex-input label {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .complex-input input {
+            width: 60px;
+            padding: 8px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        canvas {
+            border: 2px solid #333;
+            border-radius: 10px;
+            display: block;
+            margin: 20px auto;
+            background: white;
+        }
+
+        .results {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .result-card {
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+            background: #f8f9fa;
+            transition: all 0.3s;
+        }
+
+        .result-card h3 {
+            margin-top: 0;
+            color: #007bff;
+        }
+
+        .result-card.z1-card {
+            border-left-color: #007bff;
+            background: #f0f7ff;
+        }
+
+        .result-card.z2-card {
+            border-left-color: #ffc107;
+            background: #fffbf0;
+        }
+
+        .result-card.sum-card {
+            border-left-color: #28a745;
+            background: #f0fff4;
+        }
+
+        .result-card.mult-card {
+            border-left-color: #dc3545;
+            background: #fff0f0;
+        }
+
+        .legend {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-color {
+            width: 30px;
+            height: 4px;
+            border-radius: 2px;
+        }
+
+        .legend-color.blue { background: #007bff; }
+        .legend-color.yellow { background: #ffc107; }
+        .legend-color.green { background: #28a745; }
+        .legend-color.red { background: #dc3545; }
+
+        .instructions {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .instructions p {
+            margin: 5px 0;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔢 Operaciones con Números Complejos</h1>
+        
+        <div class="instructions">
+            <p><strong>📐 Cómo usar:</strong> Ingresa las partes real e imaginaria de dos números complejos.</p>
+            <p><strong>📏 Suma:</strong> Se muestra con la regla del paralelogramo (líneas punteadas verdes)</p>
+            <p><strong>🔄 Multiplicación:</strong> Se visualiza con los ángulos en forma polar (arcos rojos)</p>
+        </div>
+
+        <div class="controls">
+            <div class="complex-input z1">
+                <label style="color: #007bff;">z₁ =</label>
+                <input type="number" id="real1" value="3" placeholder="Real">
+                <span style="font-size: 18px;">+</span>
+                <input type="number" id="imag1" value="2" placeholder="Imag">
+                <span style="font-size: 18px;">i</span>
+            </div>
+            
+            <div class="complex-input z2">
+                <label style="color: #ffc107;">z₂ =</label>
+                <input type="number" id="real2" value="1" placeholder="Real">
+                <span style="font-size: 18px;">+</span>
+                <input type="number" id="imag2" value="3" placeholder="Imag">
+                <span style="font-size: 18px;">i</span>
+            </div>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color blue"></div>
+                <span><strong>z₁</strong> (Primer número)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color yellow"></div>
+                <span><strong>z₂</strong> (Segundo número)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color green"></div>
+                <span><strong>z₁ + z₂</strong> (Suma)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color red"></div>
+                <span><strong>z₁ × z₂</strong> (Multiplicación)</span>
+            </div>
+        </div>
+
+        <canvas id="complexPlane" width="600" height="600"></canvas>
+
+        <div class="results">
+            <div class="result-card z1-card">
+                <h3>🔵 z₁</h3>
+                <p><strong>Rectangular:</strong> <span id="z1Rectangular"></span></p>
+                <p><strong>Polar:</strong> <span id="z1Polar"></span></p>
+            </div>
+
+            <div class="result-card z2-card">
+                <h3>🟡 z₂</h3>
+                <p><strong>Rectangular:</strong> <span id="z2Rectangular"></span></p>
+                <p><strong>Polar:</strong> <span id="z2Polar"></span></p>
+            </div>
+
+            <div class="result-card sum-card">
+                <h3>🟢 Suma (z₁ + z₂)</h3>
+                <p><strong>Rectangular:</strong> <span id="sumRectangular"></span></p>
+                <p><strong>Polar:</strong> <span id="sumPolar"></span></p>
+                <p><em>Regla del paralelogramo</em></p>
+            </div>
+            
+            <div class="result-card mult-card">
+                <h3>🔴 Multiplicación (z₁ × z₂)</h3>
+                <p><strong>Rectangular:</strong> <span id="multRectangular"></span></p>
+                <p><strong>Polar:</strong> <span id="multPolar"></span></p>
+                <p><em>Ángulos se suman, módulos se multiplican</em></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('complexPlane');
+        const ctx = canvas.getContext('2d');
+        
+        // Configuración del plano
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        const scale = 40; // píxeles por unidad
+
+        function toRadians(degrees) {
+            return degrees * Math.PI / 180;
+        }
+
+        function toDegrees(radians) {
+            return radians * 180 / Math.PI;
+        }
+
+        function getComplexNumbers() {
+            return {
+                z1: {
+                    real: parseInt(document.getElementById('real1').value) || 0,
+                    imag: parseInt(document.getElementById('imag1').value) || 0
+                },
+                z2: {
+                    real: parseInt(document.getElementById('real2').value) || 0,
+                    imag: parseInt(document.getElementById('imag2').value) || 0
+                }
+            };
+        }
+
+        function rectangularToPolar(z) {
+            const r = Math.sqrt(z.real * z.real + z.imag * z.imag);
+            let theta = Math.atan2(z.imag, z.real);
+            let thetaDeg = toDegrees(theta);
+            if (thetaDeg < 0) thetaDeg += 360;
+            return { r, theta: thetaDeg };
+        }
+
+        function addComplex(z1, z2) {
+            return {
+                real: z1.real + z2.real,
+                imag: z1.imag + z2.imag
+            };
+        }
+
+        function multiplyComplex(z1, z2) {
+            return {
+                real: z1.real * z2.real - z1.imag * z2.imag,
+                imag: z1.real * z2.imag + z1.imag * z2.real
+            };
+        }
+
+        function drawGrid() {
+            ctx.strokeStyle = '#e9ecef';
+            ctx.lineWidth = 1;
+            
+            // Líneas verticales
+            for (let x = centerX % scale; x < canvas.width; x += scale) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+            
+            // Líneas horizontales
+            for (let y = centerY % scale; y < canvas.height; y += scale) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+        }
+
+        function drawAxes() {
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 2;
+            
+            // Eje X (Real)
+            ctx.beginPath();
+            ctx.moveTo(0, centerY);
+            ctx.lineTo(canvas.width, centerY);
+            ctx.stroke();
+            
+            // Eje Y (Imaginario)
+            ctx.beginPath();
+            ctx.moveTo(centerX, 0);
+            ctx.lineTo(centerX, canvas.height);
+            ctx.stroke();
+            
+            // Flechas
+            ctx.fillStyle = '#333';
+            ctx.font = 'bold 14px Arial';
+            
+            // Flecha eje X
+            ctx.beginPath();
+            ctx.moveTo(canvas.width - 10, centerY - 5);
+            ctx.lineTo(canvas.width, centerY);
+            ctx.lineTo(canvas.width - 10, centerY + 5);
+            ctx.fill();
+            ctx.fillText('Re', canvas.width - 30, centerY - 15);
+            
+            // Flecha eje Y
+            ctx.beginPath();
+            ctx.moveTo(centerX - 5, 10);
+            ctx.lineTo(centerX, 0);
+            ctx.lineTo(centerX + 5, 10);
+            ctx.fill();
+            ctx.fillText('Im', centerX + 15, 15);
+            
+            // Etiquetas en los ejes
+            ctx.font = '12px Arial';
+            ctx.fillStyle = '#666';
+            for (let i = -10; i <= 10; i++) {
+                if (i === 0) continue;
+                
+                // Eje X
+                let x = centerX + i * scale;
+                if (x > 10 && x < canvas.width - 10) {
+                    ctx.beginPath();
+                    ctx.moveTo(x, centerY - 5);
+                    ctx.lineTo(x, centerY + 5);
+                    ctx.stroke();
+                    ctx.fillText(i, x - 8, centerY + 20);
+                }
+                
+                // Eje Y
+                let y = centerY - i * scale;
+                if (y > 10 && y < canvas.height - 10) {
+                    ctx.beginPath();
+                    ctx.moveTo(centerX - 5, y);
+                    ctx.lineTo(centerX + 5, y);
+                    ctx.stroke();
+                    if (i > 0) {
+                        ctx.fillText(i + 'i', centerX + 10, y + 5);
+                    }
+                }
+            }
+            
+            // Origen
+            ctx.fillText('0', centerX - 15, centerY + 20);
+        }
+
+        function drawVector(z, color, label, lineWidth = 2) {
+            const x = centerX + z.real * scale;
+            const y = centerY - z.imag * scale;
+            
+            // Verificar que el punto está dentro del canvas
+            if (x < 0 || x > canvas.width || y < 0 || y > canvas.height) {
+                return; // No dibujar si está fuera del canvas
+            }
+            
+            ctx.strokeStyle = color;
+            ctx.fillStyle = color;
+            ctx.lineWidth = lineWidth;
+            
+            // Línea del vector
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            
+            // Punta de flecha
+            const angle = Math.atan2(centerY - y, x - centerX);
+            const arrowSize = 10;
+            
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(
+                x - arrowSize * Math.cos(angle - Math.PI / 6),
+                y + arrowSize * Math.sin(angle - Math.PI / 6)
+            );
+            ctx.lineTo(
+                x - arrowSize * Math.cos(angle + Math.PI / 6),
+                y + arrowSize * Math.sin(angle + Math.PI / 6)
+            );
+            ctx.closePath();
+            ctx.fill();
+            
+            // Punto en el extremo
+            ctx.beginPath();
+            ctx.arc(x, y, 6, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Etiqueta
+            ctx.font = 'bold 16px Arial';
+            ctx.fillStyle = color;
+            ctx.fillText(label, x + 15, y - 15);
+        }
+
+        function drawParallelogram(z1, z2, sum) {
+            const x1 = centerX + z1.real * scale;
+            const y1 = centerY - z1.imag * scale;
+            const x2 = centerX + z2.real * scale;
+            const y2 = centerY - z2.imag * scale;
+            const xs = centerX + sum.real * scale;
+            const ys = centerY - sum.imag * scale;
+            
+            ctx.strokeStyle = '#28a745';
+            ctx.lineWidth = 1.5;
+            ctx.setLineDash([8, 4]);
+            ctx.fillStyle = 'rgba(40, 167, 69, 0.05)';
+            
+            // Dibujar paralelogramo
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.lineTo(x1, y1);
+            ctx.lineTo(xs, ys);
+            ctx.lineTo(x2, y2);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+            
+            ctx.setLineDash([]);
+            
+            // Etiqueta en el paralelogramo
+            ctx.fillStyle = '#28a745';
+            ctx.font = 'italic 13px Arial';
+            const midX = (centerX + x1 + xs + x2) / 4;
+            const midY = (centerY + y1 + ys + y2) / 4;
+            ctx.fillText('Paralelogramo', midX - 40, midY);
+        }
+
+        function drawMultiplicationVisual(z1, z2, product) {
+            const polar1 = rectangularToPolar(z1);
+            const polar2 = rectangularToPolar(z2);
+            const polarProd = rectangularToPolar(product);
+            
+            // Solo dibujar si los números no son cero
+            if (polar1.r === 0 || polar2.r === 0) return;
+            
+            // Arco para z1
+            ctx.strokeStyle = 'rgba(0, 123, 255, 0.4)';
+            ctx.lineWidth = 3;
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, 50, -toRadians(polar1.theta), 0);
+            ctx.stroke();
+            
+            // Arco para z2
+            ctx.strokeStyle = 'rgba(255, 193, 7, 0.4)';
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, 65, -toRadians(polar2.theta), 0);
+            ctx.stroke();
+            
+            // Arco para el producto (más grande)
+            ctx.strokeStyle = 'rgba(220, 53, 69, 0.6)';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, 80, -toRadians(polarProd.theta), 0);
+            ctx.stroke();
+            
+            ctx.setLineDash([]);
+            
+            // Etiquetas de ángulos
+            ctx.font = 'bold 12px Arial';
+            
+            // Ángulo de z1
+            if (polar1.theta !== 0 && polar1.theta !== 360) {
+                ctx.fillStyle = '#007bff';
+                const midAngle1 = -toRadians(polar1.theta / 2);
+                ctx.fillText(`θ₁=${polar1.theta.toFixed(0)}°`, 
+                    centerX + 60 * Math.cos(midAngle1), 
+                    centerY + 60 * Math.sin(midAngle1));
+            }
+            
+            // Ángulo del producto
+            if (polarProd.theta !== 0 && polarProd.theta !== 360) {
+                ctx.fillStyle = '#dc3545';
+                const midAngleProd = -toRadians(polarProd.theta / 2);
+                ctx.fillText(`θ₁+θ₂=${polarProd.theta.toFixed(0)}°`, 
+                    centerX + 95 * Math.cos(midAngleProd), 
+                    centerY + 95 * Math.sin(midAngleProd));
+            }
+        }
+
+        function updatePlot() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            drawGrid();
+            drawAxes();
+            
+            const { z1, z2 } = getComplexNumbers();
+            const sum = addComplex(z1, z2);
+            const product = multiplyComplex(z1, z2);
+            
+            // Primero dibujar el paralelogramo y multiplicación (capas inferiores)
+            drawParallelogram(z1, z2, sum);
+            drawMultiplicationVisual(z1, z2, product);
+            
+            // Luego dibujar los vectores principales
+            drawVector(z1, '#007bff', 'z₁');
+            drawVector(z2, '#ffc107', 'z₂');
+            
+            // Finalmente dibujar resultados
+            drawVector(sum, '#28a745', 'z₁+z₂', 3);
+            drawVector(product, '#dc3545', 'z₁×z₂', 3);
+            
+            updateResults();
+        }
+
+        function updateResults() {
+            const { z1, z2 } = getComplexNumbers();
+            const sum = addComplex(z1, z2);
+            const product = multiplyComplex(z1, z2);
+            
+            const polar1 = rectangularToPolar(z1);
+            const polar2 = rectangularToPolar(z2);
+            const polarSum = rectangularToPolar(sum);
+            const polarProd = rectangularToPolar(product);
+            
+            // Actualizar z1
+            document.getElementById('z1Rectangular').textContent = 
+                `${z1.real} ${z1.imag >= 0 ? '+' : '-'} ${Math.abs(z1.imag)}i`;
+            document.getElementById('z1Polar').textContent = 
+                `${polar1.r.toFixed(2)} ∠ ${polar1.theta.toFixed(1)}°`;
+            
+            // Actualizar z2
+            document.getElementById('z2Rectangular').textContent = 
+                `${z2.real} ${z2.imag >= 0 ? '+' : '-'} ${Math.abs(z2.imag)}i`;
+            document.getElementById('z2Polar').textContent = 
+                `${polar2.r.toFixed(2)} ∠ ${polar2.theta.toFixed(1)}°`;
+            
+            // Actualizar suma
+            document.getElementById('sumRectangular').textContent = 
+                `${sum.real} ${sum.imag >= 0 ? '+' : '-'} ${Math.abs(sum.imag)}i`;
+            document.getElementById('sumPolar').textContent = 
+                `${polarSum.r.toFixed(2)} ∠ ${polarSum.theta.toFixed(1)}°`;
+            
+            // Actualizar multiplicación
+            document.getElementById('multRectangular').textContent = 
+                `${product.real} ${product.imag >= 0 ? '+' : '-'} ${Math.abs(product.imag)}i`;
+            document.getElementById('multPolar').textContent = 
+                `${polarProd.r.toFixed(2)} ∠ ${polarProd.theta.toFixed(1)}°`;
+        }
+
+        // Actualizar automáticamente cuando se cambian los valores
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('input', updatePlot);
+        });
+
+        // Dibujar inicial
+        updatePlot();
+    </script>
+</body>
+</html>
