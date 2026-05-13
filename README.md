@@ -1,2 +1,3 @@
 # Recursos-interactivos
-Recursos interactivos para mis clases
+Recursos interactivos para mis clases escritos en HTML y Javascript
+
